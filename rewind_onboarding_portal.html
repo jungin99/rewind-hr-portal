@@ -723,25 +723,6 @@
       <div class="nav-item" onclick="showPage('contacts', this)">
         <span class="icon">📞</span> 담당자 연락처
       </div>
-      <div class="nav-item" onclick="showPage('files', this)">
-        <span class="icon">📂</span> 자료실
-      </div>
-      <div class="nav-section-label">업무 매뉴얼</div>
-      <div class="nav-item" onclick="showPage('manual-sales', this)">
-        <span class="icon">💼</span> 영업팀
-      </div>
-      <div class="nav-item" onclick="showPage('manual-marketing', this)">
-        <span class="icon">📣</span> 마케팅팀
-      </div>
-      <div class="nav-item" onclick="showPage('manual-purchase', this)">
-        <span class="icon">🛒</span> 구매팀
-      </div>
-      <div class="nav-item" onclick="showPage('manual-ops', this)">
-        <span class="icon">⚙️</span> 운영팀
-      </div>
-      <div class="nav-item" onclick="showPage('manual-chat', this)">
-        <span class="icon">🤖</span> 업무 AI 도우미
-      </div>
     </nav>
     <div class="sidebar-footer">
       <a href="https://rewind2nature.com" target="_blank">🌐 공식 홈페이지</a><br>
@@ -1942,11 +1923,7 @@ function showPage(name, el) {
   const titles = {
     home: '홈', checklist: '온보딩 체크리스트', about: '회사 소개 & 미션',
     brand: '브랜드 & 제품', org: '조직도 & 팀', rules: '복무규정 & 휴가',
-    tools: '업무 툴 사용법', chat: 'AI 질문 챗봇', contacts: '담당자 연락처',
-    files: '자료실',
-    'manual-sales': '영업팀 업무 매뉴얼', 'manual-marketing': '마케팅팀 업무 매뉴얼',
-    'manual-purchase': '구매팀 업무 매뉴얼', 'manual-ops': '운영팀 업무 매뉴얼',
-    'manual-chat': '업무 AI 도우미'
+    tools: '업무 툴 사용법', chat: 'AI 질문 챗봇', contacts: '담당자 연락처'
   };
   document.getElementById('page-title').textContent = titles[name] || name;
 }
