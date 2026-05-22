@@ -1172,11 +1172,11 @@ async function postNoticeNew() {
     var promises = emails.map(function(email) {
       return emailjs.send('service_hr', 'template_0d8vuxl', {
         to_email: email,
-        applicant_name: '리와인드 전체 직원',
+        applicant_name: '리와인드 임직원 여러분',
         applicant_email: email,
-        cert_type: '[공지] ' + title,
-        purpose: '공지사항 · ' + date,
-        note: content
+        cert_type: '[리와인드 공지] ' + title,
+        purpose: '공지일: ' + date,
+        note: '안녕하세요, 리와인드입니다.\n\n' + '[ ' + title + ' ]\n\n' + content + '\n\n감사합니다.\n리와인드 HR팀'
       });
     });
 
