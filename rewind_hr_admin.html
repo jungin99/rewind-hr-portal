@@ -5,10 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-  if (window['pdfjs-dist/build/pdf']) {
-    window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  }
+  // PDF.js worker 사전 설정
+  window.pdfjsWorkerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 </script>
 <title>리와인드 HR 관리 시스템</title>
 <style>
@@ -413,6 +411,10 @@ select.fi{background:var(--w);}
           <div class="edraft" id="welcomeEmail"></div>
           <div class="btns">
             <button class="btn btn-p" onclick="copyText('welcomeEmail')">📋 이메일 복사</button>
+            <button class="btn" onclick="sendWelcomeEmail()" id="sendEmailBtn"
+              style="background:#0f766e;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">
+              📨 이메일 바로 발송
+            </button>
             <button class="btn btn-s" onclick="saveToList()">💾 직원 목록에 저장</button>
           </div>
         </div>
@@ -594,6 +596,7 @@ select.fi{background:var(--w);}
       <!-- 직원 상세/등록 폼 -->
       <div class="card" id="empFormCard" style="display:none;">
         <div class="ctitle" id="empFormTitle">직원 등록</div>
+        <input type="hidden" id="ef-idx" value="-1">
         <div class="frow">
           <div class="fg"><label>이름 *</label><input class="fi" id="ef-name" placeholder="홍길동"></div>
           <div class="fg"><label>팀</label>
@@ -1255,6 +1258,7 @@ function showTab(id, el) {
 function initApp() {
   renderStaff(STAFF);
   populateContactSelect();
+  loadEmployees();
   var today = new Date().toISOString().split('T')[0];
   var obDate = document.getElementById('obDate');
   var qDate = document.getElementById('qDate');
@@ -1308,7 +1312,7 @@ async function loadPdfJs() {
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
     script.onload = function() {
       var lib = window['pdfjs-dist/build/pdf'];
-      lib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      lib.GlobalWorkerOptions.workerSrc = window.pdfjsWorkerSrc || 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
       pdfjsLib = lib;
       resolve(lib);
     };
@@ -1880,6 +1884,171 @@ function copyText(id) {
 function showToast(msg) {
   var t = document.getElementById('toast');
   if (t) { t.textContent = msg; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 2500); }
+}
+
+// ── 직원 관리 ────────────────────────────────────
+var employees = JSON.parse(localStorage.getItem('rw_employees') || '[]');
+
+function loadEmployees() {
+  renderEmployeeTable(employees);
+}
+
+function renderEmployeeTable(data) {
+  var tbody = document.getElementById('empTableBody');
+  var wrap = document.getElementById('empTableWrap');
+  if (!tbody) return;
+  if (!data || !data.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--mu);">등록된 직원이 없습니다.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(function(e, i) {
+    return '<tr>' +
+      '<td><span class="team-badge">' + (e.team||'-') + '</span></td>' +
+      '<td><strong>' + (e.name||'') + '</strong></td>' +
+      '<td>' + (e.rank||'') + '</td>' +
+      '<td style="font-size:12px;">' + (e.phone||'-') + '</td>' +
+      '<td style="font-size:12px;">' + (e.email||'-') + '</td>' +
+      '<td>' + (e.joinDate||'-') + '</td>' +
+      '<td><button onclick="showEmpForm(' + i + ')" class="btn btn-s btn-sm" style="margin-right:4px;">수정</button>' +
+      '<button onclick="deleteEmployee(' + i + ')" class="btn btn-sm" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;">삭제</button></td>' +
+    '</tr>';
+  }).join('');
+  if (wrap) wrap.style.display = 'block';
+}
+
+function showEmpForm(idx) {
+  var card = document.getElementById('empFormCard');
+  var title = document.getElementById('empFormTitle');
+  if (!card) return;
+  card.style.display = 'block';
+  card.scrollIntoView({behavior:'smooth'});
+
+  if (idx === 'new') {
+    title.textContent = '신규 직원 등록';
+    document.getElementById('ef-idx').value = '-1';
+    ['ef-name','ef-team','ef-rank','ef-role','ef-phone','ef-email','ef-joinDate','ef-note'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  } else {
+    var emp = employees[idx];
+    if (!emp) return;
+    title.textContent = '직원 정보 수정';
+    document.getElementById('ef-idx').value = idx;
+    document.getElementById('ef-name').value = emp.name || '';
+    var teamEl = document.getElementById('ef-team');
+    var rankEl = document.getElementById('ef-rank');
+    var roleEl = document.getElementById('ef-role');
+    var phoneEl = document.getElementById('ef-phone');
+    var emailEl = document.getElementById('ef-email');
+    var joinEl = document.getElementById('ef-joindate');
+    var noteEl = document.getElementById('ef-note');
+    if (teamEl) teamEl.value = emp.team || '';
+    if (rankEl) rankEl.value = emp.rank || '';
+    if (roleEl) roleEl.value = emp.role || '';
+    if (phoneEl) phoneEl.value = emp.phone || '';
+    if (emailEl) emailEl.value = emp.email || '';
+    if (joinEl) joinEl.value = emp.joinDate || '';
+    var birthEl = document.getElementById('ef-birth');
+    var statusEl = document.getElementById('ef-status');
+    var addressEl = document.getElementById('ef-address');
+    var leaveEl2 = document.getElementById('ef-leavedate');
+    if (birthEl) birthEl.value = emp.birth || '';
+    if (statusEl) statusEl.value = emp.status || '';
+    if (addressEl) addressEl.value = emp.address || '';
+    if (leaveEl2) leaveEl2.value = emp.leaveDate || '';
+    if (noteEl) noteEl.value = emp.note || '';
+  }
+}
+
+function saveEmployee() {
+  var idx = parseInt(document.getElementById('ef-idx').value);
+  var name = document.getElementById('ef-name').value.trim();
+  if (!name) { showToast('이름을 입력해주세요.'); return; }
+
+  var emp = {
+    name: name,
+    team: document.getElementById('ef-team').value,
+    rank: document.getElementById('ef-rank').value,
+    role: document.getElementById('ef-role').value,
+    phone: document.getElementById('ef-phone').value,
+    email: document.getElementById('ef-email').value,
+    birth: (document.getElementById('ef-birth')||{}).value || '',
+    status: (document.getElementById('ef-status')||{}).value || '',
+    address: (document.getElementById('ef-address')||{}).value || '',
+    joinDate: document.getElementById('ef-joindate').value,
+    leaveDate: (document.getElementById('ef-leavedate')||{}).value || '',
+    note: document.getElementById('ef-note').value
+  };
+
+  if (idx === -1) {
+    employees.push(emp);
+    showToast('직원이 등록되었습니다!');
+  } else {
+    employees[idx] = emp;
+    showToast('직원 정보가 수정되었습니다!');
+  }
+
+  localStorage.setItem('rw_employees', JSON.stringify(employees));
+  document.getElementById('empFormCard').style.display = 'none';
+  renderEmployeeTable(employees);
+}
+
+function cancelEmpForm() {
+  var card = document.getElementById('empFormCard');
+  if (card) card.style.display = 'none';
+}
+
+function filterEmployees(q) {
+  if (!q) { renderEmployeeTable(employees); return; }
+  renderEmployeeTable(employees.filter(function(e){
+    return (e.name||'').includes(q) || (e.team||'').includes(q) || (e.rank||'').includes(q);
+  }));
+}
+
+function filterEmpByTeam(team) {
+  if (!team) { renderEmployeeTable(employees); return; }
+  renderEmployeeTable(employees.filter(function(e){ return e.team === team; }));
+}
+
+// ── 이메일 바로 발송 ────────────────────────────
+async function sendWelcomeEmail() {
+  var subj = document.getElementById('welcomeSubj');
+  var body = document.getElementById('welcomeEmail');
+  if (!subj || !body || !body.textContent.trim()) {
+    showToast('먼저 이력서 분석을 완료해주세요.');
+    return;
+  }
+
+  var subject = subj.textContent.replace('제목: ', '').trim();
+  var emailBody = body.textContent.trim();
+
+  // 수신자 이메일 입력 받기
+  var toEmail = prompt('수신자 이메일 주소를 입력하세요:', '');
+  if (!toEmail || !toEmail.includes('@')) {
+    showToast('올바른 이메일 주소를 입력해주세요.');
+    return;
+  }
+
+  var btn = document.getElementById('sendEmailBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '발송 중...'; }
+
+  try {
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: toEmail,
+      applicant_name: toEmail,
+      applicant_email: toEmail,
+      cert_type: subject,
+      purpose: '입사 안내 이메일',
+      note: emailBody
+    });
+    showToast('✅ 이메일이 발송되었습니다! (' + toEmail + ')');
+  } catch(e) {
+    showToast('❌ 발송 실패: ' + e.message);
+    console.error(e);
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = '📨 이메일 바로 발송'; }
 }
 </script>
 </body>
