@@ -983,8 +983,6 @@
 
       </div>
 
-      </div>
-
       <!-- BRAND -->
       <div id="page-brand" class="page">
         <div class="section-header"><h2>🏷️ 브랜드 & 제품</h2></div>
@@ -1090,7 +1088,7 @@
       </div>
 
       <!-- RULES -->
-      <div <div id="page-rules" class="page">
+      <div id="page-rules" class="page">
         <div class="section-header"><h2>📋 복무규정 & 휴가정책</h2><span>2025년 1월 기준</span></div>
 
         <div class="info-block">
@@ -1295,7 +1293,7 @@
 
       </div>
 
-      id="page-chat" class="page">
+      <div id="page-chat" class="page">
         <div class="section-header">
           <h2>💬 AI 질문 챗봇</h2>
           <span>리와인드 전문 AI 어시스턴트</span>
@@ -2321,29 +2319,28 @@
         <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:16px;margin-bottom:16px;font-size:13.5px;line-height:1.9;">
           📌 신청 후 <strong>약 1주일</strong> 내 제작 완료됩니다.<br>
           📌 신청 내용은 <strong>정성원 과장</strong>에게 자동으로 전달됩니다.<br>
-          📌 명함 시안은 제작 전 이메일로 확인 후 진행됩니다.<br>
           📌 문의: 정성원 과장 (greener_sw@iamgreener.co.kr / 010-9216-4499)
         </div>
         <div style="display:flex;flex-direction:column;gap:12px;">
-          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px;">이름 *</label>
-            <input id="nc-name" placeholder="홍길동" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;font-family:inherit;"></div>
-          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px;">직책 *</label>
-            <input id="nc-title" placeholder="대리 / 과장 / 팀장..." style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;font-family:inherit;"></div>
-          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px;">부서 *</label>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px;">이름 *</label>
+            <input id="nc-name" placeholder="홍길동" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px;">직책 *</label>
+            <input id="nc-title" placeholder="대리 / 과장 / 팀장..." style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px;">부서 *</label>
             <select id="nc-dept" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;background:#fff;font-family:inherit;">
               <option value="">선택하세요</option>
               <option>영업팀</option><option>마케팅팀</option><option>구매팀</option><option>운영팀</option><option>임원</option>
             </select></div>
-          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px;">전화번호 *</label>
-            <input id="nc-phone" placeholder="010-0000-0000" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;font-family:inherit;"></div>
-          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px;">이메일 *</label>
-            <input id="nc-email" placeholder="your@iamgreener.co.kr" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;font-family:inherit;"></div>
-          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px;">수량</label>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px;">전화번호 *</label>
+            <input id="nc-phone" placeholder="010-0000-0000" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px;">이메일 *</label>
+            <input id="nc-email" placeholder="your@iamgreener.co.kr" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px;">수량</label>
             <select id="nc-qty" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;background:#fff;font-family:inherit;">
               <option>100장</option><option>200장</option><option>300장</option><option>500장</option>
             </select></div>
-          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px;">요청사항</label>
-            <textarea id="nc-note" placeholder="특별 요청사항이 있으면 입력해주세요" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;resize:vertical;min-height:70px;font-family:inherit;"></textarea></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px;">요청사항</label>
+            <textarea id="nc-note" placeholder="특별 요청사항이 있으면 입력해주세요" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;width:100%;outline:none;resize:vertical;min-height:70px;font-family:inherit;box-sizing:border-box;"></textarea></div>
           <div id="nc-err" style="color:#dc2626;font-size:12px;display:none;padding:8px 12px;background:#fef2f2;border-radius:8px;"></div>
           <button onclick="submitNamecard()" id="nc-btn"
             style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;width:100%;">
