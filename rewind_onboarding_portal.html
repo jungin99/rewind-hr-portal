@@ -704,7 +704,7 @@
       <div class="nav-item" onclick="showPage('brand', this)">
         <span class="icon">🏷️</span> 브랜드 & 제품
       </div>
-      <div class="nav-item" onclick="showPage('about', this); setTimeout(function(){ document.getElementById('sales-channel-section').scrollIntoView({behavior:'smooth'}); }, 100);">
+      <div class="nav-item" onclick="showPage('channel', this)">
         <span class="icon">🛒</span> 판매 채널
       </div>
       <div class="nav-item" onclick="showPage('org', this)">
@@ -851,55 +851,8 @@
       <!-- ABOUT -->
       <div id="page-about" class="page">
         <div class="section-header"><h2>🌿 회사 소개 & 미션</h2>
-        <!-- 판매 채널 -->
-        <div class="info-block" id="sales-channel-section">
-          <h3>🛒 직영 판매 채널</h3>
-          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
-            👤 담당: <strong>이이현 대리</strong> &nbsp;·&nbsp; <a href="mailto:22hyun@iamgreener.co.kr" style="color:var(--green);">22hyun@iamgreener.co.kr</a> &nbsp;·&nbsp; 010-7464-8668
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-            <a href="https://smartstore.naver.com/iamgreener" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
-              <span style="font-size:20px;">🟢</span><div><div style="font-size:13px;font-weight:600;">스마트스토어</div><div style="font-size:11px;color:var(--green);">smartstore.naver.com/iamgreener</div></div>
-            </a>
-            <a href="https://blog.naver.com/iamgreener" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
-              <span style="font-size:20px;">📝</span><div><div style="font-size:13px;font-weight:600;">네이버 블로그</div><div style="font-size:11px;color:var(--green);">blog.naver.com/iamgreener</div></div>
-            </a>
-            <a href="https://www.instagram.com/iamgreener_official/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
-              <span style="font-size:20px;">📸</span><div><div style="font-size:13px;font-weight:600;">인스타그램</div><div style="font-size:11px;color:var(--green);">@iamgreener_official</div></div>
-            </a>
-            <a href="https://rewind2nature.com" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
-              <span style="font-size:20px;">🌐</span><div><div style="font-size:13px;font-weight:600;">공식 홈페이지</div><div style="font-size:11px;color:var(--green);">rewind2nature.com</div></div>
-            </a>
-          </div>
-        </div>
 
-        <div class="info-block">
-          <h3>🤝 공식 파트너사 (위탁 판매)</h3>
-          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
-            👤 담당: <strong>정민주 대리</strong> &nbsp;·&nbsp; <a href="mailto:98gusdl52@iamgreener.co.kr" style="color:var(--green);">98gusdl52@iamgreener.co.kr</a> &nbsp;·&nbsp; 010-9173-5738
-          </div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <a href="https://re-ground.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)리그라운드</div><div style="font-size:11px;color:#888;">스스·자사몰·쿠팡·오픈마켓 + 오프라인</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://www.bigcoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)세이지그린 — 빅커피</div><div style="font-size:11px;color:#888;">자사몰·고도몰</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://www.caffemuseo.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">주식회사 뮤제오</div><div style="font-size:11px;color:#888;">자사몰·이마트 + 오프라인</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://bakingmon.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)SPC GFS — 베이킹몬</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://nauspack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)나우스 — 나우스팩</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://www.cntmart.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)대상다이브스 — 씨앤티마트</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://npackage.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">세경인터내셔널</div><div style="font-size:11px;color:#888;">스마트스토어 셀러 유통</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://napkinkorea.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)한창인터내셔날 — 냅킨코리아</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://www.megacoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)비앤씨인터내셔널 — 메가커피</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://www.happypack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)삼신상사 — 해피팩</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://packagelab.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">주식회사 제삼 — 패키지랩</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://cookapack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">쿡앤팩</div></div><span style="color:var(--green);">→</span></a>
-            <a href="https://ourpack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">아워팩 주식회사</div></div><span style="color:var(--green);">→</span></a>
-          </div>
-        </div>
 
-        <div class="info-block">
-          <h3>🏢 기업 유통사</h3>
-          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
-            👤 담당: <strong>정민주 대리</strong> &nbsp;·&nbsp; <a href="mailto:98gusdl52@iamgreener.co.kr" style="color:var(--green);">98gusdl52@iamgreener.co.kr</a> &nbsp;·&nbsp; 010-9173-5738
-          </div>
       </div>
 
         <div class="info-block">
@@ -1048,6 +1001,62 @@
           </div>
         </div>
 
+      <div id="page-channel" class="page">
+        <div class="section-header">
+          <h2>🛒 판매 채널</h2>
+          <span>직영 채널 · 공식 파트너사 · 기업 유통사</span>
+        </div>
+
+        <div class="info-block" id="sales-channel-section">
+          <h3>🛒 직영 판매 채널</h3>
+          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
+            👤 담당: <strong>이이현 대리</strong> &nbsp;·&nbsp; <a href="mailto:22hyun@iamgreener.co.kr" style="color:var(--green);">22hyun@iamgreener.co.kr</a> &nbsp;·&nbsp; 010-7464-8668
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <a href="https://smartstore.naver.com/iamgreener" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:20px;">🟢</span><div><div style="font-size:13px;font-weight:600;">스마트스토어</div><div style="font-size:11px;color:var(--green);">smartstore.naver.com/iamgreener</div></div>
+            </a>
+            <a href="https://blog.naver.com/iamgreener" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:20px;">📝</span><div><div style="font-size:13px;font-weight:600;">네이버 블로그</div><div style="font-size:11px;color:var(--green);">blog.naver.com/iamgreener</div></div>
+            </a>
+            <a href="https://www.instagram.com/iamgreener_official/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:20px;">📸</span><div><div style="font-size:13px;font-weight:600;">인스타그램</div><div style="font-size:11px;color:var(--green);">@iamgreener_official</div></div>
+            </a>
+            <a href="https://rewind2nature.com" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:20px;">🌐</span><div><div style="font-size:13px;font-weight:600;">공식 홈페이지</div><div style="font-size:11px;color:var(--green);">rewind2nature.com</div></div>
+            </a>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <h3>🤝 공식 파트너사 (위탁 판매)</h3>
+          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
+            👤 담당: <strong>정민주 대리</strong> &nbsp;·&nbsp; <a href="mailto:98gusdl52@iamgreener.co.kr" style="color:var(--green);">98gusdl52@iamgreener.co.kr</a> &nbsp;·&nbsp; 010-9173-5738
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="https://re-ground.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)리그라운드</div><div style="font-size:11px;color:#888;">스스·자사몰·쿠팡·오픈마켓 + 오프라인</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.bigcoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)세이지그린 — 빅커피</div><div style="font-size:11px;color:#888;">자사몰·고도몰</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.caffemuseo.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">주식회사 뮤제오</div><div style="font-size:11px;color:#888;">자사몰·이마트 + 오프라인</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://bakingmon.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)SPC GFS — 베이킹몬</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://nauspack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)나우스 — 나우스팩</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.cntmart.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)대상다이브스 — 씨앤티마트</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://npackage.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">세경인터내셔널</div><div style="font-size:11px;color:#888;">스마트스토어 셀러 유통</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://napkinkorea.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)한창인터내셔날 — 냅킨코리아</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.megacoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)비앤씨인터내셔널 — 메가커피</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.happypack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)삼신상사 — 해피팩</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://packagelab.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">주식회사 제삼 — 패키지랩</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://cookapack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">쿡앤팩</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://ourpack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">아워팩 주식회사</div></div><span style="color:var(--green);">→</span></a>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <h3>🏢 기업 유통사</h3>
+          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
+            👤 담당: <strong>정민주 대리</strong> &nbsp;·&nbsp; <a href="mailto:98gusdl52@iamgreener.co.kr" style="color:var(--green);">98gusdl52@iamgreener.co.kr</a> &nbsp;·&nbsp; 010-9173-5738
+          </div>
+      </div>
+
       <!-- BRAND -->
       <div id="page-brand" class="page">
         <div class="section-header"><h2>🏷️ 브랜드 & 제품</h2></div>
@@ -1113,23 +1122,7 @@
       <div id="page-org" class="page">
         <div class="section-header"><h2>👥 조직도 & 팀 소개</h2></div>
 
-        <div class="info-block">
-          <h3>🏢 경영진</h3>
-          <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
-            <div class="person-card" style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;">
-              <div style="width:38px;height:38px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">은정</div>
-              <div><strong style="font-size:14px;">김은정 대표이사</strong><div style="font-size:12px;color:var(--text-muted);">창업자 · 경영 총괄</div><div style="font-size:12px;color:var(--green);">greener_kim@iamgreener.co.kr · 010-2792-4375</div></div>
-            </div>
-            <div class="person-card" style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;">
-              <div style="width:38px;height:38px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">원욱</div>
-              <div><strong style="font-size:14px;">박원욱 공동대표</strong><div style="font-size:12px;color:var(--text-muted);">사업 개발 총괄 · 영업·구매·대한항공 직결</div><div style="font-size:12px;color:var(--green);">eddy_park@iamgreener.co.kr · 010-9513-0202</div></div>
-            </div>
-            <div class="person-card" style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;">
-              <div style="width:38px;height:38px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">정인</div>
-              <div><strong style="font-size:14px;">신정인 이사</strong><div style="font-size:12px;color:var(--text-muted);">마케팅 · 운영 · 부산지사</div><div style="font-size:12px;color:var(--green);">jungin_shin@iamgreener.co.kr · 010-4426-0617</div></div>
-            </div>
-          </div>
-        </div>
+        
 
         <div class="info-block">
           <h3>📋 주요 팀 구성</h3>
@@ -1228,73 +1221,32 @@
 
 
         <!-- 자기개발비 신청 -->
-        <div class="info-block">
+                <div class="info-block">
           <h3>📚 자기개발비 신청</h3>
           <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.8;">
-            💡 신청 내용은 <strong>김지혜 부장</strong>에게 이메일로 자동 전달됩니다.
+            💡 신청 내용은 <strong>김지혜 부장</strong>에게 이메일로 자동 전달됩니다.<br>
+            월 한도: 자기개발 목적 사용 가능 (헬스장, 학원, 도서 등)
           </div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청자 이름 *</label>
-              <input id="dev-name" placeholder="홍길동" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
-            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">용도 (어디에 어떻게 사용할지) *</label>
-              <input id="dev-purpose" placeholder="예: 헬스장 월 이용권, 영어 학원 수강료 등" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
-            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">금액 *</label>
-              <input id="dev-amount" placeholder="예: 50,000원" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
-            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">결제 방식 *</label>
-              <select id="dev-type" onchange="toggleDevType()" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;background:#fff;font-family:inherit;">
-                <option value="">선택하세요</option>
-                <option value="paid">이미 결제했어요 (환급 요청)</option>
-                <option value="request">결제 요청 (선결제 요청)</option>
-              </select>
-            </div>
-            <div id="dev-paid-section" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
-              <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:8px;">📎 이미 결제하신 경우</div>
-              <div style="font-size:13px;line-height:1.8;color:#555;">
-                영수증/결제내역서를 첨부해서 이메일로 보내주세요.<br>
-                신청 완료 후 김지혜 부장이 확인 후 처리해 드립니다.
-              </div>
-              <textarea id="dev-receipt" placeholder="결제 내역 입력 (날짜, 금액, 사용처 등)" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;resize:vertical;min-height:60px;font-family:inherit;box-sizing:border-box;margin-top:8px;"></textarea>
-            </div>
-            <div id="dev-request-section" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
-              <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:8px;">💳 결제 요청하시는 경우</div>
-              <div style="font-size:13px;line-height:1.8;color:#555;">
-                신청 완료 후 김지혜 부장이 확인하여<br>
-                • 법인카드 사용 가능한 경우: 결제 방법 안내<br>
-                • 현금 필요한 경우: 결제 요청으로 처리
-              </div>
-              <input id="dev-how" placeholder="결제 방법 또는 요청 사항 입력" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;margin-top:8px;"></div>
-            <div id="dev-err" style="color:#dc2626;font-size:12px;display:none;padding:8px;background:#fef2f2;border-radius:8px;"></div>
-            <button onclick="submitDevAllowance()" style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;">
-              📨 자기개발비 신청하기
-            </button>
-          </div>
+          <button onclick="showPage('dev-allowance', null)"
+            style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;">
+            📝 자기개발비 신청하기
+          </button>
         </div>
 
         <!-- 도서 구매 신청 -->
-        <div class="info-block">
+                <div class="info-block">
           <h3>📖 도서 구매 신청</h3>
           <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.8;">
             💡 신청 완료 후 <strong>김지혜 부장</strong>이 구매 처리합니다.<br>
             구매된 도서는 읽은 후 회사 서재에 비치해 주세요.
           </div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청자 이름 *</label>
-              <input id="book-name" placeholder="홍길동" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
-            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">도서명 *</label>
-              <input id="book-title" placeholder="책 제목을 입력하세요" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
-            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">저자 / 출판사</label>
-              <input id="book-author" placeholder="저자명 / 출판사명" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
-            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청 이유</label>
-              <textarea id="book-reason" placeholder="업무 관련 또는 자기개발에 어떻게 도움이 될지 간단히 적어주세요" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;resize:vertical;min-height:60px;font-family:inherit;box-sizing:border-box;"></textarea></div>
-            <div id="book-err" style="color:#dc2626;font-size:12px;display:none;padding:8px;background:#fef2f2;border-radius:8px;"></div>
-            <button onclick="submitBookRequest()" style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;">
-              📚 도서 구매 신청하기
-            </button>
-          </div>
-
-          <!-- 도서 구매 목록 -->
-          <div style="margin-top:20px;">
-            <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:10px;">📋 구매된 도서 목록</div>
+          <button onclick="showPage('book-request', null)"
+            style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;">
+            📚 도서 구매 신청하기
+          </button>
+          <!-- 구매된 도서 목록 -->
+          <div style="margin-top:16px;">
+            <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:8px;">📋 구매된 도서 목록</div>
             <div id="book-list" style="display:flex;flex-direction:column;gap:6px;"></div>
             <div id="book-empty" style="font-size:13px;color:var(--text-muted);padding:16px;text-align:center;background:var(--bg);border-radius:8px;">아직 구매된 도서가 없습니다.</div>
           </div>
@@ -1576,6 +1528,20 @@
           <div>
             <h2>영업팀 업무 매뉴얼</h2>
             <p>B2B 영업 · 주문제작 · 대한항공 전담 · 유통<br>팀장: 안시진 차장 · 부장: 한윤구</p>
+          </div>
+        </div>
+
+
+        <div class="card" style="background:linear-gradient(135deg,var(--green-pale),#f0fdf4);border:1px solid var(--green-mid);margin-bottom:16px;">
+          <div class="ctitle" style="color:var(--green);">🤖 💼 영업팀 AI 도우미</div>
+          <p style="font-size:13px;color:#555;margin-bottom:10px;">리와인드 영업팀 업무 전문 AI입니다. 호텔/사업자 고객 발주, 거래처 관리, 세금계산서, 직납, SRM, 이지어드민 등 영업 업무를 도와드립니다.</p>
+          <div id="sales-ai-msgs" style="min-height:80px;max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:8px;padding:8px;background:#fff;border-radius:8px;">
+            <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:8px 12px;font-size:12.5px;">안녕하세요! 무엇이든 물어보세요 😊</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input id="sales-ai-input" placeholder="질문 입력..." onkeydown="if(event.key==='Enter')sendTeamAI('sales-ai','리와인드 영업팀 업무 전문 AI입니다. 호텔/사업자 고객 발주, 거래처 관리, 세금계산서, 직납, SRM, 이지어드민 등 영업 업무를 도와드립니다.')"
+              style="flex:1;border:1px solid var(--green-mid);border-radius:8px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit;">
+            <button onclick="sendTeamAI('sales-ai','리와인드 영업팀 업무 전문 AI입니다. 호텔/사업자 고객 발주, 거래처 관리, 세금계산서, 직납, SRM, 이지어드민 등 영업 업무를 도와드립니다.')" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;">➤</button>
           </div>
         </div>
 
@@ -2015,6 +1981,20 @@
           </div>
         </div>
 
+
+        <div class="card" style="background:linear-gradient(135deg,var(--green-pale),#f0fdf4);border:1px solid var(--green-mid);margin-bottom:16px;">
+          <div class="ctitle" style="color:var(--green);">🤖 📣 마케팅팀 AI 도우미</div>
+          <p style="font-size:13px;color:#555;margin-bottom:10px;">리와인드 마케팅팀 업무 전문 AI입니다. 온라인몰 MD, 쿠팡 입출고, 배민상회, 브랜드 관리, SNS, 디자인 업무를 도와드립니다.</p>
+          <div id="marketing-ai-msgs" style="min-height:80px;max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:8px;padding:8px;background:#fff;border-radius:8px;">
+            <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:8px 12px;font-size:12.5px;">안녕하세요! 무엇이든 물어보세요 😊</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input id="marketing-ai-input" placeholder="질문 입력..." onkeydown="if(event.key==='Enter')sendTeamAI('marketing-ai','리와인드 마케팅팀 업무 전문 AI입니다. 온라인몰 MD, 쿠팡 입출고, 배민상회, 브랜드 관리, SNS, 디자인 업무를 도와드립니다.')"
+              style="flex:1;border:1px solid var(--green-mid);border-radius:8px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit;">
+            <button onclick="sendTeamAI('marketing-ai','리와인드 마케팅팀 업무 전문 AI입니다. 온라인몰 MD, 쿠팡 입출고, 배민상회, 브랜드 관리, SNS, 디자인 업무를 도와드립니다.')" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;">➤</button>
+          </div>
+        </div>
+
         <div class="manual-section">
           <div class="manual-section-header" onclick="toggleSection(this)">
             <h3>👥 팀 구성 & 역할</h3>
@@ -2140,6 +2120,20 @@
           <div>
             <h2>구매팀 업무 매뉴얼</h2>
             <p>국내외 원자재·제품 구매 · 공급업체 관리 · 재고 관리<br>담당: 김성수 과장</p>
+          </div>
+        </div>
+
+
+        <div class="card" style="background:linear-gradient(135deg,var(--green-pale),#f0fdf4);border:1px solid var(--green-mid);margin-bottom:16px;">
+          <div class="ctitle" style="color:var(--green);">🤖 🛒 구매팀 AI 도우미</div>
+          <p style="font-size:13px;color:#555;margin-bottom:10px;">리와인드 구매팀 업무 전문 AI입니다. 자재 발주, 원가 분석, 공급업체 관리, 재고 관리 업무를 도와드립니다.</p>
+          <div id="purchase-ai-msgs" style="min-height:80px;max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:8px;padding:8px;background:#fff;border-radius:8px;">
+            <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:8px 12px;font-size:12.5px;">안녕하세요! 무엇이든 물어보세요 😊</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input id="purchase-ai-input" placeholder="질문 입력..." onkeydown="if(event.key==='Enter')sendTeamAI('purchase-ai','리와인드 구매팀 업무 전문 AI입니다. 자재 발주, 원가 분석, 공급업체 관리, 재고 관리 업무를 도와드립니다.')"
+              style="flex:1;border:1px solid var(--green-mid);border-radius:8px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit;">
+            <button onclick="sendTeamAI('purchase-ai','리와인드 구매팀 업무 전문 AI입니다. 자재 발주, 원가 분석, 공급업체 관리, 재고 관리 업무를 도와드립니다.')" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;">➤</button>
           </div>
         </div>
 
@@ -2281,6 +2275,20 @@
           <div>
             <h2>운영팀 업무 매뉴얼</h2>
             <p>재무·인사·노무 · 물류·창고 · CS<br>팀장: 김지혜 부장 · 물류실장: 안성진</p>
+          </div>
+        </div>
+
+
+        <div class="card" style="background:linear-gradient(135deg,var(--green-pale),#f0fdf4);border:1px solid var(--green-mid);margin-bottom:16px;">
+          <div class="ctitle" style="color:var(--green);">🤖 ⚙️ 운영팀 AI 도우미</div>
+          <p style="font-size:13px;color:#555;margin-bottom:10px;">리와인드 운영팀 업무 전문 AI입니다. 물류, 창고, CS 처리, 재무, 인사, 노무 업무를 도와드립니다.</p>
+          <div id="ops-ai-msgs" style="min-height:80px;max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:8px;padding:8px;background:#fff;border-radius:8px;">
+            <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:8px 12px;font-size:12.5px;">안녕하세요! 무엇이든 물어보세요 😊</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input id="ops-ai-input" placeholder="질문 입력..." onkeydown="if(event.key==='Enter')sendTeamAI('ops-ai','리와인드 운영팀 업무 전문 AI입니다. 물류, 창고, CS 처리, 재무, 인사, 노무 업무를 도와드립니다.')"
+              style="flex:1;border:1px solid var(--green-mid);border-radius:8px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit;">
+            <button onclick="sendTeamAI('ops-ai','리와인드 운영팀 업무 전문 AI입니다. 물류, 창고, CS 처리, 재무, 인사, 노무 업무를 도와드립니다.')" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;">➤</button>
           </div>
         </div>
 
@@ -2811,6 +2819,74 @@
         <p style="margin-top:10px;font-size:12px;color:var(--text-muted);">링크가 연결되지 않으면 정성원 과장에게 문의하세요.</p>
       </div>
       </div>
+
+    <!-- 자기개발비 신청 페이지 -->
+    <div id="page-dev-allowance" class="page">
+      <div class="section-header">
+        <h2>📚 자기개발비 신청</h2>
+        <button onclick="showPage('rules', null)" style="background:none;border:none;color:var(--green);font-size:13px;cursor:pointer;">← 복지 페이지로 돌아가기</button>
+      </div>
+      <div class="info-block">
+        <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;line-height:1.8;">
+          💡 신청 내용은 <strong>김지혜 부장</strong>에게 이메일로 자동 전달됩니다.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청자 이름 *</label>
+            <input id="dev-name" placeholder="홍길동" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">용도 (어디에 어떻게 사용할지) *</label>
+            <input id="dev-purpose" placeholder="예: 헬스장 월 이용권, 영어 학원 수강료 등" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">금액 *</label>
+            <input id="dev-amount" placeholder="예: 50,000원" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">결제 방식 *</label>
+            <select id="dev-type" onchange="toggleDevType()" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;background:#fff;font-family:inherit;">
+              <option value="">선택하세요</option>
+              <option value="paid">이미 결제했어요 (환급 요청)</option>
+              <option value="request">결제 요청 (선결제 요청)</option>
+            </select></div>
+          <div id="dev-paid-section" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
+            <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:8px;">📎 이미 결제하신 경우</div>
+            <textarea id="dev-receipt" placeholder="결제 내역 입력 (날짜, 금액, 사용처 등)" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;resize:vertical;min-height:60px;font-family:inherit;box-sizing:border-box;margin-top:4px;"></textarea>
+          </div>
+          <div id="dev-request-section" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
+            <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:8px;">💳 결제 요청하시는 경우</div>
+            <div style="font-size:13px;color:#555;line-height:1.8;">신청 후 김지혜 부장이 법인카드 또는 결제 요청으로 처리해드립니다.</div>
+            <input id="dev-how" placeholder="요청 사항 (선택)" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;margin-top:8px;"></div>
+          <div id="dev-err" style="color:#dc2626;font-size:12px;display:none;padding:8px;background:#fef2f2;border-radius:8px;"></div>
+          <button onclick="submitDevAllowance()" style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">
+            📨 자기개발비 신청하기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 도서 구매 신청 페이지 -->
+    <div id="page-book-request" class="page">
+      <div class="section-header">
+        <h2>📖 도서 구매 신청</h2>
+        <button onclick="showPage('rules', null)" style="background:none;border:none;color:var(--green);font-size:13px;cursor:pointer;">← 복지 페이지로 돌아가기</button>
+      </div>
+      <div class="info-block">
+        <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;line-height:1.8;">
+          💡 신청 완료 후 <strong>김지혜 부장</strong>이 구매 처리합니다.<br>
+          구매된 도서는 읽은 후 회사 서재에 비치해 주세요.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청자 이름 *</label>
+            <input id="book-name" placeholder="홍길동" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">도서명 *</label>
+            <input id="book-title" placeholder="책 제목을 입력하세요" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">저자 / 출판사</label>
+            <input id="book-author" placeholder="저자명 / 출판사명" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청 이유</label>
+            <textarea id="book-reason" placeholder="업무 관련 또는 자기개발에 어떻게 도움이 될지 간단히 적어주세요" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;resize:vertical;min-height:60px;font-family:inherit;box-sizing:border-box;"></textarea></div>
+          <div id="book-err" style="color:#dc2626;font-size:12px;display:none;padding:8px;background:#fef2f2;border-radius:8px;"></div>
+          <button onclick="submitBookRequest()" style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">
+            📚 도서 구매 신청하기
+          </button>
+        </div>
+      </div>
+    </div>
+
     </div><!-- /content -->
   </main>
 </div>
@@ -2938,7 +3014,7 @@ function showPage(name, el) {
   const titles = {
     home: '홈', checklist: '온보딩 체크리스트', about: '회사 소개 & 미션',
     brand: '브랜드 & 제품', org: '조직도 & 팀', rules: '복무규정 & 휴가',
-    tools: '업무 툴 사용법', chat: 'AI 질문 챗봇', contacts: '담당자 연락처',
+    tools: '업무 툴 사용법', channel: '판매 채널', 'dev-allowance': '자기개발비 신청', 'book-request': '도서 구매 신청', chat: 'AI 질문 챗봇', contacts: '담당자 연락처',
     files: '자료실',
     'manual-sales': '영업팀 업무 매뉴얼', 'manual-marketing': '마케팅팀 업무 매뉴얼',
     'manual-purchase': '구매팀 업무 매뉴얼', 'manual-ops': '운영팀 업무 매뉴얼',

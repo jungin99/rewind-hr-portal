@@ -854,6 +854,19 @@ select.fi{background:var(--w);}
         <div id="grant-result" style="margin-top:8px;font-size:12px;color:var(--g);display:none;"></div>
       </div>
 
+
+      <!-- 생일 축하 메일 발송 -->
+      <div class="card" style="background:linear-gradient(135deg,#fff8e1,#fffde7);border:1px solid #ffe082;margin-top:16px;">
+        <div class="ctitle" style="color:#f59e0b;">🎂 생일 축하 메일 발송</div>
+        <p style="font-size:13px;color:#666;margin-bottom:12px;">오늘 생일인 직원에게 축하 메일을 발송합니다. 본인 + 김지혜 부장 + 신정인 이사에게 동시 발송됩니다.</p>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+          <input id="bday-name" placeholder="직원 이름" class="fi" style="font-size:13px;">
+          <input id="bday-email" placeholder="직원 이메일" class="fi" style="font-size:13px;">
+          <input id="bday-joindate" type="date" placeholder="입사일" class="fi" style="font-size:13px;">
+        </div>
+        <button onclick="sendBirthdayMailAdmin()" class="btn btn-p btn-sm" style="background:#f59e0b;border-color:#f59e0b;">🎂 생일 축하 메일 발송</button>
+        <div id="bday-result" style="margin-top:8px;font-size:12px;display:none;color:var(--g);"></div>
+      </div>
     </div>
 
     <!-- 공지 관리 -->
@@ -2155,6 +2168,55 @@ function adminRevokeAccess() {
   var targetNames = {'manual-sales':'영업팀','manual-marketing':'마케팅팀','manual-purchase':'구매팀','manual-ops':'운영팀'};
   showToast('🚫 ' + fromTeam + ' → ' + targetNames[targetPage] + ' 접근 취소!');
   document.getElementById('grant-result').style.display = 'none';
+}
+
+
+async function sendBirthdayMailAdmin() {
+  var name = document.getElementById('bday-name').value.trim();
+  var email = document.getElementById('bday-email').value.trim();
+  var joinDate = document.getElementById('bday-joindate').value;
+  if (!name || !email || !joinDate) { showToast('이름, 이메일, 입사일을 모두 입력해주세요.'); return; }
+
+  var today = new Date();
+  var join = new Date(joinDate);
+  var days = Math.floor((today - join) / (1000 * 60 * 60 * 24));
+
+  var bdayMsg = '안녕하세요 ' + name + '님! 🎂\n\n' +
+    '오늘은 ' + name + '님의 생일이에요! 🎉🎊\n\n' +
+    '리와인드 가족 모두가 진심으로 축하합니다! 🌿\n\n' +
+    '입사하신 지 벌써 ' + days + '일이 됐어요.\n' +
+    '그 시간 동안 정말 고생 많으셨고, 함께해서 너무 든든하고 행복합니다 😊\n\n' +
+    '앞으로도 건강하게, 즐겁게, 리와인드와 함께 멋진 날들 만들어가요!\n' +
+    '오늘 하루 푹 쉬고 맛있는 것도 드시고 행복하게 보내세요 🎁\n\n' +
+    '생일 축하해요! 🌿💚\n리와인드 HR팀';
+
+  showToast('📨 생일 메일 발송 중...');
+  try {
+    // 본인에게
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: email, applicant_name: name, applicant_email: email,
+      cert_type: '🎂 생일을 진심으로 축하해요, ' + name + '님!',
+      purpose: '입사 ' + days + '일째 생일', note: bdayMsg
+    });
+    // 김지혜에게
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: 'jiheyya@iamgreener.co.kr', applicant_name: '김지혜 부장', applicant_email: 'jiheyya@iamgreener.co.kr',
+      cert_type: '[생일 알림] ' + name + '님 오늘 생일! 🎂',
+      purpose: '생일 메일 발송 완료', note: name + '님(' + email + ')에게 생일 축하 메일 발송 완료!\n입사 ' + days + '일째입니다.'
+    });
+    // 신정인에게
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: 'jungin_shin@iamgreener.co.kr', applicant_name: '신정인 이사', applicant_email: 'jungin_shin@iamgreener.co.kr',
+      cert_type: '[생일 알림] ' + name + '님 오늘 생일! 🎂',
+      purpose: '생일 메일 발송 완료', note: name + '님(' + email + ')에게 생일 축하 메일 발송 완료!\n입사 ' + days + '일째입니다.'
+    });
+    var resultEl = document.getElementById('bday-result');
+    resultEl.textContent = '✅ ' + name + '님 + 김지혜 부장 + 신정인 이사 총 3명에게 발송 완료!';
+    resultEl.style.display = 'block';
+    showToast('✅ 생일 축하 메일 발송 완료!');
+  } catch(e) {
+    showToast('❌ 발송 실패: ' + e.message);
+  }
 }
 
 </script>
