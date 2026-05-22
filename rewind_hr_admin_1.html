@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리와인드 HR 관리 시스템</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --g:#1a6b4a;--gl:#2d8f63;--gp:#e8f5ee;--gm:#c3e6d1;
+  --teal:#0d7c6a;--tx:#1c2b22;--mu:#5a7066;--bg:#f5faf7;
+  --w:#fff;--bd:#d4e8dc;
+  --am:#f59e0b;--amp:#fffbeb;--amm:#fde68a;
+  --bl:#2563eb;--blp:#eff6ff;--blm:#bfdbfe;
+  --rd:#dc2626;--rdp:#fef2f2;--rdm:#fecaca;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.login-box{background:var(--w);border:1px solid var(--bd);border-radius:20px;padding:48px 40px;width:380px;text-align:center;box-shadow:0 8px 32px rgba(26,107,74,.1);}
+.brand-tag{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--g);text-transform:uppercase;margin-bottom:8px;}
+.login-box h1{font-size:22px;font-weight:700;margin-bottom:6px;}
+.login-box>p{font-size:13px;color:var(--mu);margin-bottom:28px;}
+.inp{width:100%;border:1px solid var(--bd);border-radius:10px;padding:12px 16px;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px;color:var(--tx);}
+.inp:focus{border-color:var(--g);}
+.err-msg{color:var(--rd);font-size:12px;margin-bottom:10px;display:none;}
+.btn-full{width:100%;background:var(--g);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-full:hover{background:var(--gl);}
+.hint-txt{font-size:11px;color:var(--mu);margin-top:14px;}
+
+/* APP */
+.app{display:none;min-height:100vh;flex-direction:column;}
+.app.on{display:flex;}
+.topbar{background:var(--w);border-bottom:1px solid var(--bd);height:58px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.top-l{display:flex;align-items:center;gap:10px;}
+.top-brand{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--g);text-transform:uppercase;}
+.top-sub{font-size:13px;color:var(--mu);}
+.btn-logout{background:none;border:1px solid var(--bd);border-radius:8px;padding:6px 14px;font-size:12px;color:var(--mu);cursor:pointer;font-family:inherit;}
+.btn-logout:hover{border-color:var(--g);color:var(--g);}
+
+/* TABS */
+.tabs{background:var(--w);border-bottom:1px solid var(--bd);padding:0 28px;display:flex;gap:0;overflow-x:auto;}
+.tab{padding:14px 18px;font-size:13px;color:var(--mu);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;}
+.tab:hover{color:var(--g);}
+.tab.on{color:var(--g);border-bottom-color:var(--g);font-weight:500;}
+.tbadge{display:inline-flex;align-items:center;justify-content:center;background:var(--rd);color:#fff;font-size:10px;font-weight:700;border-radius:10px;padding:1px 6px;margin-left:5px;}
+
+/* CONTENT */
+.content{padding:28px;flex:1;max-width:1080px;margin:0 auto;width:100%;}
+.panel{display:none;}.panel.on{display:block;}
+.ptitle{font-size:17px;font-weight:600;margin-bottom:18px;}
+
+/* CARD */
+.card{background:var(--w);border:1px solid var(--bd);border-radius:14px;padding:24px;margin-bottom:18px;}
+.ctitle{font-size:14px;font-weight:600;color:var(--g);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+
+/* UPLOAD */
+.drop-zone{border:2px dashed var(--gm);border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;background:var(--gp);transition:all .2s;}
+.drop-zone:hover,.drop-zone.over{border-color:var(--g);background:#dff2ea;}
+.drop-zone .dicon{font-size:38px;margin-bottom:10px;display:block;}
+.drop-zone h3{font-size:14px;font-weight:600;margin-bottom:4px;}
+.drop-zone p{font-size:12px;color:var(--mu);}
+
+/* GRID */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.info-item{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;}
+.info-item .lbl{font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+.info-item .val{font-size:13.5px;font-weight:500;}
+.info-item.full{grid-column:1/-1;}
+
+/* FORM */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.frow.one{grid-template-columns:1fr;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fg label{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;}
+.fi{border:1px solid var(--bd);border-radius:8px;padding:9px 13px;font-size:13.5px;font-family:inherit;outline:none;color:var(--tx);}
+.fi:focus{border-color:var(--g);}
+.fta{border:1px solid var(--bd);border-radius:8px;padding:9px 13px;font-size:13.5px;font-family:inherit;outline:none;color:var(--tx);resize:vertical;min-height:72px;}
+.fta:focus{border-color:var(--g);}
+select.fi{background:var(--w);}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s;}
+.btn-p{background:var(--g);color:#fff;}.btn-p:hover{background:var(--gl);}
+.btn-p:disabled{background:var(--bd);cursor:not-allowed;}
+.btn-s{background:var(--gp);color:var(--g);border:1px solid var(--gm);}.btn-s:hover{background:var(--gm);}
+.btn-a{background:var(--amp);color:#92400e;border:1px solid var(--amm);}.btn-a:hover{background:var(--amm);}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+
+/* EMAIL */
+.esubj{background:var(--blp);border:1px solid var(--blm);border-radius:8px;padding:9px 13px;font-size:13px;font-weight:600;color:var(--bl);margin-bottom:6px;}
+.edraft{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:18px;font-size:13px;line-height:1.9;white-space:pre-wrap;max-height:320px;overflow-y:auto;font-family:inherit;}
+
+/* DAY CARDS */
+.day-row{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:14px;}
+.dcard{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:12px;cursor:pointer;transition:all .15s;}
+.dcard:hover{border-color:var(--g);}
+.dcard.sel{border-color:var(--g);background:var(--gp);}
+.dlbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-bottom:3px;}
+.dtitle{font-size:11.5px;font-weight:600;line-height:1.4;}
+.dcard.sel .dtitle{color:var(--g);}
+
+/* STAFF TABLE */
+.staff-table{width:100%;border-collapse:collapse;font-size:13px;}
+.staff-table th{background:var(--gp);color:var(--g);text-align:left;padding:9px 12px;font-size:11px;font-weight:700;letter-spacing:.05em;border-bottom:1px solid var(--gm);}
+.staff-table td{padding:10px 12px;border-bottom:1px solid var(--bd);vertical-align:middle;}
+.staff-table tr:last-child td{border-bottom:none;}
+.staff-table tr:hover td{background:var(--gp);}
+.team-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;}
+.team-영업{background:#e0f2fe;color:#0369a1;}
+.team-마케팅{background:#fce7f3;color:#9d174d;}
+.team-구매{background:#fef9c3;color:#854d0e;}
+.team-운영{background:#f0fdf4;color:#166534;}
+.team-임원{background:#ede9fe;color:#5b21b6;}
+
+/* Q BOARD */
+.q-item{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:16px 18px;margin-bottom:10px;}
+.q-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.q-name{font-size:13px;font-weight:600;}
+.q-date{font-size:11px;color:var(--mu);}
+.q-body{font-size:13.5px;line-height:1.7;}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;}
+.badge-new{background:var(--rdp);color:var(--rd);border:1px solid var(--rdm);}
+.badge-done{background:var(--gp);color:var(--g);border:1px solid var(--gm);}
+
+/* DOC LIST */
+.doc-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border:1px solid var(--bd);border-radius:8px;margin-bottom:7px;background:var(--w);}
+.doc-name{font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:7px;}
+.doc-st{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;}
+.doc-ok{background:var(--gp);color:var(--g);}
+.doc-wait{background:var(--amp);color:#92400e;}
+
+/* UTILS */
+.hl{background:var(--gp);border:1px solid var(--gm);border-left:4px solid var(--g);border-radius:8px;padding:13px 16px;font-size:13px;line-height:1.7;margin:10px 0;}
+.albox{background:var(--amp);border:1px solid var(--amm);border-left:4px solid var(--am);border-radius:8px;padding:13px 16px;font-size:13px;line-height:1.7;margin:10px 0;}
+.divhr{height:1px;background:var(--bd);margin:18px 0;}
+.loading{display:inline-flex;gap:4px;align-items:center;}
+.ldot{width:6px;height:6px;background:var(--g);border-radius:50%;animation:ld 1.2s infinite;}
+.ldot:nth-child(2){animation-delay:.2s;}.ldot:nth-child(3){animation-delay:.4s;}
+@keyframes ld{0%,80%,100%{transform:scale(.6);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:11px 22px;border-radius:10px;font-size:13px;font-weight:500;z-index:2000;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast.show{opacity:1;}
+.result-wrap{display:none;}.result-wrap.show{display:block;}
+@media(max-width:700px){.frow,.info-grid,.day-row{grid-template-columns:1fr!important;}}
+
+/* EMPLOYEE TABLE */
+.emp-table{width:100%;border-collapse:collapse;font-size:13px;}
+.emp-table th{background:var(--gp);color:var(--g);text-align:left;padding:9px 12px;font-size:11px;font-weight:700;letter-spacing:.05em;border-bottom:1px solid var(--gm);}
+.emp-table td{padding:10px 12px;border-bottom:1px solid var(--bd);vertical-align:middle;}
+.emp-table tr:hover td{background:var(--gp);cursor:pointer;}
+.status-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.status-active{background:var(--gp);color:var(--g);border:1px solid var(--gm);}
+.status-resigned{background:var(--rdp);color:var(--rd);border:1px solid var(--rdm);}
+.tenure{font-size:11px;color:var(--mu);}
+
+/* TIMELINE */
+.tl-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd);}
+.tl-item:last-child{border-bottom:none;}
+.tl-dot{width:10px;height:10px;background:var(--g);border-radius:50%;margin-top:4px;flex-shrink:0;}
+.tl-content{flex:1;}
+.tl-date{font-size:11px;color:var(--mu);margin-bottom:2px;}
+.tl-text{font-size:13.5px;}
+
+/* LEAVE */
+.leave-card{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.leave-avatar{width:36px;height:36px;background:var(--gm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--g);flex-shrink:0;}
+.leave-info{flex:1;}
+.leave-info strong{font-size:13.5px;}
+.leave-info span{font-size:12px;color:var(--mu);margin-left:6px;}
+.leave-type{font-size:12px;font-weight:600;padding:2px 8px;border-radius:12px;}
+.leave-연차{background:var(--blp);color:var(--bl);}
+.leave-반차{background:var(--amp);color:#92400e;}
+.leave-empty{text-align:center;padding:24px;color:var(--mu);font-size:13.5px;}
+
+/* SUMMARY */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:10px;}
+.summary-card{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;}
+.summary-card .s-name{font-size:12px;font-weight:600;margin-bottom:4px;}
+.summary-card .s-used{font-size:20px;font-weight:700;color:var(--g);}
+.summary-card .s-total{font-size:11px;color:var(--mu);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="brand-tag">Rewind</div>
+    <h1>HR 관리 시스템</h1>
+    <p>인사담당자 전용 페이지입니다</p>
+    <input class="inp" type="password" id="pwInp" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="err-msg" id="loginErr">비밀번호가 틀렸습니다</div>
+    <button class="btn-full" onclick="doLogin()">로그인</button>
+    <p class="hint-txt">기본 비밀번호: rewind2024</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="mainApp">
+  <header class="topbar">
+    <div class="top-l">
+      <span class="top-brand">Rewind</span>
+      <span class="top-sub">HR 관리 시스템</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:12px;color:var(--mu);">인사담당자 전용</span>
+      <button class="btn-logout" onclick="doLogout()">로그아웃</button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab on" onclick="showTab('resume',this)">📄 이력서 분석</div>
+    <div class="tab" onclick="showTab('onboarding',this)">🚀 온보딩 메일</div>
+    <div class="tab" onclick="showTab('docs',this)">📁 서류 관리</div>
+    <div class="tab" onclick="showTab('questions',this)">💬 질문 게시판 <span class="tbadge" id="qBadge">2</span></div>
+    <div class="tab" onclick="showTab('employees',this)">👤 직원 관리</div>
+    <div class="tab" onclick="showTab('leave',this)">🏖️ 연차 현황</div>
+    <div class="tab" onclick="showTab('staff',this)">👥 직원 연락처</div>
+  </div>
+
+  <div class="content">
+
+    <!-- ① 이력서 분석 -->
+    <div class="panel on" id="tab-resume">
+      <div class="ptitle">📄 이력서 분석 & 입사 안내 메일 생성</div>
+
+      <div class="card">
+        <div class="ctitle">📎 이력서 업로드</div>
+        <div class="drop-zone" id="dropZone"
+          onclick="document.getElementById('resumeFile').click()"
+          ondragover="event.preventDefault();this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="onDrop(event)">
+          <span class="dicon">📄</span>
+          <h3>이력서 파일을 여기에 드래그하거나 클릭하세요</h3>
+          <p>PDF · Word(.docx) · 이미지(jpg/png) · 텍스트 파일 지원</p>
+          <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt" style="display:none" onchange="handleFile(this.files[0])">
+        </div>
+
+        <div style="margin-top:14px;">
+          <div class="ctitle" style="margin-bottom:8px;">✏️ 또는 이력서 내용 직접 붙여넣기</div>
+          <textarea class="fta" id="resumeText" style="min-height:120px;" placeholder="이력서 텍스트를 여기에 붙여넣으세요..."></textarea>
+          <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+            <div class="fg" style="flex:1;">
+              <label>출근 시 연락할 담당자</label>
+              <select class="fi" id="contactSelect">
+                <option value="">-- 담당자 선택 --</option>
+              </select>
+            </div>
+            <div style="align-self:flex-end;">
+              <button class="btn btn-p" onclick="analyzeResume()" id="analyzeBtn">✨ AI 분석 시작</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-wrap" id="resumeResult">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div class="ctitle" style="margin-bottom:0;">📋 분석된 직원 정보</div>
+            <button class="btn btn-s btn-sm" onclick="copyText('infoText')">📋 정보 복사</button>
+          </div>
+          <div class="info-grid" id="infoGrid"></div>
+          <textarea id="infoText" style="display:none;"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="ctitle">✉️ 입사 안내 이메일 초안</div>
+          <div class="hl">아래 초안을 복사해서 이메일로 발송하세요. 내용을 수정한 후 사용하시면 됩니다.</div>
+          <div class="esubj" id="welcomeSubj"></div>
+          <div class="edraft" id="welcomeEmail"></div>
+          <div class="btns">
+            <button class="btn btn-p" onclick="copyText('welcomeEmail')">📋 이메일 복사</button>
+            <button class="btn btn-s" onclick="saveToList()">💾 직원 목록에 저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② 온보딩 메일 -->
+    <div class="panel" id="tab-onboarding">
+      <div class="ptitle">🚀 7일 온보딩 이메일 시퀀스 생성</div>
+
+      <div class="card">
+        <div class="ctitle">👤 신입 직원 정보 입력</div>
+        <div class="frow">
+          <div class="fg"><label>직원 이름 *</label><input class="fi" id="obName" placeholder="홍길동"></div>
+          <div class="fg"><label>출근 예정일 *</label><input class="fi" type="date" id="obDate"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label>직책 / 팀</label><input class="fi" id="obRole" placeholder="예: 영업팀 사원"></div>
+          <div class="fg"><label>나이</label><input class="fi" id="obAge" placeholder="예: 28세"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label>이메일</label><input class="fi" id="obEmail" placeholder="신규 이메일 계정"></div>
+          <div class="fg"><label>연락처</label><input class="fi" id="obPhone" placeholder="010-0000-0000"></div>
+        </div>
+        <div class="frow one">
+          <div class="fg"><label>주요 경력 요약</label><textarea class="fta" id="obCareer" placeholder="예: 3년간 친환경 제품 영업 담당, B2B 거래처 관리 경험 보유"></textarea></div>
+        </div>
+        <div class="frow one">
+          <div class="fg"><label>특이사항 (성격, 강점 등)</label><textarea class="fta" id="obNote" placeholder="이력서에서 파악된 강점이나 특이사항"></textarea></div>
+        </div>
+        <button class="btn btn-p" onclick="generateOnboarding()" id="obBtn">✨ 온보딩 메일 생성</button>
+      </div>
+
+      <div class="result-wrap" id="obResult">
+        <div class="card">
+          <div class="ctitle">📢 D-1 팀장 공지 메일 (출근 하루 전 발송)</div>
+          <div class="albox">💡 <strong>Google 방식:</strong> 출근 하루 전 팀장에게 발송해 즉각적인 준비를 유도합니다 (Just-in-Time 효과)</div>
+          <div class="esubj" id="d1Subj"></div>
+          <div class="edraft" id="d1Email"></div>
+          <button class="btn btn-s btn-sm" style="margin-top:10px;" onclick="copyText('d1Email')">📋 복사</button>
+        </div>
+
+        <div class="card">
+          <div class="ctitle">📅 7일 온보딩 이메일 시퀀스</div>
+          <div class="hl">각 날짜 카드를 클릭하면 해당 이메일 초안이 표시됩니다</div>
+          <div class="day-row" id="dayRow"></div>
+          <div id="dayDetail" style="display:none;margin-top:16px;">
+            <div class="esubj" id="daySubj"></div>
+            <div class="edraft" id="dayEmail"></div>
+            <button class="btn btn-s btn-sm" style="margin-top:10px;" onclick="copyText('dayEmail')">📋 복사</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 서류 관리 -->
+    <div class="panel" id="tab-docs">
+      <div class="ptitle">📁 입사 서류 관리</div>
+
+      <div class="card">
+        <div class="ctitle">📋 제출 서류 현황</div>
+        <div class="hl">신입 직원이 온보딩 포털에서 서류를 업로드하면 여기에 표시됩니다.</div>
+        <div class="frow" style="margin-bottom:14px;">
+          <div class="fg">
+            <label>직원 이름 필터</label>
+            <input class="fi" placeholder="이름 입력..." oninput="filterDocs(this.value)">
+          </div>
+        </div>
+        <div id="docList">
+          <div style="text-align:center;padding:32px;color:var(--mu);font-size:13.5px;">
+            아직 제출된 서류가 없습니다.<br>신입 직원이 포털에서 업로드하면 여기에 표시됩니다.
+          </div>
+        </div>
+        <div class="divhr"></div>
+        <div class="ctitle">➕ 신규 직원 서류 항목 추가</div>
+        <div class="frow">
+          <div class="fg"><label>직원 이름</label><input class="fi" id="docEmp" placeholder="홍길동"></div>
+          <div class="fg"><label>서류 종류</label>
+            <select class="fi" id="docType">
+              <option>최종학교 졸업증명서</option>
+              <option>주민등록등본</option>
+              <option>가족관계증명서</option>
+              <option>급여통장 사본</option>
+              <option>증명사진 파일</option>
+              <option>채용건강진단서</option>
+              <option>소득금액증명원</option>
+              <option>전년도 근로소득원천징수영수증</option>
+              <option>건강보험자격득실확인서</option>
+              <option>연봉계약서</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-s btn-sm" onclick="addDoc()">+ 추가</button>
+      </div>
+
+      <div class="card">
+        <div class="ctitle">📤 신입 직원에게 공유할 서류 안내문</div>
+        <div class="frow">
+          <div class="fg"><label>직원 이름</label><input class="fi" id="docGuideEmp" placeholder="홍길동"></div>
+          <div class="fg"><label>경력 여부</label>
+            <select class="fi" id="docGuideCareer">
+              <option value="신입">신입</option>
+              <option value="경력">경력</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-p btn-sm" onclick="genDocGuide()">📋 서류 안내문 생성</button>
+        <div id="docGuideResult" style="display:none;margin-top:14px;">
+          <div class="esubj" id="docGuideSubj"></div>
+          <div class="edraft" id="docGuideEmail"></div>
+          <button class="btn btn-s btn-sm" style="margin-top:10px;" onclick="copyText('docGuideEmail')">📋 복사</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 질문 게시판 -->
+    <div class="panel" id="tab-questions">
+      <div class="ptitle">💬 신입 직원 질문 게시판</div>
+      <div class="hl">신입 직원이 온보딩 포털에서 질문을 남기면 여기에 표시됩니다.</div>
+
+      <div id="qList">
+        <div class="q-item">
+          <div class="q-head">
+            <div class="q-name">정다운 <span class="badge badge-new">미답변</span></div>
+            <div class="q-date">2026.03.03</div>
+          </div>
+          <div class="q-body">출근 첫날 주차는 어떻게 하면 되나요? 지하주차장이 있는지 궁금합니다.</div>
+          <div class="btns">
+            <button class="btn btn-s btn-sm" onclick="markDone(this)">✅ 답변 완료</button>
+            <button class="btn btn-a btn-sm" onclick="genAnswer(this,'출근 첫날 주차는 어떻게 하면 되나요?')">✨ AI 답변 초안</button>
+          </div>
+        </div>
+        <div class="q-item">
+          <div class="q-head">
+            <div class="q-name">정다운 <span class="badge badge-new">미답변</span></div>
+            <div class="q-date">2026.03.03</div>
+          </div>
+          <div class="q-body">점심은 보통 팀원들과 같이 먹나요? 근처에 식당이 있는지 알고 싶어요.</div>
+          <div class="btns">
+            <button class="btn btn-s btn-sm" onclick="markDone(this)">✅ 답변 완료</button>
+            <button class="btn btn-a btn-sm" onclick="genAnswer(this,'점심은 보통 팀원들과 같이 먹나요?')">✨ AI 답변 초안</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <div class="ctitle">✏️ 직접 질문 추가 (테스트용)</div>
+        <div class="frow">
+          <div class="fg"><label>직원 이름</label><input class="fi" id="qName" placeholder="홍길동"></div>
+          <div class="fg"><label>날짜</label><input class="fi" type="date" id="qDate"></div>
+        </div>
+        <div class="frow one">
+          <div class="fg"><label>질문 내용</label><textarea class="fta" id="qText" placeholder="질문 내용을 입력하세요"></textarea></div>
+        </div>
+        <button class="btn btn-s btn-sm" onclick="addQuestion()">+ 추가</button>
+      </div>
+    </div>
+
+    <!-- ⑤ 직원 관리 -->
+    <div class="panel" id="tab-employees">
+      <div class="ptitle">👤 직원 관리</div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+          <div class="ctitle" style="margin-bottom:0;">전체 직원 현황</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-p btn-sm" onclick="showEmpForm('new')">+ 신규 직원 등록</button>
+            <select class="fi" style="font-size:12px;padding:5px 10px;" onchange="filterEmpStatus(this.value)">
+              <option value="all">전체</option>
+              <option value="active">재직중</option>
+              <option value="resigned">퇴사자</option>
+            </select>
+            <input class="fi" style="font-size:12px;padding:5px 10px;width:140px;" placeholder="이름 검색..." oninput="filterEmpName(this.value)">
+          </div>
+        </div>
+        <div id="empList" style="overflow-x:auto;"></div>
+      </div>
+
+      <!-- 직원 상세/등록 폼 -->
+      <div class="card" id="empFormCard" style="display:none;">
+        <div class="ctitle" id="empFormTitle">직원 등록</div>
+        <div class="frow">
+          <div class="fg"><label>이름 *</label><input class="fi" id="ef-name" placeholder="홍길동"></div>
+          <div class="fg"><label>팀</label>
+            <select class="fi" id="ef-team">
+              <option>영업팀</option><option>마케팅팀</option><option>구매팀</option><option>운영팀</option><option>임원</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label>직급</label><input class="fi" id="ef-rank" placeholder="사원/대리/과장..."></div>
+          <div class="fg"><label>담당 업무</label><input class="fi" id="ef-role" placeholder="영업, 마케팅..."></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label>입사일 *</label><input class="fi" type="date" id="ef-joindate"></div>
+          <div class="fg"><label>퇴사일 (퇴사자만)</label><input class="fi" type="date" id="ef-leavedate"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label>이메일</label><input class="fi" id="ef-email" placeholder="greener_xxx@iamgreener.co.kr"></div>
+          <div class="fg"><label>휴대폰</label><input class="fi" id="ef-phone" placeholder="010-0000-0000"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label>생년월일</label><input class="fi" type="date" id="ef-birth"></div>
+          <div class="fg"><label>재직 상태</label>
+            <select class="fi" id="ef-status">
+              <option value="active">재직중</option>
+              <option value="resigned">퇴사</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow one">
+          <div class="fg"><label>주소</label><input class="fi" id="ef-address" placeholder="서울특별시..."></div>
+        </div>
+        <div class="frow one">
+          <div class="fg"><label>특이사항 / 메모</label><textarea class="fta" id="ef-note" placeholder="근무 중 특이사항, 수상, 징계, 인사평가 메모 등"></textarea></div>
+        </div>
+
+        <div class="ctitle" style="margin-top:8px;">📄 이력서 / 서류 업로드</div>
+        <div class="drop-zone" id="empDropZone" onclick="document.getElementById('empFile').click()"
+          ondragover="event.preventDefault();this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="empFileDrop(event)" style="padding:24px;">
+          <span class="dicon" style="font-size:28px;">📎</span>
+          <h3 style="font-size:13px;">이력서 / 입사서류 업로드 (선택)</h3>
+          <p>PDF · 이미지 · Word 지원</p>
+          <input type="file" id="empFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display:none" onchange="empFileHandle(this.files[0])">
+        </div>
+        <div id="empFileList" style="margin-top:10px;"></div>
+
+        <div class="btns" style="margin-top:16px;">
+          <button class="btn btn-p" onclick="saveEmployee()">💾 저장</button>
+          <button class="btn btn-s" onclick="cancelEmpForm()">취소</button>
+          <button class="btn" style="background:var(--rdp);color:var(--rd);border:1px solid var(--rdm);" id="deleteEmpBtn" onclick="deleteEmployee()" style="display:none;">🗑 삭제</button>
+        </div>
+      </div>
+
+      <!-- 인사 이력 타임라인 -->
+      <div class="card" id="empTimelineCard" style="display:none;">
+        <div class="ctitle">📅 인사 이력 타임라인</div>
+        <div id="empTimeline"></div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <input class="fi" id="tl-text" placeholder="특이사항 메모 추가 (예: 승진, 부서이동, 인사평가 A등급 등)" style="flex:1;">
+          <button class="btn btn-s btn-sm" onclick="addTimeline()">+ 추가</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑥ 연차 현황 -->
+    <div class="panel" id="tab-leave">
+      <div class="ptitle">🏖️ 연차 현황</div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <div class="ctitle" style="margin-bottom:0;">📅 오늘 연차자 현황</div>
+          <button class="btn btn-p btn-sm" onclick="loadLeaveData()">🔄 새로고침</button>
+        </div>
+        <div id="todayLeave" class="hl">로그인 후 새로고침 버튼을 눌러주세요.</div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <div class="ctitle" style="margin-bottom:0;">📋 전체 연차 신청 내역</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input class="fi" style="font-size:12px;padding:5px 10px;width:130px;" placeholder="이름 검색..." oninput="filterLeave(this.value)">
+            <select class="fi" style="font-size:12px;padding:5px 10px;" onchange="filterLeaveStatus(this.value)">
+              <option value="all">전체</option>
+              <option value="승인">승인</option>
+              <option value="취소">취소</option>
+              <option value="대기">대기중</option>
+            </select>
+          </div>
+        </div>
+        <div id="leaveLoading" style="text-align:center;padding:32px;color:var(--mu);font-size:13.5px;">
+          🔄 새로고침 버튼을 눌러 데이터를 불러오세요
+        </div>
+        <div style="overflow-x:auto;display:none;" id="leaveTableWrap">
+          <table class="staff-table" id="leaveTable">
+            <thead>
+              <tr>
+                <th>성명</th><th>부서</th><th>유형</th><th>시작일</th><th>종료일</th>
+                <th>사용일수</th><th>업무인계자</th><th>승인여부</th>
+              </tr>
+            </thead>
+            <tbody id="leaveBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ctitle">📊 직원별 연차 사용 현황</div>
+        <div id="leaveSummary" style="text-align:center;padding:20px;color:var(--mu);font-size:13px;">
+          데이터를 불러온 후 표시됩니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑦ 직원 연락처 -->
+    <div class="panel" id="tab-staff">
+      <div class="ptitle">👥 직원 연락처</div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+          <div class="ctitle" style="margin-bottom:0;">전체 직원 목록</div>
+          <input class="fi" style="width:200px;" placeholder="이름/팀 검색..." oninput="filterStaff(this.value)">
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="staff-table" id="staffTable">
+            <thead>
+              <tr>
+                <th>팀</th><th>이름</th><th>직급</th><th>담당</th>
+                <th>이메일</th><th>휴대폰</th><th>내선</th><th>비고</th>
+              </tr>
+            </thead>
+            <tbody id="staffBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMIN_PW = 'rewind2024';
+
+const STAFF = [
+  {team:'임원',name:'김은정',rank:'대표이사',role:'신사업',email:'greener_kim@iamgreener.co.kr',phone:'010-2792-4375',ext:'-',note:''},
+  {team:'임원',name:'박원욱',rank:'대표이사',role:'영업, 구매',email:'eddy_park@iamgreener.co.kr',phone:'010-9513-0202',ext:'-',note:''},
+  {team:'임원',name:'신정인',rank:'이사',role:'마케팅, 운영',email:'jungin_shin@iamgreener.co.kr',phone:'010-4426-0617',ext:'-',note:'부산지사'},
+  {team:'영업팀',name:'안시진',rank:'팀장/차장',role:'주문제작',email:'greener_asj@rewind2nature.com',phone:'010-3032-4111',ext:'070-4217-5365',note:''},
+  {team:'영업팀',name:'한윤구',rank:'부장',role:'영업',email:'yghan@rewind2nature.com',phone:'010-4286-0907',ext:'070-7726-5072',note:''},
+  {team:'영업팀',name:'구승모',rank:'과장',role:'대한항공 전담',email:'ksm@rewind2nature.com',phone:'010-4132-2959',ext:'-',note:'중국'},
+  {team:'영업팀',name:'정민주',rank:'대리',role:'유통',email:'98gusdl52@rewind2nature.com',phone:'010-9173-5738',ext:'-',note:'부산지사'},
+  {team:'영업팀',name:'안주희',rank:'사원',role:'주문제작',email:'juhee_an@rewind2nature.com',phone:'010-8824-3142',ext:'070-4217-0727',note:''},
+  {team:'마케팅팀',name:'정성원',rank:'팀장/과장',role:'디자인',email:'greener_sw@rewind2nature.com',phone:'010-9216-4499',ext:'-',note:''},
+  {team:'마케팅팀',name:'허다람',rank:'과장',role:'홍보',email:'greener_hdr@rewind2nature.com',phone:'010-9083-9095',ext:'070-7700-5375',note:''},
+  {team:'마케팅팀',name:'이이현',rank:'대리',role:'MD',email:'22hyun@rewind2nature.com',phone:'010-7464-8668',ext:'-',note:''},
+  {team:'구매팀',name:'김성수',rank:'과장',role:'구매',email:'kss1224@rewind2nature.com',phone:'010-7107-9522',ext:'-',note:''},
+  {team:'구매팀',name:'김윤경',rank:'사원',role:'구매',email:'yunkk@rewind2nature.com',phone:'010-9353-3235',ext:'070-4215-5070',note:''},
+  {team:'구매팀',name:'김민수',rank:'사원',role:'구매',email:'minnwaterr@rewind2nature.com',phone:'010-9956-4800',ext:'070-4217-5364',note:''},
+  {team:'운영팀',name:'김지혜',rank:'팀장/차장',role:'재무, 인사, 노무',email:'jiheyya@naver.com',phone:'010-7712-1236',ext:'-',note:'제주'},
+  {team:'운영팀',name:'안성진',rank:'실장',role:'물류',email:'greener_an@rewind2nature.com',phone:'010-2866-5803',ext:'-',note:'김포창고'},
+  {team:'운영팀',name:'신희연',rank:'대리',role:'CS',email:'greener_hys@rewind2nature.com',phone:'010-9288-0827',ext:'070-4217-5366',note:'부산지사'},
+  {team:'운영팀',name:'유태근',rank:'대리',role:'물류',email:'-',phone:'-',ext:'-',note:'김포창고'},
+];
+
+let pdfjsLib = null;
+let generatedDays = [];
+
+// LOGIN
+function doLogin() {
+  if (document.getElementById('pwInp').value === ADMIN_PW) {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('mainApp').classList.add('on');
+    initApp();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+function doLogout() {
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('mainApp').classList.remove('on');
+  document.getElementById('pwInp').value = '';
+}
+document.getElementById('pwInp').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+
+function initApp() {
+  renderStaff(STAFF);
+  populateContactSelect();
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('obDate').value = today;
+  document.getElementById('qDate').value = today;
+  // 기존 직원 데이터에 STAFF 기본값 자동 채우기
+  if (employees.length === 0) {
+    STAFF.forEach(function(s) {
+      employees.push({
+        name: s.name, team: s.team, rank: s.rank, role: s.role,
+        email: s.email, phone: s.phone, status: 'active',
+        joindate: '', leavedate: '', birth: '', address: '', note: '',
+        timeline: [], files: [], updatedAt: new Date().toISOString()
+      });
+    });
+    saveEmpStorage();
+  }
+  renderEmpList(employees);
+}
+
+function populateContactSelect() {
+  var sel = document.getElementById('contactSelect');
+  STAFF.forEach(function(s) {
+    if (s.phone !== '-') {
+      var opt = document.createElement('option');
+      opt.value = s.name + ' ' + s.rank + ' (' + s.phone + ')';
+      opt.textContent = s.team + ' · ' + s.name + ' ' + s.rank + ' · ' + s.phone;
+      sel.appendChild(opt);
+    }
+  });
+}
+
+// TABS
+function showTab(id, el) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); });
+  document.getElementById('tab-' + id).classList.add('on');
+  el.classList.add('on');
+}
+
+// STAFF
+function renderStaff(data) {
+  var tbody = document.getElementById('staffBody');
+  tbody.innerHTML = data.map(function(s) {
+    return '<tr>' +
+      '<td><span class="team-badge team-' + s.team.replace('팀','') + '">' + s.team + '</span></td>' +
+      '<td><strong>' + s.name + '</strong></td>' +
+      '<td>' + s.rank + '</td>' +
+      '<td>' + s.role + '</td>' +
+      '<td style="font-size:12px;">' + s.email + '</td>' +
+      '<td><strong>' + s.phone + '</strong></td>' +
+      '<td style="font-size:12px;">' + s.ext + '</td>' +
+      '<td style="font-size:12px;color:var(--mu);">' + s.note + '</td>' +
+    '</tr>';
+  }).join('');
+}
+function filterStaff(q) {
+  renderStaff(STAFF.filter(function(s){
+    return s.name.includes(q)||s.team.includes(q)||s.role.includes(q)||s.rank.includes(q);
+  }));
+}
+
+// PDF.js
+async function loadPdfJs() {
+  if (pdfjsLib) return pdfjsLib;
+  return new Promise(function(resolve, reject) {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.onload = function() {
+      var lib = window['pdfjs-dist/build/pdf'];
+      lib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      pdfjsLib = lib;
+      resolve(lib);
+    };
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+async function extractPdfText(file) {
+  var lib = await loadPdfJs();
+  var arrayBuffer = await file.arrayBuffer();
+  var pdf = await lib.getDocument({ data: arrayBuffer }).promise;
+  var fullText = '';
+  for (var i = 1; i <= pdf.numPages; i++) {
+    var page = await pdf.getPage(i);
+    var content = await page.getTextContent();
+    fullText += content.items.map(function(item){ return item.str; }).join(' ') + '\n';
+  }
+  return fullText.trim();
+}
+
+function fileToBase64(file) {
+  return new Promise(function(resolve) {
+    var reader = new FileReader();
+    reader.onload = function(e){ resolve(e.target.result.split(',')[1]); };
+    reader.readAsDataURL(file);
+  });
+}
+
+// FILE HANDLER
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('over');
+  var file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+}
+
+async function handleFile(file) {
+  if (!file) return;
+  var ta = document.getElementById('resumeText');
+  var zone = document.getElementById('dropZone');
+  zone.innerHTML = '<span class="dicon">⏳</span><h3>파일 읽는 중...</h3><p>' + file.name + '</p>';
+  try {
+    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+      var text = await extractPdfText(file);
+      if (!text || text.length < 20) {
+        ta.value = '';
+        zone.innerHTML = '<span class="dicon">⚠️</span><h3>텍스트 추출 실패</h3><p>스캔된 이미지 PDF입니다.<br>아래 입력란에 직접 붙여넣기 해주세요.</p>';
+        showToast('스캔 PDF는 추출 불가 — 직접 붙여넣기 해주세요.');
+      } else {
+        ta.value = text;
+        zone.innerHTML = '<span class="dicon">✅</span><h3>' + file.name + '</h3><p>PDF 추출 완료 (' + text.length.toLocaleString() + '자) — 아래 분석 버튼을 눌러주세요</p>';
+        showToast('PDF 추출 완료! 분석 버튼을 눌러주세요.');
+      }
+    } else if (file.type.startsWith('image/')) {
+      var b64 = await fileToBase64(file);
+      window._imgB64 = b64;
+      window._imgType = file.type;
+      ta.value = '__IMAGE_RESUME__';
+      zone.innerHTML = '<span class="dicon">🖼</span><h3>' + file.name + '</h3><p>이미지 이력서 — 분석 버튼을 눌러주세요</p>';
+      showToast('이미지 준비 완료! 분석 버튼을 눌러주세요.');
+    } else {
+      var reader = new FileReader();
+      reader.onload = function(e){
+        ta.value = e.target.result || '';
+        zone.innerHTML = '<span class="dicon">✅</span><h3>' + file.name + '</h3><p>파일 로드 완료 — 분석 버튼을 눌러주세요</p>';
+        showToast('파일 로드 완료!');
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+  } catch(err) {
+    zone.innerHTML = '<span class="dicon">📄</span><h3>이력서 파일을 여기에 드래그하거나 클릭하세요</h3><p>PDF · Word · 이미지 · 텍스트 지원</p>';
+    showToast('파일 읽기 실패. 직접 붙여넣기 해주세요.');
+    console.error(err);
+  }
+}
+
+// ANALYZE RESUME
+async function analyzeResume() {
+  var rawText = document.getElementById('resumeText').value.trim();
+  var contact = document.getElementById('contactSelect').value || '한윤구 부장 (010-4286-0907)';
+  var isImage = rawText === '__IMAGE_RESUME__';
+
+  if (!rawText) { showToast('이력서 내용을 입력하거나 파일을 업로드해주세요.'); return; }
+
+  var btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"><span class="ldot"></span><span class="ldot"></span><span class="ldot"></span></span> AI 분석 중...';
+
+  var jsonSchema = '{"name":"이름","birth":"생년월일또는나이","phone":"연락처","email":"이메일","address":"주소","education":"최종학력","career_summary":"경력요약2-3줄","skills":"주요스킬자격증","prev_company":"직전직장","prev_role":"직전직책","strength":"강점","join_team":"추정입사팀"}';
+
+  var messages;
+  if (isImage && window._imgB64) {
+    messages = [{
+      role: 'user',
+      content: [
+        { type: 'image', source: { type: 'base64', media_type: window._imgType, data: window._imgB64 } },
+        { type: 'text', text: '이 이미지는 이력서입니다. 분석해서 JSON만 반환하세요. 다른 텍스트 없이 JSON만. 형식: ' + jsonSchema }
+      ]
+    }];
+  } else {
+    messages = [{
+      role: 'user',
+      content: '다음 이력서를 분석해서 JSON만 반환하세요. 다른 텍스트 없이 JSON만. 형식: ' + jsonSchema + '\n\n이력서:\n' + rawText
+    }];
+  }
+
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: messages })
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    var raw = data.content[0].text.replace(/```json|```/g,'').trim();
+    var info;
+    try { info = JSON.parse(raw); }
+    catch(pe) {
+      var m = raw.match(/\{[\s\S]+\}/);
+      if (m) info = JSON.parse(m[0]);
+      else throw new Error('JSON 파싱 실패: ' + raw.substring(0,100));
+    }
+    renderInfo(info);
+    await generateWelcomeEmail(info, contact);
+    document.getElementById('resumeResult').classList.add('show');
+    document.getElementById('resumeResult').scrollIntoView({behavior:'smooth'});
+  } catch(e) {
+    showToast('분석 중 오류: ' + e.message);
+    console.error(e);
+  }
+  btn.disabled = false;
+  btn.innerHTML = '✨ AI 분석 시작';
+}
+
+function renderInfo(info) {
+  var grid = document.getElementById('infoGrid');
+  var fields = [
+    ['이름', info.name], ['생년월일/나이', info.birth],
+    ['연락처', info.phone], ['이메일', info.email],
+    ['주소', info.address], ['최종학력', info.education],
+    ['직전 직장', info.prev_company], ['직전 직책', info.prev_role],
+    ['경력 요약', info.career_summary, true],
+    ['주요 스킬', info.skills, true],
+    ['강점', info.strength, true],
+  ];
+  grid.innerHTML = fields.map(function(f){
+    return '<div class="info-item' + (f[2]?' full':'') + '"><div class="lbl">' + f[0] + '</div><div class="val">' + (f[1]||'-') + '</div></div>';
+  }).join('');
+  document.getElementById('infoText').value = fields.map(function(f){ return f[0]+': '+(f[1]||'-'); }).join('\n');
+}
+
+async function generateWelcomeEmail(info, contact) {
+  var prompt = '리와인드(아이엠그리너) 신입 직원 ' + (info.name||'OOO') + '님의 입사 안내 이메일을 작성하세요.\n\n' +
+    '아래 실제 회사에서 사용하는 메일 형식을 그대로 따르세요:\n\n' +
+    '안녕하세요 [이름]님!!\n리와인드 김지혜 차장입니다^^\n먼저 이렇게 귀한 인연을 시작하게 되어 너무 기쁘고 환영해요!\n앞으로 함께 성장해 나가며 소중한 인연을 이어가기 바래요!\n\n' +
+    '1. 출근 일시\n- 출근 일시: [날짜 미정 - 추후 안내] 오전 9시 30분\n  (도착하시면 ' + contact + '께 연락주세요!)\n- 출근 장소: 서울특별시 서대문구 연희로26 동방빌딩 6층\n\n' +
+    '2. 입사 서류\n기본 제출 서류:\n1. 최종학교 졸업증명서\n2. 주민등록등본\n3. 가족관계증명서\n4. 급여통장 사본\n5. 증명사진 파일\n6. 채용건강진단서 (출근 후 제출 가능)\n\n' +
+    '3. 이메일 계정\n업무용 이메일 아이디를 미리 알려주시면 계정을 생성해두겠습니다.\n예시: greener_kjh@iamgreener.co.kr\n\n' +
+    '연봉계약서 작성을 위해 주민등록번호와 주소, 희망 이메일 아이디를 먼저 회신해 주시면 감사하겠습니다.\n\n' +
+    '발신: 김지혜 차장 (jiheyya@iamgreener.co.kr)\n\n' +
+    '제목줄도 함께 작성하세요. 첫줄: 제목: [제목내용]';
+
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1200, messages: [{role:'user', content: prompt}] })
+  });
+  var data = await res.json();
+  var text = data.content[0].text;
+  var sm = text.match(/제목:\s*(.+)/);
+  document.getElementById('welcomeSubj').textContent = '제목: ' + (sm ? sm[1].trim() : '[리와인드] ' + (info.name||'') + '님 입사 안내');
+  document.getElementById('welcomeEmail').textContent = text.replace(/제목:.+\n?/,'').trim();
+}
+
+function saveToList() { showToast('직원 목록에 저장되었습니다!'); }
+
+// ONBOARDING
+async function generateOnboarding() {
+  var name = document.getElementById('obName').value.trim();
+  var date = document.getElementById('obDate').value;
+  var role = document.getElementById('obRole').value.trim() || '신입 직원';
+  var age = document.getElementById('obAge').value.trim();
+  var career = document.getElementById('obCareer').value.trim();
+  var note = document.getElementById('obNote').value.trim();
+  if (!name) { showToast('직원 이름을 입력해주세요.'); return; }
+
+  var btn = document.getElementById('obBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"><span class="ldot"></span><span class="ldot"></span><span class="ldot"></span></span> 생성 중...';
+
+  var dateStr = date ? new Date(date).toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'}) : '출근 예정일';
+
+  var d1Prompt = '리와인드(아이엠그리너) 신입 직원 ' + name + '(' + role + ', ' + (age||'') + ') 입사 하루 전 팀장들에게 보내는 준비 공지 이메일을 작성하세요.\n' +
+    '출근일: ' + dateStr + '\n주요 경력: ' + (career||'없음') + '\n특이사항: ' + (note||'없음') + '\n\n' +
+    'Google Just-in-Time 방식으로 팀장이 즉시 실행할 5가지 체크리스트 포함:\n' +
+    '1. 자리 및 장비 준비\n2. 역할과 책임 논의 일정\n3. 버디(동료 멘토) 지정\n4. 팀 소개 일정\n5. 첫 주 업무 계획\n\n' +
+    '이력서 분석 기반으로 ' + name + '님의 경력과 강점도 요약해서 팀장들이 참고할 수 있게 해주세요.\n' +
+    '발신: 김지혜 차장. 첫줄: 제목: [제목내용]';
+
+  try {
+    var r1 = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1200, messages:[{role:'user',content:d1Prompt}]})
+    });
+    var d1 = await r1.json();
+    var d1text = d1.content[0].text;
+    var d1sm = d1text.match(/제목:\s*(.+)/);
+    document.getElementById('d1Subj').textContent = '제목: ' + (d1sm ? d1sm[1].trim() : '[리와인드] ' + name + '님 내일 출근 - 준비 체크리스트');
+    document.getElementById('d1Email').textContent = d1text.replace(/제목:.+\n?/,'').trim();
+
+    var dayLabels = [
+      {d:'D-Day', theme:'환영 인사 + 오늘 할 일 안내'},
+      {d:'Day 1 오후', theme:'첫날 적응 체크 + 질문 유도'},
+      {d:'Day 2', theme:'회사 미션·제품 소개'},
+      {d:'Day 3', theme:'업무 툴 세팅 + 동료 소개'},
+      {d:'Day 4', theme:'리와인드 4R 환경 미션 깊이 알기'},
+      {d:'Day 5', theme:'첫 주 소감 설문 (3가지 질문)'},
+      {d:'Day 7', theme:'첫 주 완주 축하 + 2주차 안내'}
+    ];
+
+    var dayRow = document.getElementById('dayRow');
+    dayRow.innerHTML = dayLabels.map(function(d,i){
+      return '<div class="dcard" onclick="loadDay('+i+')" id="dcard-'+i+'"><div class="dlbl">'+d.d+'</div><div class="dtitle">'+d.theme+'</div></div>';
+    }).join('');
+
+    generatedDays = dayLabels.map(function(d,i){
+      var p;
+      if (i === 5) {
+        p = '리와인드 신입 직원 ' + name + '(' + role + ')에게 입사 5일차에 보내는 첫 주 소감 설문 이메일을 작성하세요.\n' +
+          '3가지 질문 포함:\n1. 첫 주 가장 좋았던 점은?\n2. 어렵거나 불편했던 점은?\n3. 더 도와드릴 것이 있나요?\n' +
+          '답변이 팀장과 임원에게 전달된다고 안내하세요. 솔직한 피드백을 장려하는 따뜻한 톤.\n발신: 김지혜 차장. 첫줄: 제목: [제목내용]';
+      } else {
+        p = '리와인드(아이엠그리너, 친환경 소셜벤처) 신입 직원 ' + name + '(' + role + (age?', '+age:'') + ')에게 ' + d.d + '에 보내는 온보딩 이메일을 작성하세요.\n' +
+          '주제: ' + d.theme + '\n경력 참고: ' + (career||'없음') + '\n' +
+          '따뜻하고 친근한 톤. 리와인드 슬로건("일회용품을 만들지만 쓰레기는 만들지 않습니다")을 자연스럽게 녹여주세요.\n발신: 김지혜 차장. 첫줄: 제목: [제목내용]';
+      }
+      return { prompt: p, text: null };
+    });
+
+    document.getElementById('obResult').classList.add('show');
+    document.getElementById('dayDetail').style.display = 'none';
+    await loadDay(0);
+
+  } catch(e) {
+    showToast('생성 중 오류. 다시 시도해주세요.');
+    console.error(e);
+  }
+  btn.disabled = false;
+  btn.innerHTML = '✨ 온보딩 메일 생성';
+}
+
+async function loadDay(i) {
+  document.querySelectorAll('.dcard').forEach(function(c,j){ c.classList.toggle('sel', j===i); });
+  var detail = document.getElementById('dayDetail');
+  detail.style.display = 'block';
+  if (!generatedDays[i]) return;
+  if (!generatedDays[i].text) {
+    document.getElementById('daySubj').textContent = '생성 중...';
+    document.getElementById('dayEmail').textContent = '';
+    var r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:generatedDays[i].prompt}]})
+    });
+    var d = await r.json();
+    generatedDays[i].text = d.content[0].text;
+  }
+  var text = generatedDays[i].text;
+  var sm = text.match(/제목:\s*(.+)/);
+  document.getElementById('daySubj').textContent = '제목: ' + (sm ? sm[1].trim() : '온보딩 메일');
+  document.getElementById('dayEmail').textContent = text.replace(/제목:.+\n?/,'').trim();
+  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// DOCS
+function addDoc() {
+  var emp = document.getElementById('docEmp').value.trim();
+  var type = document.getElementById('docType').value;
+  if (!emp) { showToast('직원 이름을 입력해주세요.'); return; }
+  var list = document.getElementById('docList');
+  if (list.querySelector('div[style*="text-align"]')) list.innerHTML = '';
+  var row = document.createElement('div');
+  row.className = 'doc-row';
+  row.innerHTML = '<div class="doc-name">📄 ' + type + ' <span style="font-size:12px;color:var(--mu);">· ' + emp + '</span></div>' +
+    '<div style="display:flex;align-items:center;gap:8px;"><span class="doc-st doc-wait">대기 중</span>' +
+    '<button class="btn btn-s btn-sm" onclick="toggleDoc(this)">완료</button></div>';
+  list.appendChild(row);
+  showToast('서류 항목 추가됨');
+}
+function toggleDoc(btn) {
+  var st = btn.previousElementSibling;
+  if (st.classList.contains('doc-wait')) {
+    st.className = 'doc-st doc-ok'; st.textContent = '제출 완료'; btn.textContent = '취소';
+  } else {
+    st.className = 'doc-st doc-wait'; st.textContent = '대기 중'; btn.textContent = '완료';
+  }
+}
+function filterDocs(q) {
+  document.querySelectorAll('#docList .doc-row').forEach(function(r){
+    r.style.display = r.textContent.includes(q) ? '' : 'none';
+  });
+}
+
+async function genDocGuide() {
+  var emp = document.getElementById('docGuideEmp').value.trim() || '직원';
+  var career = document.getElementById('docGuideCareer').value;
+  var prompt = '리와인드(아이엠그리너) 신입 직원 ' + emp + '님(' + career + ')에게 보내는 입사 서류 안내 이메일을 작성하세요.\n\n' +
+    '기본 서류: 1.최종학교 졸업증명서 2.주민등록등본 3.가족관계증명서 4.급여통장 사본 5.증명사진 파일 6.채용건강진단서(출근 후 가능)\n' +
+    (career==='경력' ? '경력직 추가: 소득금액증명원 또는 건강보험자격득실확인서, 전년도 근로소득원천징수영수증 (민원24/홈택스 발급)\n' : '') +
+    '연봉계약서 작성을 위해 주민등록번호, 주소, 희망 이메일 아이디를 먼저 회신해달라고 안내하세요.\n' +
+    '발신: 김지혜 차장 (jiheyya@iamgreener.co.kr). 첫줄: 제목: [제목내용]';
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:prompt}]})
+  });
+  var data = await res.json();
+  var text = data.content[0].text;
+  var sm = text.match(/제목:\s*(.+)/);
+  document.getElementById('docGuideSubj').textContent = '제목: ' + (sm ? sm[1] : '입사 서류 안내');
+  document.getElementById('docGuideEmail').textContent = text.replace(/제목:.+\n?/,'').trim();
+  document.getElementById('docGuideResult').style.display = 'block';
+}
+
+// QUESTIONS
+function markDone(btn) {
+  var item = btn.closest('.q-item');
+  var badge = item.querySelector('.badge');
+  badge.className = 'badge badge-done'; badge.textContent = '답변 완료';
+  btn.remove();
+  updateQBadge();
+}
+async function genAnswer(btn, question) {
+  btn.disabled = true; btn.textContent = '생성 중...';
+  var prompt = '리와인드(서울 서대문구 연희로26 동방빌딩 6층) 신입 직원 질문에 인사담당자로서 친절하게 답변하세요.\n질문: ' + question + '\n짧고 친절하게 2-3문장으로 답변하세요.';
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:300, messages:[{role:'user',content:prompt}]})
+  });
+  var data = await res.json();
+  var answer = data.content[0].text;
+  var item = btn.closest('.q-item');
+  var ansDiv = document.createElement('div');
+  ansDiv.style.cssText = 'background:var(--gp);border:1px solid var(--gm);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.7;';
+  ansDiv.innerHTML = '<strong style="color:var(--g);">AI 답변 초안:</strong><br>' + answer;
+  item.appendChild(ansDiv);
+  btn.disabled = false; btn.textContent = 'AI 답변 초안';
+}
+function addQuestion() {
+  var name = document.getElementById('qName').value.trim();
+  var text = document.getElementById('qText').value.trim();
+  var date = document.getElementById('qDate').value;
+  if (!name || !text) { showToast('이름과 질문을 입력해주세요.'); return; }
+  var list = document.getElementById('qList');
+  var item = document.createElement('div');
+  item.className = 'q-item';
+  var safeText = text.replace(/'/g, "\\'");
+  item.innerHTML = '<div class="q-head"><div class="q-name">' + name + ' <span class="badge badge-new">미답변</span></div><div class="q-date">' + date + '</div></div>' +
+    '<div class="q-body">' + text + '</div>' +
+    '<div class="btns"><button class="btn btn-s btn-sm" onclick="markDone(this)">답변 완료</button>' +
+    '<button class="btn btn-a btn-sm" onclick="genAnswer(this,\'' + safeText + '\')">AI 답변 초안</button></div>';
+  list.appendChild(item);
+  document.getElementById('qName').value = '';
+  document.getElementById('qText').value = '';
+  updateQBadge();
+  showToast('질문이 추가되었습니다.');
+}
+function updateQBadge() {
+  document.getElementById('qBadge').textContent = document.querySelectorAll('.badge-new').length;
+}
+
+
+// ── SHEET ID ──────────────────────────────────────
+var SHEET_ID = '1z-zU3M36VoMTdQOoGHuUhzM-48YXm3Mewa4d_iNAR24';
+var SHEET_GID = '641507610';
+var leaveAllData = [];
+
+// ── EMPLOYEE DATA ─────────────────────────────────
+var employees = JSON.parse(localStorage.getItem('rw_employees') || '[]');
+var editingEmpIdx = -1;
+
+function saveEmpStorage() {
+  localStorage.setItem('rw_employees', JSON.stringify(employees));
+}
+
+function calcTenure(joinDate, leaveDate) {
+  if (!joinDate) return '-';
+  var start = new Date(joinDate);
+  var end = leaveDate ? new Date(leaveDate) : new Date();
+  var months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+  var years = Math.floor(months / 12);
+  var rem = months % 12;
+  if (years > 0 && rem > 0) return years + '년 ' + rem + '개월';
+  if (years > 0) return years + '년';
+  return rem + '개월';
+}
+
+function calcAnnualLeave(joinDate) {
+  if (!joinDate) return 0;
+  var start = new Date(joinDate);
+  var now = new Date();
+  var months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+  var years = Math.floor(months / 12);
+  if (years < 1) return Math.min(months, 11);
+  if (years < 3) return 15;
+  return Math.min(15 + Math.floor((years - 1) / 2), 25);
+}
+
+function renderEmpList(data) {
+  var list = document.getElementById('empList');
+  if (!data || data.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:32px;color:var(--mu);font-size:13.5px;">등록된 직원이 없습니다.<br>신규 직원 등록 버튼을 눌러 추가하세요.</div>';
+    return;
+  }
+  var rows = data.map(function(e, i) {
+    var tenure = calcTenure(e.joindate, e.leavedate);
+    var leave = calcAnnualLeave(e.joindate);
+    var statusClass = e.status === 'resigned' ? 'status-resigned' : 'status-active';
+    var statusText = e.status === 'resigned' ? '퇴사' : '재직중';
+    return '<tr onclick="editEmployee(' + i + ')">' +
+      '<td><strong>' + e.name + '</strong></td>' +
+      '<td>' + (e.team||'-') + '</td>' +
+      '<td>' + (e.rank||'-') + '</td>' +
+      '<td>' + (e.joindate ? e.joindate.replace(/-/g,'.') : '-') + '</td>' +
+      '<td class="tenure">' + tenure + '</td>' +
+      '<td style="font-size:12px;">' + leave + '일</td>' +
+      '<td>' + (e.email||'-') + '</td>' +
+      '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>' +
+      '<td>' + (e.note ? e.note.substring(0,20) + (e.note.length>20?'...':'') : '-') + '</td>' +
+    '</tr>';
+  }).join('');
+  list.innerHTML = '<table class="emp-table"><thead><tr>' +
+    '<th>이름</th><th>팀</th><th>직급</th><th>입사일</th><th>근속기간</th><th>연차</th><th>이메일</th><th>상태</th><th>특이사항</th>' +
+    '</tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+var _empFilterStatus = 'all';
+var _empFilterName = '';
+
+function filterEmpStatus(v) { _empFilterStatus = v; applyEmpFilter(); }
+function filterEmpName(v) { _empFilterName = v; applyEmpFilter(); }
+function applyEmpFilter() {
+  var filtered = employees.filter(function(e) {
+    var statusOk = _empFilterStatus === 'all' || e.status === _empFilterStatus;
+    var nameOk = !_empFilterName || e.name.includes(_empFilterName);
+    return statusOk && nameOk;
+  });
+  renderEmpList(filtered);
+}
+
+function showEmpForm(mode, idx) {
+  document.getElementById('empFormCard').style.display = 'block';
+  document.getElementById('empTimelineCard').style.display = 'none';
+  document.getElementById('empFileList').innerHTML = '';
+  if (mode === 'new') {
+    editingEmpIdx = -1;
+    document.getElementById('empFormTitle').textContent = '신규 직원 등록';
+    document.getElementById('deleteEmpBtn').style.display = 'none';
+    ['ef-name','ef-rank','ef-role','ef-email','ef-phone','ef-address','ef-note'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('ef-team').value = '영업팀';
+    document.getElementById('ef-status').value = 'active';
+    document.getElementById('ef-joindate').value = '';
+    document.getElementById('ef-leavedate').value = '';
+  } else {
+    editingEmpIdx = idx;
+    var e = employees[idx];
+    document.getElementById('empFormTitle').textContent = e.name + ' 님 정보 수정';
+    document.getElementById('deleteEmpBtn').style.display = 'inline-flex';
+    document.getElementById('ef-name').value = e.name || '';
+    document.getElementById('ef-team').value = e.team || '영업팀';
+    document.getElementById('ef-rank').value = e.rank || '';
+    document.getElementById('ef-role').value = e.role || '';
+    document.getElementById('ef-joindate').value = e.joindate || '';
+    document.getElementById('ef-leavedate').value = e.leavedate || '';
+    document.getElementById('ef-email').value = e.email || '';
+    document.getElementById('ef-phone').value = e.phone || '';
+    document.getElementById('ef-birth').value = e.birth || '';
+    document.getElementById('ef-address').value = e.address || '';
+    document.getElementById('ef-status').value = e.status || 'active';
+    document.getElementById('ef-note').value = e.note || '';
+    renderTimeline(e);
+  }
+  document.getElementById('empFormCard').scrollIntoView({behavior:'smooth'});
+}
+
+function editEmployee(idx) { showEmpForm('edit', idx); }
+function cancelEmpForm() {
+  document.getElementById('empFormCard').style.display = 'none';
+  document.getElementById('empTimelineCard').style.display = 'none';
+}
+
+function saveEmployee() {
+  var name = document.getElementById('ef-name').value.trim();
+  if (!name) { showToast('이름을 입력해주세요.'); return; }
+  var emp = {
+    name: name,
+    team: document.getElementById('ef-team').value,
+    rank: document.getElementById('ef-rank').value,
+    role: document.getElementById('ef-role').value,
+    joindate: document.getElementById('ef-joindate').value,
+    leavedate: document.getElementById('ef-leavedate').value,
+    email: document.getElementById('ef-email').value,
+    phone: document.getElementById('ef-phone').value,
+    birth: document.getElementById('ef-birth').value,
+    address: document.getElementById('ef-address').value,
+    status: document.getElementById('ef-status').value,
+    note: document.getElementById('ef-note').value,
+    timeline: editingEmpIdx >= 0 ? (employees[editingEmpIdx].timeline || []) : [],
+    files: editingEmpIdx >= 0 ? (employees[editingEmpIdx].files || []) : [],
+    updatedAt: new Date().toISOString()
+  };
+  if (editingEmpIdx >= 0) {
+    employees[editingEmpIdx] = emp;
+    showToast(name + ' 님 정보가 수정되었습니다.');
+  } else {
+    emp.timeline = [{ date: new Date().toLocaleDateString('ko-KR'), text: '입사' }];
+    employees.push(emp);
+    showToast(name + ' 님이 등록되었습니다.');
+  }
+  saveEmpStorage();
+  applyEmpFilter();
+  cancelEmpForm();
+}
+
+function deleteEmployee() {
+  if (editingEmpIdx < 0) return;
+  var name = employees[editingEmpIdx].name;
+  if (!confirm(name + ' 님을 삭제하시겠습니까?')) return;
+  employees.splice(editingEmpIdx, 1);
+  saveEmpStorage();
+  applyEmpFilter();
+  cancelEmpForm();
+  showToast(name + ' 님이 삭제되었습니다.');
+}
+
+function renderTimeline(emp) {
+  document.getElementById('empTimelineCard').style.display = 'block';
+  var tl = emp.timeline || [];
+  var container = document.getElementById('empTimeline');
+  container.innerHTML = tl.length === 0
+    ? '<div style="color:var(--mu);font-size:13px;padding:8px 0;">인사 이력이 없습니다.</div>'
+    : tl.map(function(t) {
+        return '<div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-date">' + t.date + '</div><div class="tl-text">' + t.text + '</div></div></div>';
+      }).join('');
+}
+
+function addTimeline() {
+  if (editingEmpIdx < 0) return;
+  var text = document.getElementById('tl-text').value.trim();
+  if (!text) { showToast('내용을 입력해주세요.'); return; }
+  if (!employees[editingEmpIdx].timeline) employees[editingEmpIdx].timeline = [];
+  employees[editingEmpIdx].timeline.push({ date: new Date().toLocaleDateString('ko-KR'), text: text });
+  saveEmpStorage();
+  renderTimeline(employees[editingEmpIdx]);
+  document.getElementById('tl-text').value = '';
+  showToast('이력이 추가되었습니다.');
+}
+
+function empFileDrop(e) { e.preventDefault(); empFileHandle(e.dataTransfer.files[0]); }
+function empFileHandle(file) {
+  if (!file) return;
+  var list = document.getElementById('empFileList');
+  var item = document.createElement('div');
+  item.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;margin-bottom:6px;font-size:13px;';
+  item.innerHTML = '📎 ' + file.name + ' <span style="color:var(--mu);font-size:11px;">(' + (file.size/1024).toFixed(0) + 'KB)</span>';
+  list.appendChild(item);
+  showToast(file.name + ' 업로드 준비 완료 (저장 시 등록됩니다)');
+}
+
+// ── LEAVE DATA ────────────────────────────────────
+async function loadLeaveData() {
+  var loadingEl = document.getElementById('leaveLoading');
+  var tableWrap = document.getElementById('leaveTableWrap');
+  loadingEl.style.display = 'block';
+  loadingEl.textContent = '데이터 불러오는 중...';
+  tableWrap.style.display = 'none';
+
+  var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/export?format=csv&gid=' + SHEET_GID;
+  try {
+    var res = await fetch(url);
+    if (!res.ok) throw new Error('시트 접근 불가 (공유 설정 확인 필요)');
+    var csv = await res.text();
+    leaveAllData = parseCSV(csv);
+    renderLeaveTable(leaveAllData);
+    renderTodayLeave(leaveAllData);
+    renderLeaveSummary(leaveAllData);
+    loadingEl.style.display = 'none';
+    tableWrap.style.display = 'block';
+    showToast('연차 데이터 불러오기 완료!');
+  } catch(e) {
+    loadingEl.textContent = '❌ ' + e.message + '\n구글 시트 공유 설정을 "링크가 있는 모든 사용자 - 뷰어"로 변경해주세요.';
+    showToast('데이터 로드 실패: ' + e.message);
+  }
+}
+
+function parseCSV(csv) {
+  var lines = csv.split('\n').filter(function(l){ return l.trim(); });
+  if (lines.length < 2) return [];
+  var headers = lines[0].split(',').map(function(h){ return h.replace(/"/g,'').trim(); });
+  return lines.slice(1).map(function(line) {
+    var cols = [];
+    var cur = '';
+    var inQ = false;
+    for (var i=0;i<line.length;i++) {
+      if (line[i]==='"') { inQ=!inQ; }
+      else if (line[i]===',' && !inQ) { cols.push(cur.trim()); cur=''; }
+      else { cur+=line[i]; }
+    }
+    cols.push(cur.trim());
+    var obj = {};
+    headers.forEach(function(h,i){ obj[h] = (cols[i]||'').replace(/"/g,''); });
+    return obj;
+  });
+}
+
+function renderLeaveTable(data) {
+  var tbody = document.getElementById('leaveBody');
+  tbody.innerHTML = data.map(function(r) {
+    var status = r['승인여부'] || '';
+    var statusStyle = status==='승인' ? 'color:var(--g);font-weight:600;' : status==='취소' ? 'color:var(--rd);' : 'color:var(--am);';
+    return '<tr>' +
+      '<td><strong>' + (r['성명']||'') + '</strong></td>' +
+      '<td>' + (r['부서']||'') + '</td>' +
+      '<td>' + (r['신청 연차 유형']||'') + '</td>' +
+      '<td>' + (r['시작일']||'') + '</td>' +
+      '<td>' + (r['종료일']||'') + '</td>' +
+      '<td style="text-align:center;">' + (r['사용일수']||'') + '</td>' +
+      '<td style="font-size:12px;">' + (r['업무인수인계자']||'') + '</td>' +
+      '<td style="' + statusStyle + '">' + status + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function renderTodayLeave(data) {
+  var today = new Date();
+  var todayStr = today.toLocaleDateString('ko-KR', {year:'numeric',month:'numeric',day:'numeric'}).replace(/\. /g,'.').replace(/\./g,'.');
+  var todayISO = today.toISOString().split('T')[0];
+
+  var todayPeople = data.filter(function(r) {
+    if (r['승인여부'] !== '승인') return false;
+    var start = r['시작일'] ? r['시작일'].replace(/\./g,'-').replace(/ /g,'') : '';
+    var end = r['종료일'] ? r['종료일'].replace(/\./g,'-').replace(/ /g,'') : '';
+    if (!start) return false;
+    try {
+      var s = new Date(start.substring(0,10));
+      var e = new Date((end||start).substring(0,10));
+      return today >= s && today <= e;
+    } catch(ex) { return false; }
+  });
+
+  var el = document.getElementById('todayLeave');
+  if (todayPeople.length === 0) {
+    el.innerHTML = '<div class="leave-empty">오늘 (' + today.toLocaleDateString('ko-KR') + ') 연차자가 없습니다. 🌿</div>';
+    el.className = 'hl';
+    return;
+  }
+  el.className = '';
+  el.style.cssText = '';
+  el.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:10px;">오늘 ' + today.toLocaleDateString('ko-KR') + ' 연차자 ' + todayPeople.length + '명</div>' +
+    todayPeople.map(function(r) {
+      var initial = (r['성명']||'?')[0];
+      var typeClass = (r['신청 연차 유형']||'').includes('반차') ? 'leave-반차' : 'leave-연차';
+      return '<div class="leave-card">' +
+        '<div class="leave-avatar">' + initial + '</div>' +
+        '<div class="leave-info"><strong>' + r['성명'] + '</strong><span>' + (r['부서']||'') + '</span></div>' +
+        '<span class="leave-type ' + typeClass + '">' + (r['신청 연차 유형']||'연차') + '</span>' +
+        '</div>';
+    }).join('');
+}
+
+function renderLeaveSummary(data) {
+  var approved = data.filter(function(r){ return r['승인여부']==='승인'; });
+  var byPerson = {};
+  approved.forEach(function(r) {
+    var name = r['성명'];
+    if (!name) return;
+    if (!byPerson[name]) byPerson[name] = { used: 0, team: r['부서']||'' };
+    byPerson[name].used += parseFloat(r['사용일수']||0) || 0;
+  });
+  var names = Object.keys(byPerson).sort();
+  var el = document.getElementById('leaveSummary');
+  if (names.length === 0) { el.textContent = '데이터가 없습니다.'; return; }
+  el.innerHTML = '<div class="summary-grid">' +
+    names.map(function(name) {
+      var d = byPerson[name];
+      return '<div class="summary-card">' +
+        '<div class="s-name">' + name + ' <span style="font-size:10px;color:var(--mu);">' + d.team + '</span></div>' +
+        '<div class="s-used">' + d.used + '<span style="font-size:13px;font-weight:400;color:var(--mu);">일</span></div>' +
+        '<div class="s-total">사용 연차</div>' +
+        '</div>';
+    }).join('') + '</div>';
+}
+
+var _leaveFilterName = '';
+var _leaveFilterStatus = 'all';
+function filterLeave(v) { _leaveFilterName = v; applyLeaveFilter(); }
+function filterLeaveStatus(v) { _leaveFilterStatus = v; applyLeaveFilter(); }
+function applyLeaveFilter() {
+  var filtered = leaveAllData.filter(function(r) {
+    var nameOk = !_leaveFilterName || (r['성명']||'').includes(_leaveFilterName);
+    var statusOk = _leaveFilterStatus === 'all' || (r['승인여부']||'').includes(_leaveFilterStatus);
+    return nameOk && statusOk;
+  });
+  renderLeaveTable(filtered);
+}
+
+
+// UTILS
+function copyText(id) {
+  var el = document.getElementById(id);
+  var text = el.tagName === 'TEXTAREA' ? el.value : el.innerText;
+  navigator.clipboard.writeText(text).then(function(){ showToast('복사되었습니다!'); });
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+</script>
+</body>
+</html>
