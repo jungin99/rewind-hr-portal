@@ -704,6 +704,9 @@
       <div class="nav-item" onclick="showPage('brand', this)">
         <span class="icon">🏷️</span> 브랜드 & 제품
       </div>
+      <div class="nav-item" onclick="showPage('about', this); setTimeout(function(){ document.getElementById('sales-channel-section').scrollIntoView({behavior:'smooth'}); }, 100);">
+        <span class="icon">🛒</span> 판매 채널
+      </div>
       <div class="nav-item" onclick="showPage('org', this)">
         <span class="icon">👥</span> 조직도 & 팀
       </div>
@@ -727,16 +730,16 @@
         <span class="icon">📂</span> 자료실
       </div>
       <div class="nav-section-label">업무 매뉴얼</div>
-      <div class="nav-item" onclick="showPage('manual-sales', this)">
+      <div class="nav-item" onclick="openManualTeamSelect('manual-sales', '영업팀')">
         <span class="icon">💼</span> 영업팀
       </div>
-      <div class="nav-item" onclick="showPage('manual-marketing', this)">
+      <div class="nav-item" onclick="openManualTeamSelect('manual-marketing', '마케팅팀')">
         <span class="icon">📣</span> 마케팅팀
       </div>
-      <div class="nav-item" onclick="showPage('manual-purchase', this)">
+      <div class="nav-item" onclick="openManualTeamSelect('manual-purchase', '구매팀')">
         <span class="icon">🛒</span> 구매팀
       </div>
-      <div class="nav-item" onclick="showPage('manual-ops', this)">
+      <div class="nav-item" onclick="openManualTeamSelect('manual-ops', '운영팀')">
         <span class="icon">⚙️</span> 운영팀
       </div>
       <div class="nav-item" onclick="showPage('manual-chat', this)">
@@ -847,7 +850,57 @@
 
       <!-- ABOUT -->
       <div id="page-about" class="page">
-        <div class="section-header"><h2>🌿 회사 소개 & 미션</h2></div>
+        <div class="section-header"><h2>🌿 회사 소개 & 미션</h2>
+        <!-- 판매 채널 -->
+        <div class="info-block" id="sales-channel-section">
+          <h3>🛒 직영 판매 채널</h3>
+          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
+            👤 담당: <strong>이이현 대리</strong> &nbsp;·&nbsp; <a href="mailto:22hyun@iamgreener.co.kr" style="color:var(--green);">22hyun@iamgreener.co.kr</a> &nbsp;·&nbsp; 010-7464-8668
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <a href="https://smartstore.naver.com/iamgreener" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:20px;">🟢</span><div><div style="font-size:13px;font-weight:600;">스마트스토어</div><div style="font-size:11px;color:var(--green);">smartstore.naver.com/iamgreener</div></div>
+            </a>
+            <a href="https://blog.naver.com/iamgreener" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:20px;">📝</span><div><div style="font-size:13px;font-weight:600;">네이버 블로그</div><div style="font-size:11px;color:var(--green);">blog.naver.com/iamgreener</div></div>
+            </a>
+            <a href="https://www.instagram.com/iamgreener_official/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:20px;">📸</span><div><div style="font-size:13px;font-weight:600;">인스타그램</div><div style="font-size:11px;color:var(--green);">@iamgreener_official</div></div>
+            </a>
+            <a href="https://rewind2nature.com" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:20px;">🌐</span><div><div style="font-size:13px;font-weight:600;">공식 홈페이지</div><div style="font-size:11px;color:var(--green);">rewind2nature.com</div></div>
+            </a>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <h3>🤝 공식 파트너사 (위탁 판매)</h3>
+          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
+            👤 담당: <strong>정민주 대리</strong> &nbsp;·&nbsp; <a href="mailto:98gusdl52@iamgreener.co.kr" style="color:var(--green);">98gusdl52@iamgreener.co.kr</a> &nbsp;·&nbsp; 010-9173-5738
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="https://re-ground.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)리그라운드</div><div style="font-size:11px;color:#888;">스스·자사몰·쿠팡·오픈마켓 + 오프라인</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.bigcoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)세이지그린 — 빅커피</div><div style="font-size:11px;color:#888;">자사몰·고도몰</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.caffemuseo.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">주식회사 뮤제오</div><div style="font-size:11px;color:#888;">자사몰·이마트 + 오프라인</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://bakingmon.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)SPC GFS — 베이킹몬</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://nauspack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)나우스 — 나우스팩</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.cntmart.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)대상다이브스 — 씨앤티마트</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://npackage.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">세경인터내셔널</div><div style="font-size:11px;color:#888;">스마트스토어 셀러 유통</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://napkinkorea.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)한창인터내셔날 — 냅킨코리아</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.megacoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)비앤씨인터내셔널 — 메가커피</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://www.happypack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">(주)삼신상사 — 해피팩</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://packagelab.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">주식회사 제삼 — 패키지랩</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://cookapack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">쿡앤팩</div></div><span style="color:var(--green);">→</span></a>
+            <a href="https://ourpack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;"><div><div style="font-size:13px;font-weight:600;">아워팩 주식회사</div></div><span style="color:var(--green);">→</span></a>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <h3>🏢 기업 유통사</h3>
+          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;">
+            👤 담당: <strong>정민주 대리</strong> &nbsp;·&nbsp; <a href="mailto:98gusdl52@iamgreener.co.kr" style="color:var(--green);">98gusdl52@iamgreener.co.kr</a> &nbsp;·&nbsp; 010-9173-5738
+          </div>
+      </div>
 
         <div class="info-block">
           <h3>🏢 회사 개요</h3>
@@ -983,6 +1036,18 @@
 
       </div>
 
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">CJ프레시웨이</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">현대그린푸드</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">아이마켓코리아</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">아워홈</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">푸디스트</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">엠즈푸드시스템</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">신세계푸드 HD현대글로벌</div>
+          </div>
+        </div>
+
       <!-- BRAND -->
       <div id="page-brand" class="page">
         <div class="section-header"><h2>🏷️ 브랜드 & 제품</h2></div>
@@ -1042,106 +1107,7 @@
         </div>
       </div>
 
-        <!-- 판매 채널 -->
-        <div class="info-block">
-          <h3>🛒 직영 판매 채널</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
-            <a href="https://smartstore.naver.com/iamgreener" target="_blank"
-              style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
-              <span style="font-size:22px;">🟢</span>
-              <div><div style="font-size:13px;font-weight:600;">스마트스토어</div><div style="font-size:11px;color:var(--green);">smartstore.naver.com/iamgreener</div></div>
-            </a>
-            <a href="https://blog.naver.com/iamgreener" target="_blank"
-              style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
-              <span style="font-size:22px;">📝</span>
-              <div><div style="font-size:13px;font-weight:600;">네이버 블로그</div><div style="font-size:11px;color:var(--green);">blog.naver.com/iamgreener</div></div>
-            </a>
-            <a href="https://www.instagram.com/iamgreener_official/" target="_blank"
-              style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
-              <span style="font-size:22px;">📸</span>
-              <div><div style="font-size:13px;font-weight:600;">인스타그램</div><div style="font-size:11px;color:var(--green);">@iamgreener_official</div></div>
-            </a>
-            <a href="https://rewind2nature.com" target="_blank"
-              style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
-              <span style="font-size:22px;">🌐</span>
-              <div><div style="font-size:13px;font-weight:600;">공식 홈페이지</div><div style="font-size:11px;color:var(--green);">rewind2nature.com</div></div>
-            </a>
-          </div>
-        </div>
 
-        <!-- 공식 파트너사 -->
-        <div class="info-block">
-          <h3>🤝 공식 파트너사 (위탁 판매)</h3>
-          <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px;">아이엠그리너 제품을 위탁 판매하는 공식 파트너사입니다.</p>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <a href="https://re-ground.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">(주)리그라운드</div><div style="font-size:11px;color:#888;">스스·자사몰·쿠팡·오픈마켓 + 오프라인</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://www.bigcoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">(주)세이지그린 — 빅커피</div><div style="font-size:11px;color:#888;">자사몰·고도몰</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://www.caffemuseo.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">주식회사 뮤제오</div><div style="font-size:11px;color:#888;">자사몰·이마트 + 오프라인</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://bakingmon.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">(주)SPC GFS — 베이킹몬</div><div style="font-size:11px;color:#888;">자사몰</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://nauspack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">(주)나우스 — 나우스팩</div><div style="font-size:11px;color:#888;">자사몰</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://www.cntmart.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">(주)대상다이브스 — 씨앤티마트</div><div style="font-size:11px;color:#888;">자사몰</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://npackage.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">주식회사 세경인터내셔널</div><div style="font-size:11px;color:#888;">스마트스토어 셀러 유통</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://napkinkorea.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">(주)한창인터내셔날 — 냅킨코리아</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://www.megacoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">(주)비앤씨인터내셔널 — 메가커피</div><div style="font-size:11px;color:#888;">자사몰</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://www.happypack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">(주)삼신상사 — 해피팩</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://packagelab.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">주식회사 제삼 — 패키지랩</div><div style="font-size:11px;color:#888;">자사몰</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://cookapack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">쿡앤팩</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-            <a href="https://ourpack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
-              <div><div style="font-size:13px;font-weight:600;">아워팩 주식회사</div></div>
-              <span style="color:var(--green);font-size:12px;">→</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- 기업 유통사 -->
-        <div class="info-block">
-          <h3>🏢 기업 유통사</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">CJ프레시웨이</div>
-            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">현대그린푸드</div>
-            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">아이마켓코리아</div>
-            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">아워홈</div>
-            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">푸디스트</div>
-            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">엠즈푸드시스템</div>
-            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">신세계푸드 HD현대글로벌</div>
-          </div>
-        </div>
 
       <!-- ORG -->
       <div id="page-org" class="page">
@@ -1754,6 +1720,196 @@
           </div>
         </div>
 
+
+        <div class="manual-section">
+          <div class="manual-section-header" onclick="toggleSection(this)">
+            <h3>🏨 호텔 업무 — 데일리 루틴</h3>
+            <span class="manual-toggle">▼</span>
+          </div>
+          <div class="manual-section-body">
+            <div class="tip-box">💡 발주건마다 <strong>발주서 체크 → 비연동파일 작성 → 판매입력</strong> 3단계 반드시 완료 (누수 방지)<br>
+            ⚠️ 신라호텔 / 조선호텔(구) / 워커힐: 알람 없음 → 발주 여부 일일 직접 확인 필수</div>
+            <table class="manual-table" style="margin-top:10px;">
+              <tr><th>시간</th><th>업무</th><th>내용</th></tr>
+              <tr><td>오전</td><td>CS 처리</td><td>배송 문의(전화·카톡), 견적·샘플 발송(이메일·카톡)</td></tr>
+              <tr><td>오전</td><td>주문서 1차 취합</td><td>이메일, SRM 확인 — 신라·조선(구)·삼성물산리조트는 알림 없으므로 직접 체크</td></tr>
+              <tr><td>14:00</td><td>거래명세서 발송</td><td>동봉용 거래명세서 물류측으로 메일 발송</td></tr>
+              <tr><td>14:30~14:55</td><td>발주</td><td>이지어드민 비연동 발주 진행 (2시 이전 → 당일 출고 / 2시 이후 → 익일)</td></tr>
+              <tr><td>15:00~16:00</td><td>송장번호 전달</td><td>이지어드민 송장번호 다운로드 → 메일 회신</td></tr>
+              <tr><td>17:00~</td><td>주문서 2차 취합</td><td>2시 이후 주문건 정리 → 익일 발송</td></tr>
+              <tr><td>마무리</td><td>리체크</td><td>발주서 누락 여부 · 품목 더블체크 · 명세서/송장 발송 여부 확인</td></tr>
+            </table>
+            <p style="font-weight:600;color:var(--green);margin:14px 0 8px;">금요일 추가 업무</p>
+            <div class="warn-box">📋 차주 직납 정리 (5곳) — 전주 월~금 발주서 정리 + 출고전표 업로드 + 안성 물류창고 픽업 일정 협의 (화요일 오후 1:30 고정)</div>
+            <p style="font-weight:600;color:var(--green);margin:14px 0 8px;">월간 마감 업무</p>
+            <table class="manual-table">
+              <tr><th>시점</th><th>내용</th></tr>
+              <tr><td>월말~익월 10일</td><td>이카운트 판매내역 → 마감원장 출력 → 메일 확인 요청 → 세금계산서 발행<br><small style="color:#888;">⚠️ 조선호텔 역발행 승인 마감: 9일 (10일 아님!) 놓치지 않게 주의</small></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="manual-section">
+          <div class="manual-section-header" onclick="toggleSection(this)">
+            <h3>🏨 호텔 업무 — 이지어드민 발주 처리</h3>
+            <span class="manual-toggle">▼</span>
+          </div>
+          <div class="manual-section-body">
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">📌 제품코드 구분: 제품코드/제품코드-1 → 펄프용기 | 제품코드-2 → PLA용기 (세트코드: 비연동양식에 2줄 입력)</p>
+            <table class="manual-table">
+              <tr><th>단계</th><th>내용</th></tr>
+              <tr><td>1</td><td>이지어드민 → 주문배송관리 → 주문관리 → 발주 → <strong>리와인드[호텔]</strong> 거래명세서 동봉</td></tr>
+              <tr><td>2</td><td>비연동파일 업로드 (시트1만 남긴 파일)</td></tr>
+              <tr><td>3</td><td>스텝2 메모 스킵 → 스텝3 매칭: 상품코드 복사 → 상품명 검색 (코드 맨 앞 '1' 제거)<br><small style="color:#888;">수량 불일치 시: 발주서 수량 ÷ 상품명 기재 개수 = 매칭수량 (예: 1,000개 ÷ 50개 = 20)</small></td></tr>
+              <tr><td>4</td><td>완료 후 김진국 본부장, 임영빈 차장에게 거래명세서 첨부 메일 발송</td></tr>
+              <tr><td>5</td><td>30분~1시간 후 송장번호 확인: 주문배송관리 → 배송관리 → 확장주문검색2</td></tr>
+              <tr><td>6</td><td>거래명세서 + 송장번호 첨부 메일 회신 ⚠️ 호텔별 참조 추가 필수 / 마감: 14:30~15:30</td></tr>
+            </table>
+            <p style="font-weight:600;color:var(--green);margin:14px 0 8px;">직납 주간 루틴</p>
+            <table class="manual-table">
+              <tr><th>요일</th><th>업무</th></tr>
+              <tr><td><strong>금요일</strong></td><td>이카운트에 발주서 일괄 입력 후 PO번호별 발주서/거래명세서 생성 → 출고전표 취합 리스트 정리</td></tr>
+              <tr><td><strong>월요일</strong></td><td>오전 10:30까지 호텔 단톡방에 캡처본 업로드 → 이지어드민 출고요청전표 작성 → 동봉서류 PDF 병합 후 물류 실장님 송부</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="manual-section">
+          <div class="manual-section-header" onclick="toggleSection(this)">
+            <h3>🏨 호텔 CS 처리</h3>
+            <span class="manual-toggle">▼</span>
+          </div>
+          <div class="manual-section-body">
+            <table class="manual-table">
+              <tr><th>유형</th><th>프로세스</th><th>주의</th></tr>
+              <tr><td>반품</td><td>이지어드민 CS창 → 회수 구글시트 작성 → 이지어드민 회수처리</td><td>필요정보: 고객명, 송장번호, 상품종류, 수량, 사유</td></tr>
+              <tr><td>불량</td><td>이지어드민 CS창 → 불량내용·생산일자 확인 → 구매팀 공유 → 환불/교환처리</td><td>사진 + 생산일자 확인 필수</td></tr>
+              <tr><td>오배송</td><td>이지어드민 교환처리 → 회수·오배송 구글시트 업데이트</td><td>⚠️ 물류 오배송 시 정산 차감!</td></tr>
+              <tr><td>직납 반품</td><td>반품물품 정리 → 실장님 전달 → 이지어드민 입고요청전표 (출고요청전표 아님!)</td><td>입고 = 안성창고 입고</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="manual-section">
+          <div class="manual-section-header" onclick="toggleSection(this)">
+            <h3>🏨 직납 호텔 스케줄 & 담당자</h3>
+            <span class="manual-toggle">▼</span>
+          </div>
+          <div class="manual-section-body">
+            <table class="manual-table">
+              <tr><th>호텔</th><th>입고 요일</th><th>담당자</th><th>주요 특이사항</th></tr>
+              <tr><td><strong>그랜드하얏트 서울</strong></td><td>금요일</td><td>오은선 010-8601-2089</td><td>직납 + 자체 거래명세서</td></tr>
+              <tr><td><strong>그랜드하얏트 인천</strong></td><td>화요일</td><td>문지훈 010-9677-8004 / 이승환 010-5934-5321</td><td>직납 + 자체 거래명세서 / 대한항공 배송과 동선 연계</td></tr>
+              <tr><td><strong>서울드래곤시티</strong></td><td>목요일</td><td>유찬규</td><td>오후 1시~3시 / 월요일 오전 발주서 전달 → 화요일 픽업 → 목요일 입고</td></tr>
+              <tr><td><strong>콘래드</strong></td><td>수요일</td><td>송예원</td><td>⚠️ 무조건 수요일 오후 1시~3시 / 시간 외 방문 시 사전 연락 필수</td></tr>
+              <tr><td><strong>안토</strong></td><td>목요일 (월 1~3회)</td><td>황형주</td><td>자체 SRM — 알림 없음, 직접 확인 / 동봉서류: 발주서+검수서+거래명세서 3장</td></tr>
+            </table>
+            <div class="warn-box" style="margin-top:10px;">
+              ⚠️ 점심시간 피해서 방문 / 직납 판매입력은 발주일 아님 — <strong>입고일 기준</strong>으로 입력<br>
+              ⚠️ 거래명세서 PO번호: 끝 5자리 숫자만 입력해야 하는 경우 있음
+            </div>
+          </div>
+        </div>
+
+        <div class="manual-section">
+          <div class="manual-section-header" onclick="toggleSection(this)">
+            <h3>🏨 호텔 거래처 리스트</h3>
+            <span class="manual-toggle">▼</span>
+          </div>
+          <div class="manual-section-body">
+            <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:10px;">계열사별 주요 담당자 및 발주/마감 방식 정리</p>
+
+            <p style="font-weight:600;color:var(--green);margin:10px 0 6px;">🏨 하얏트 계열</p>
+            <table class="manual-table">
+              <tr><th>호텔명</th><th>담당자</th><th>연락처</th><th>주문접수</th><th>마감</th></tr>
+              <tr><td>그랜드하얏트 서울</td><td>오은선 / 송민정 / 고영후</td><td>010-8601-2089</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>그랜드하얏트 인천</td><td>김경아 / 문지훈 / 이승환</td><td>010-6429-2949</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>그랜드하얏트 제주</td><td>고태성 / 김성현 / 현승일</td><td>010-8268-4885</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>파크하얏트 서울</td><td>황호준 / 신지원</td><td>010-4944-3382</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>파크하얏트 부산</td><td>신현송 / 황태현</td><td>010-5745-1684</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>안다즈 서울강남</td><td>황지희</td><td>010-3121-4404</td><td>이메일(BSS)</td><td>정발행</td></tr>
+            </table>
+
+            <p style="font-weight:600;color:var(--green);margin:14px 0 6px;">🏨 메리어트 계열</p>
+            <table class="manual-table">
+              <tr><th>호텔명</th><th>담당자</th><th>연락처</th><th>주문접수</th><th>마감</th></tr>
+              <tr><td>코트야드 서울 타임스퀘어</td><td>김가윤</td><td>-</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>대구 메리어트</td><td>배수용 / 윤지훈</td><td>010-4020-3615</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>JW메리어트 동대문</td><td>이대로 / 박의영</td><td>010-5391-2295</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>JW메리어트 제주</td><td>전용현 / 현정관</td><td>010-3578-1506</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>JW메리어트 서울</td><td>이현정 / 박찬수 / 박웅기</td><td>010-9090-0479</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>코트야드 보타닉파크</td><td>고영재 / 임혜진</td><td>010-7682-6182</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>코트야드 수원</td><td>김동환</td><td>010-2788-9334</td><td>이메일(BSS)</td><td>정발행</td></tr>
+            </table>
+
+            <p style="font-weight:600;color:var(--green);margin:14px 0 6px;">🏨 쉐라톤 계열</p>
+            <table class="manual-table">
+              <tr><th>호텔명</th><th>담당자</th><th>연락처</th><th>주문접수</th><th>마감</th></tr>
+              <tr><td>쉐라톤 그랜드 인천</td><td>신재섭 / 윤민솔</td><td>010-4337-6599</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>포포인츠 수원</td><td>정혜원</td><td>010-3912-3722</td><td>이메일(BSS)</td><td>정발행</td></tr>
+              <tr><td>포포인츠 서울강남</td><td>김채린</td><td>010-4331-4569</td><td>이메일(BSS)</td><td>정발행</td></tr>
+            </table>
+
+            <p style="font-weight:600;color:var(--green);margin:14px 0 6px;">🏨 아난티 계열</p>
+            <table class="manual-table">
+              <tr><th>호텔명</th><th>담당자</th><th>연락처</th><th>주문접수</th><th>마감</th></tr>
+              <tr><td>아난티 클럽 서울</td><td>-</td><td>010-9772-0826</td><td>이메일</td><td>정발행</td></tr>
+              <tr><td>아난티 클럽 제주</td><td>김현순</td><td>010-8663-5223</td><td>이메일</td><td>정발행</td></tr>
+              <tr><td>빌라쥬 드 아난티</td><td>김대범</td><td>010-6692-4211</td><td>이메일</td><td>정발행</td></tr>
+              <tr><td>아난티 힐튼 부산</td><td>박찬영</td><td>010-4189-2734</td><td>이메일</td><td>정발행</td></tr>
+              <tr><td>아난티 앳 강남</td><td>박재성 / 김재국</td><td>010-4400-2795</td><td>이메일</td><td>정발행</td></tr>
+              <tr><td>아난티 남해</td><td>이재민</td><td>010-8685-0039</td><td>이메일</td><td>정발행</td></tr>
+              <tr><td>아난티 펜트하우스 서울</td><td>김윤희</td><td>010-7598-0821</td><td>이메일</td><td>정발행</td></tr>
+            </table>
+
+            <p style="font-weight:600;color:var(--green);margin:14px 0 6px;">🏨 조선호텔 계열 (SRM 역발행)</p>
+            <div class="warn-box">⚠️ 조선호텔 계열 전체: SRM 발주 / 역발행 / 어드민에 송장번호 직접 입력</div>
+            <table class="manual-table" style="margin-top:8px;">
+              <tr><th>호텔명</th><th>담당자</th><th>연락처</th></tr>
+              <tr><td>조선호텔 서울 (웨스틴)</td><td>김나연 / 최유진 / 김희준</td><td>010-4439-6652</td></tr>
+              <tr><td>웨스틴 조선 부산</td><td>이희준 / 송보경</td><td>-</td></tr>
+              <tr><td>조선팰리스 강남</td><td>백문주 / 염호승</td><td>010-4007-4770</td></tr>
+              <tr><td>조선호텔 그래비티 판교</td><td>박건주 / 권호림</td><td>010-4879-5936</td></tr>
+              <tr><td>그랜드 조선 부산</td><td>최은경 / 박윤경</td><td>010-5040-3457</td></tr>
+              <tr><td>포포인츠 조선 명동</td><td>권오규</td><td>010-9977-6877</td></tr>
+              <tr><td>자주테이블</td><td>주희선</td><td>010-2370-1534</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="manual-section">
+          <div class="manual-section-header" onclick="toggleSection(this)">
+            <h3>🏨 특수 발주 처리</h3>
+            <span class="manual-toggle">▼</span>
+          </div>
+          <div class="manual-section-body">
+            <p style="font-weight:600;color:var(--green);margin:0 0 8px;">대명소노 발주</p>
+            <table class="manual-table">
+              <tr><th>단계</th><th>내용</th></tr>
+              <tr><td>1</td><td>메일 알림 수신 → 대명소노 발주사이트 로그인</td></tr>
+              <tr><td>2</td><td>납품확인 → 발주 진행 (보통 냅킨코리아에서 구매)</td></tr>
+              <tr><td>3</td><td>받는사람: 대명소노 주소 + 담당자 연락처</td></tr>
+              <tr><td>4</td><td>송장번호 입력 → 납품완료처리 (발주 당일/출고 날짜 기준)</td></tr>
+            </table>
+
+            <p style="font-weight:600;color:var(--green);margin:14px 0 8px;">빌라쥬 드 아난티 / 박스→봉지 전환 발주</p>
+            <div class="tip-box">봉지 단위로 발주서 수량 수정 필요<br>단가 계산: (박스 단가 ÷ 박스 내 개수) × 봉지 내 개수 = 1봉지 단가</div>
+
+            <p style="font-weight:600;color:var(--green);margin:14px 0 8px;">런드리백 발주</p>
+            <table class="manual-table">
+              <tr><td>1</td><td>발주서 확인 → 거래명세서 작성 → 이카운트 발주 입력</td></tr>
+              <tr><td>2</td><td>비앤피팩 단톡방에 발주 요청</td></tr>
+              <tr><td>3</td><td>송장번호 나오면 호텔에 전달</td></tr>
+            </table>
+
+            <p style="font-weight:600;color:var(--green);margin:14px 0 8px;">견적서 작성</p>
+            <table class="manual-table">
+              <tr><td>1</td><td>이카운트 → 영업관리 → 견적서입력 → 업체명·담당자·연락처·품목코드·수량 입력</td></tr>
+              <tr><td>2</td><td>참조란: '상품명 견적서' / 양식: [호텔전용] 선택</td></tr>
+              <tr><td>3</td><td>저장전표 → 인쇄 → PDF 저장 (드랍박스 업체 폴더 내 견적서 폴더)</td></tr>
+            </table>
+          </div>
+        </div>
         <div class="manual-section">
           <div class="manual-section-header" onclick="toggleSection(this)">
             <h3>🏪 사업자 고객 데일리 업무</h3>
@@ -2778,6 +2934,7 @@ function showPage(name, el) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   if (el) el.classList.add('active');
+  if (!el) { document.querySelectorAll('.nav-item').forEach(function(n){ if (n.textContent.trim().startsWith(MANUAL_TEAMS[name] ? MANUAL_TEAMS[name].icon : 'X')) n.classList.add('active'); }); }
   const titles = {
     home: '홈', checklist: '온보딩 체크리스트', about: '회사 소개 & 미션',
     brand: '브랜드 & 제품', org: '조직도 & 팀', rules: '복무규정 & 휴가',
@@ -2843,6 +3000,9 @@ var WORK_CONTEXT = '당신은 리와인드(아이엠그리너) 업무 전문 AI 
 '\n안주희 사원(주문제작): juhee_an@iamgreener.co.kr / 010-8824-3142' +
 '\n주문제작 프로세스: 상담→견적→결제→시안→생산→납품 / 입금 후 생산 시작 / 대나무컵 최소 2달 소요' +
 '\n사업자 데일리: 오전발주처리/CS/월요일주간매출작성/오후2시이후발주체크/송장번호오후5시전전달' +
+'\n호텔 발주: 이지어드민비연동발주/2시이전당일출고/2시이후익일/발주서체크→비연동파일→판매입력3단계필수' +
+'\n직납호텔: 그랜드하얏트서울(금/오은선010-8601-2089)/그랜드하얏트인천(화/문지훈)/드래곤시티(목/유찬규)/콘래드(수/송예원-수요일1~3시半고정)/안토(목월1~3회/황형주)' +
+'\n조선호텔계열: SRM주문/역발행/어드민송장입력/마감9일주의' +
 '\n블루보틀 전국 매장별 개별배송: 휴먼메이드(김화진010-5190-4837)/광화문(이준영010-4103-4460)/명동(정용정010-7739-2963)/삼성(장나윤010-6217-6821)/성수(허은정010-3348-4539)/압구정(배소영010-5772-7035)/여의도(임희언010-2861-4110)/역삼(안인규010-2922-9424)/연남(이승훈010-2707-2318)/잠실(강용하010-7584-2207)/제주(이경희010-3173-8723)/판교(이병욱010-7324-1310)/한남(황신애010-4317-0023)/홍대(김세희010-7641-5543)/부산(백정엽010-5346-7484)/기장(이현주010-9459-5173)/서울역(박소현010-4486-0121)/인천(신영규010-5046-7916)/판교현백(허다빈010-9799-2656)/마곡(한소라010-8857-3980)' +
 '\n대한항공씨앤디: partner.koreanaircnd.com (ID:V1724560) | 코리아e플랫폼: koreab2b.com (ID:REWIND)' +
 '\n\n=== 마케팅팀 ===' +
@@ -3544,6 +3704,53 @@ function saveChanges() {
   t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500);
 }
 <\/script>
+
+
+<!-- 업무 매뉴얼 팀 선택 모달 -->
+<div id="manualTeamModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:20px;padding:32px;max-width:440px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:32px;margin-bottom:8px;">🔒</div>
+      <div id="manualTeamModalTitle" style="font-size:18px;font-weight:700;color:#1c2b22;">팀 매뉴얼 접근</div>
+      <div id="manualTeamModalSub" style="font-size:13px;color:#888;margin-top:6px;">본인 소속 팀을 선택해주세요</div>
+    </div>
+
+    <!-- 팀 선택 화면 -->
+    <div id="manualTeamSelectView">
+      <div style="font-size:12px;font-weight:600;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">소속 팀 선택</div>
+      <div id="manualTeamBtns" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid #f0f0f0;text-align:center;">
+        <button onclick="closeManualTeamModal()" style="background:none;border:none;color:#888;font-size:13px;cursor:pointer;">취소</button>
+      </div>
+    </div>
+
+    <!-- 접근 불가 화면 -->
+    <div id="manualAccessDenied" style="display:none;text-align:center;">
+      <div style="font-size:40px;margin-bottom:12px;">🚫</div>
+      <div style="font-size:15px;font-weight:600;color:#1c2b22;margin-bottom:8px;" id="accessDeniedMsg">접근 권한이 없습니다</div>
+      <div style="font-size:13px;color:#888;margin-bottom:20px;" id="accessDeniedSub"></div>
+      <button onclick="sendAccessRequest()" id="accessRequestBtn"
+        style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:10px;">
+        📧 접근 허용 요청하기
+      </button>
+      <button onclick="closeManualTeamModal()"
+        style="width:100%;background:#f5f5f5;color:#555;border:none;border-radius:10px;padding:11px;font-size:13px;cursor:pointer;font-family:inherit;">
+        취소
+      </button>
+    </div>
+
+    <!-- 요청 완료 화면 -->
+    <div id="manualRequestSent" style="display:none;text-align:center;">
+      <div style="font-size:40px;margin-bottom:12px;">✅</div>
+      <div style="font-size:15px;font-weight:600;color:#1c2b22;margin-bottom:8px;">요청이 전송됐어요!</div>
+      <div style="font-size:13px;color:#888;margin-bottom:20px;">신정인 이사에게 허용 요청 이메일을 발송했습니다.<br>승인 후 접근 가능해집니다.</div>
+      <button onclick="closeManualTeamModal()"
+        style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">
+        확인
+      </button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
