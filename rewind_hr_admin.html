@@ -228,10 +228,20 @@ select.fi{background:var(--w);}
       <option value="jungin">신정인 이사</option>
       <option value="jihye">김지혜 부장</option>
     </select>
-    <input class="inp" type="password" id="pwInp" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')doLogin()">
+    <div style="position:relative;">
+      <input class="inp" type="password" id="pwInp" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')doLogin()" style="padding-right:44px;">
+      <button onclick="togglePwVisible()" id="pwEyeBtn" type="button"
+        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;padding:0;line-height:1;">
+        👁
+      </button>
+    </div>
     <div class="err-msg" id="loginErr">비밀번호가 틀렸습니다</div>
     <button class="btn-full" onclick="doLogin()">로그인</button>
-    <p class="hint-txt" style="color:transparent;font-size:10px;">·</p>
+    <div style="display:flex;justify-content:center;gap:16px;margin-top:10px;">
+      <button onclick="showFindPw()" style="background:none;border:none;color:#888;font-size:12px;cursor:pointer;text-decoration:underline;">비밀번호 찾기</button>
+      <span style="color:#ddd;">|</span>
+      <button onclick="showChangePw()" style="background:none;border:none;color:#888;font-size:12px;cursor:pointer;text-decoration:underline;">비밀번호 변경</button>
+    </div>
   </div>
 </div>
 
@@ -252,6 +262,70 @@ select.fi{background:var(--w);}
   </div>
 </div>
 
+<!-- 비밀번호 찾기 모달 -->
+<div id="findPwModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:28px;max-width:400px;width:90%;">
+    <div style="font-size:16px;font-weight:700;color:var(--g);margin-bottom:8px;">🔍 비밀번호 찾기</div>
+    <p style="font-size:13px;color:#666;margin-bottom:16px;">담당자를 선택하고 등록된 이메일로 임시 비밀번호를 발송해드립니다.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <select id="findPwUser" class="inp" style="margin:0;">
+        <option value="">담당자 선택</option>
+        <option value="jungin">신정인 이사 (jungin_shin@iamgreener.co.kr)</option>
+        <option value="jihye">김지혜 부장 (jiheyya@iamgreener.co.kr)</option>
+      </select>
+      <div id="findPwErr" style="color:#dc2626;font-size:12px;display:none;"></div>
+      <button onclick="sendTempPw()" class="btn-full" style="margin:0;">📧 임시 비밀번호 발송</button>
+      <button onclick="document.getElementById('findPwModal').style.display='none'" 
+        style="background:none;border:none;color:#888;font-size:13px;cursor:pointer;">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 비밀번호 변경 모달 (로그인 전) -->
+<div id="changePwModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:28px;max-width:400px;width:90%;">
+    <div style="font-size:16px;font-weight:700;color:var(--g);margin-bottom:16px;">🔑 비밀번호 변경</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <select id="changePwUser" class="inp" style="margin:0;">
+        <option value="">담당자 선택</option>
+        <option value="jungin">신정인 이사</option>
+        <option value="jihye">김지혜 부장</option>
+      </select>
+      <input type="password" id="changePwCurrent" placeholder="현재 비밀번호" class="inp" style="margin:0;">
+      <input type="password" id="changePwNew" placeholder="새 비밀번호 (6자 이상)" class="inp" style="margin:0;">
+      <input type="password" id="changePwNew2" placeholder="새 비밀번호 확인" class="inp" style="margin:0;">
+      <div id="changePwErr" style="color:#dc2626;font-size:12px;display:none;"></div>
+      <button onclick="doChangePw()" class="btn-full" style="margin:0;">변경 완료</button>
+      <button onclick="document.getElementById('changePwModal').style.display='none'"
+        style="background:none;border:none;color:#888;font-size:13px;cursor:pointer;">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 관리자 추가 모달 -->
+<div id="addAdminModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:28px;max-width:420px;width:90%;">
+    <div style="font-size:16px;font-weight:700;color:var(--g);margin-bottom:8px;">👤 관리자 추가</div>
+    <p style="font-size:12.5px;color:#666;margin-bottom:16px;">새 관리자를 추가합니다. 초기 비밀번호는 직접 전달해주세요.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <input id="newAdminId" placeholder="아이디 (영문, 예: minju)" class="inp" style="margin:0;">
+      <input id="newAdminName" placeholder="이름 (예: 정민주 대리)" class="inp" style="margin:0;">
+      <input id="newAdminEmail" placeholder="이메일" class="inp" style="margin:0;">
+      <input type="password" id="newAdminPw" placeholder="초기 비밀번호 (6자 이상)" class="inp" style="margin:0;">
+      <div id="addAdminErr" style="color:#dc2626;font-size:12px;display:none;"></div>
+      <button onclick="addNewAdmin()" class="btn-full" style="margin:0;">➕ 관리자 추가</button>
+      <button onclick="document.getElementById('addAdminModal').style.display='none'"
+        style="background:none;border:none;color:#888;font-size:13px;cursor:pointer;">취소</button>
+    </div>
+    
+    <!-- 현재 관리자 목록 -->
+    <div style="margin-top:16px;border-top:1px solid #eee;padding-top:14px;">
+      <div style="font-size:12px;font-weight:700;color:#666;margin-bottom:8px;">현재 등록된 관리자</div>
+      <div id="adminList"></div>
+    </div>
+  </div>
+</div>
+
 <!-- APP -->
 <div class="app" id="mainApp" style="display:none;">
   <header class="topbar">
@@ -264,6 +338,10 @@ select.fi{background:var(--w);}
       <button onclick="openPwChange()" 
         style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;">
         🔑 비밀번호 변경
+      </button>
+      <button onclick="showAddAdmin()" 
+        style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;">
+        👤 관리자 추가
       </button>
       <button class="btn-logout" onclick="doLogout()">로그아웃</button>
     </div>
@@ -768,38 +846,111 @@ select.fi{background:var(--w);}
 
 <script>
 // ── 비밀번호 관리 ──────────────────────────────────
-// 초기 비밀번호 (해시 없이 localStorage에 저장, 첫 실행 시 기본값 설정)
+
 function getPw(user) {
-  return localStorage.getItem('rw_pw_' + user) || (user === 'jungin' ? 'rewind2024' : 'rewind2024');
+  return localStorage.getItem('rw_pw_' + user) || 'rewind2024';
+}
+
+function togglePwVisible() {
+  var inp = document.getElementById('pwInp');
+  var btn = document.getElementById('pwEyeBtn');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    inp.type = 'password';
+    btn.textContent = '👁';
+  }
+}
+
+function getAdmins() {
+  var defaults = [
+    {id:'jungin', name:'신정인 이사', email:'jungin_shin@iamgreener.co.kr'},
+    {id:'jihye', name:'김지혜 부장', email:'jiheyya@iamgreener.co.kr'}
+  ];
+  var extra = JSON.parse(localStorage.getItem('rw_extra_admins') || '[]');
+  return defaults.concat(extra);
+}
+
+function showFindPw() {
+  document.getElementById('findPwModal').style.display = 'flex';
+  document.getElementById('findPwErr').style.display = 'none';
+}
+
+function showChangePw() {
+  document.getElementById('changePwModal').style.display = 'flex';
+  document.getElementById('changePwErr').style.display = 'none';
+}
+
+async function sendTempPw() {
+  var user = document.getElementById('findPwUser').value;
+  var errEl = document.getElementById('findPwErr');
+  errEl.style.display = 'none';
+  if (!user) { errEl.textContent = '담당자를 선택해주세요.'; errEl.style.display = 'block'; return; }
+
+  var tempPw = 'RW' + Math.random().toString(36).slice(2,6).toUpperCase() + Math.floor(Math.random()*100);
+  localStorage.setItem('rw_pw_' + user, tempPw);
+
+  var admins = getAdmins();
+  var admin = admins.find(function(a){ return a.id === user; });
+  var email = admin ? admin.email : '';
+  var name = admin ? admin.name : '';
+
+  try {
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: email,
+      applicant_name: name,
+      applicant_email: email,
+      cert_type: '[HR 시스템] 임시 비밀번호 발송',
+      purpose: 'HR 관리 시스템 비밀번호 찾기',
+      note: '안녕하세요 ' + name + '님!\n\n임시 비밀번호: ' + tempPw + '\n\n로그인 후 즉시 비밀번호를 변경해주세요.\n\n리와인드 HR 시스템'
+    });
+    document.getElementById('findPwModal').style.display = 'none';
+    alert('✅ ' + email + '로 임시 비밀번호를 발송했습니다!\n로그인 후 즉시 변경해주세요.');
+  } catch(e) {
+    errEl.textContent = '이메일 발송 실패. 신정인 이사에게 직접 문의하세요.';
+    errEl.style.display = 'block';
+  }
+}
+
+function doChangePw() {
+  var user = document.getElementById('changePwUser').value;
+  var current = document.getElementById('changePwCurrent').value;
+  var newPw = document.getElementById('changePwNew').value;
+  var newPw2 = document.getElementById('changePwNew2').value;
+  var errEl = document.getElementById('changePwErr');
+  errEl.style.display = 'none';
+
+  if (!user) { errEl.textContent = '담당자를 선택해주세요.'; errEl.style.display = 'block'; return; }
+  if (current !== getPw(user)) { errEl.textContent = '현재 비밀번호가 틀렸습니다.'; errEl.style.display = 'block'; return; }
+  if (newPw.length < 6) { errEl.textContent = '새 비밀번호는 6자 이상이어야 합니다.'; errEl.style.display = 'block'; return; }
+  if (newPw !== newPw2) { errEl.textContent = '새 비밀번호가 일치하지 않습니다.'; errEl.style.display = 'block'; return; }
+
+  localStorage.setItem('rw_pw_' + user, newPw);
+  document.getElementById('changePwModal').style.display = 'none';
+  document.getElementById('changePwCurrent').value = '';
+  document.getElementById('changePwNew').value = '';
+  document.getElementById('changePwNew2').value = '';
+  alert('✅ 비밀번호가 변경되었습니다!');
 }
 
 function doLogin() {
   var user = document.getElementById('userSelect').value;
   var pw = document.getElementById('pwInp').value;
   var errEl = document.getElementById('loginErr');
-  
-  if (!user) {
-    errEl.textContent = '담당자를 선택해주세요.';
-    errEl.style.display = 'block';
-    return;
-  }
-  if (!pw) {
-    errEl.textContent = '비밀번호를 입력해주세요.';
-    errEl.style.display = 'block';
-    return;
-  }
-  
+
+  if (!user) { errEl.textContent = '담당자를 선택해주세요.'; errEl.style.display = 'block'; return; }
+  if (!pw) { errEl.textContent = '비밀번호를 입력해주세요.'; errEl.style.display = 'block'; return; }
+
   if (pw === getPw(user)) {
     errEl.style.display = 'none';
     document.getElementById('loginWrap').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
-    // 로그인 사용자 저장
     sessionStorage.setItem('rw_admin_user', user);
     sessionStorage.setItem('rw_admin_name', user === 'jungin' ? '신정인 이사' : '김지혜 부장');
-    // 로그인 이름 표시
     var nameEl = document.getElementById('loggedInName');
     if (nameEl) nameEl.textContent = (user === 'jungin' ? '신정인 이사' : '김지혜 부장') + ' 로그인 중';
-    loadAdminNotices();
+    initApp();
   } else {
     errEl.textContent = '비밀번호가 틀렸습니다.';
     errEl.style.display = 'block';
@@ -808,9 +959,17 @@ function doLogin() {
   }
 }
 
+function doLogout() {
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('pwInp').value = '';
+  document.getElementById('userSelect').value = '';
+  sessionStorage.removeItem('rw_admin_user');
+}
+
 function openPwChange() {
   var user = sessionStorage.getItem('rw_admin_user');
-  var name = sessionStorage.getItem('rw_admin_name');
+  var name = sessionStorage.getItem('rw_admin_name') || '관리자';
   document.getElementById('pwChangeUser').textContent = name + '의 비밀번호 변경';
   document.getElementById('pwCurrent').value = '';
   document.getElementById('pwNew').value = '';
@@ -827,33 +986,99 @@ function savePwChange() {
   var errEl = document.getElementById('pwChangeErr');
   errEl.style.display = 'none';
 
-  if (current !== getPw(user)) {
-    errEl.textContent = '현재 비밀번호가 틀렸습니다.';
-    errEl.style.display = 'block';
-    return;
-  }
-  if (newPw.length < 6) {
-    errEl.textContent = '새 비밀번호는 6자 이상이어야 합니다.';
-    errEl.style.display = 'block';
-    return;
-  }
-  if (newPw !== newPw2) {
-    errEl.textContent = '새 비밀번호가 일치하지 않습니다.';
-    errEl.style.display = 'block';
-    return;
-  }
+  if (current !== getPw(user)) { errEl.textContent = '현재 비밀번호가 틀렸습니다.'; errEl.style.display = 'block'; return; }
+  if (newPw.length < 6) { errEl.textContent = '새 비밀번호는 6자 이상이어야 합니다.'; errEl.style.display = 'block'; return; }
+  if (newPw !== newPw2) { errEl.textContent = '새 비밀번호가 일치하지 않습니다.'; errEl.style.display = 'block'; return; }
 
   localStorage.setItem('rw_pw_' + user, newPw);
   document.getElementById('pwChangeModal').style.display = 'none';
   alert('✅ 비밀번호가 변경되었습니다!');
 }
+
+function showAddAdmin() {
+  document.getElementById('addAdminModal').style.display = 'flex';
+  renderAdminList();
+}
+
+function renderAdminList() {
+  var admins = getAdmins();
+  var extra = JSON.parse(localStorage.getItem('rw_extra_admins') || '[]');
+  var listEl = document.getElementById('adminList');
+  if (!listEl) return;
+  listEl.innerHTML = admins.map(function(a) {
+    var isDefault = (a.id === 'jungin' || a.id === 'jihye');
+    var delBtn = isDefault
+      ? '<span style="font-size:11px;color:#888;background:#e9ecef;padding:2px 8px;border-radius:10px;">기본</span>'
+      : '<button onclick="removeAdmin(\"' + a.id + '\")" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;">삭제</button>';
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#f8f9fa;border-radius:8px;margin-bottom:6px;font-size:13px;">' +
+      '<div><strong>' + a.name + '</strong><div style="font-size:11px;color:#888;">' + a.email + '</div></div>' +
+      delBtn + '</div>';
+  }).join('');
+}
+
+function addNewAdmin() {
+  var id = document.getElementById('newAdminId').value.trim().replace(/\s/g,'');
+  var name = document.getElementById('newAdminName').value.trim();
+  var email = document.getElementById('newAdminEmail').value.trim();
+  var pw = document.getElementById('newAdminPw').value;
+  var errEl = document.getElementById('addAdminErr');
+  errEl.style.display = 'none';
+
+  if (!id || !name || !email || !pw) { errEl.textContent = '모든 항목을 입력해주세요.'; errEl.style.display = 'block'; return; }
+  if (pw.length < 6) { errEl.textContent = '비밀번호는 6자 이상이어야 합니다.'; errEl.style.display = 'block'; return; }
+
+  var extra = JSON.parse(localStorage.getItem('rw_extra_admins') || '[]');
+  if (extra.find(function(a){ return a.id === id; })) {
+    errEl.textContent = '이미 사용 중인 아이디입니다.'; errEl.style.display = 'block'; return;
+  }
+
+  extra.push({id:id, name:name, email:email});
+  localStorage.setItem('rw_extra_admins', JSON.stringify(extra));
+  localStorage.setItem('rw_pw_' + id, pw);
+
+  var sel = document.getElementById('userSelect');
+  if (sel) {
+    var opt = document.createElement('option');
+    opt.value = id; opt.textContent = name;
+    sel.appendChild(opt);
+  }
+
+  document.getElementById('newAdminId').value = '';
+  document.getElementById('newAdminName').value = '';
+  document.getElementById('newAdminEmail').value = '';
+  document.getElementById('newAdminPw').value = '';
+  renderAdminList();
+  alert('✅ ' + name + ' 관리자가 추가됐습니다!');
+}
+
+function removeAdmin(id) {
+  if (!confirm('이 관리자를 삭제할까요?')) return;
+  var extra = JSON.parse(localStorage.getItem('rw_extra_admins') || '[]');
+  extra = extra.filter(function(a){ return a.id !== id; });
+  localStorage.setItem('rw_extra_admins', JSON.stringify(extra));
+  localStorage.removeItem('rw_pw_' + id);
+  renderAdminList();
+}
+
+// 페이지 로드 시 추가 관리자 반영
+document.addEventListener('DOMContentLoaded', function() {
+  var extra = JSON.parse(localStorage.getItem('rw_extra_admins') || '[]');
+  var sel = document.getElementById('userSelect');
+  if (sel && extra.length) {
+    extra.forEach(function(a) {
+      var opt = document.createElement('option');
+      opt.value = a.id; opt.textContent = a.name;
+      sel.appendChild(opt);
+    });
+  }
+});
 </script>
 
 <script>
 
 
 // ── 새 공지 탭 전용 postNotice ──────────────────────
-async async function postNoticeNew() {
+async function postNoticeNew() {
   var title = document.getElementById('noticeTitle').value.trim();
   var content = document.getElementById('noticeContent').value.trim();
   var sendEmail = document.getElementById('noticeSendEmail').checked;
@@ -990,6 +1215,450 @@ async function sendAllLateNotices() {
   showToast('✅ 지각 알림 발송 완료!');
 }
 
+
+
+
+// ── CORE APP FUNCTIONS ────────────────────────────
+
+var STAFF = [
+  {team:'임원',name:'김은정',rank:'대표이사',role:'신사업',email:'greener_kim@iamgreener.co.kr',phone:'010-2792-4375',ext:'-',note:''},
+  {team:'임원',name:'박원욱',rank:'대표이사',role:'영업, 구매',email:'eddy_park@iamgreener.co.kr',phone:'010-9513-0202',ext:'-',note:''},
+  {team:'임원',name:'신정인',rank:'이사',role:'마케팅, 운영',email:'jungin_shin@iamgreener.co.kr',phone:'010-4426-0617',ext:'-',note:'부산지사'},
+  {team:'영업팀',name:'안시진',rank:'팀장/차장',role:'주문제작',email:'greener_asj@iamgreener.co.kr',phone:'010-3032-4111',ext:'070-4217-5365',note:''},
+  {team:'영업팀',name:'한윤구',rank:'부장',role:'영업',email:'yghan@iamgreener.co.kr',phone:'010-4286-0907',ext:'070-7726-5072',note:''},
+  {team:'영업팀',name:'구승모',rank:'과장',role:'대한항공 전담',email:'ksm@iamgreener.co.kr',phone:'010-4132-2959',ext:'-',note:'중국'},
+  {team:'영업팀',name:'정민주',rank:'대리',role:'유통',email:'98gusdl52@iamgreener.co.kr',phone:'010-9173-5738',ext:'-',note:'부산지사'},
+  {team:'영업팀',name:'안주희',rank:'사원',role:'주문제작',email:'juhee_an@iamgreener.co.kr',phone:'010-8824-3142',ext:'070-4217-0727',note:''},
+  {team:'마케팅팀',name:'정성원',rank:'팀장/과장',role:'디자인',email:'greener_sw@iamgreener.co.kr',phone:'010-9216-4499',ext:'-',note:''},
+  {team:'마케팅팀',name:'허다람',rank:'과장',role:'홍보',email:'greener_hdr@iamgreener.co.kr',phone:'010-9083-9095',ext:'070-7700-5375',note:''},
+  {team:'마케팅팀',name:'이이현',rank:'대리',role:'MD',email:'22hyun@iamgreener.co.kr',phone:'010-7464-8668',ext:'-',note:''},
+  {team:'구매팀',name:'김성수',rank:'과장',role:'구매',email:'kss1224@iamgreener.co.kr',phone:'010-7107-9522',ext:'-',note:''},
+  {team:'구매팀',name:'김윤경',rank:'사원',role:'구매',email:'yunkk@iamgreener.co.kr',phone:'010-9353-3235',ext:'070-4215-5070',note:''},
+  {team:'구매팀',name:'김민수',rank:'사원',role:'구매',email:'minnwaterr@iamgreener.co.kr',phone:'010-9956-4800',ext:'070-4217-5364',note:''},
+  {team:'운영팀',name:'김지혜',rank:'팀장/부장',role:'재무, 인사, 노무',email:'jiheyya@iamgreener.co.kr',phone:'010-7712-1236',ext:'-',note:'제주'},
+  {team:'운영팀',name:'안성진',rank:'실장',role:'물류',email:'greener_an@iamgreener.co.kr',phone:'010-2866-5803',ext:'-',note:'김포창고'},
+  {team:'운영팀',name:'신희연',rank:'대리',role:'CS',email:'greener_hys@iamgreener.co.kr',phone:'010-9288-0827',ext:'070-4217-5366',note:'부산지사'},
+];
+
+var generatedDays = [];
+var attendAllData = [];
+var pdfjsLib = null;
+
+function showTab(id, el) {
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); });
+  var panel = document.getElementById('tab-' + id);
+  if (panel) panel.classList.add('on');
+  if (el) el.classList.add('on');
+}
+
+function initApp() {
+  renderStaff(STAFF);
+  populateContactSelect();
+  var today = new Date().toISOString().split('T')[0];
+  var obDate = document.getElementById('obDate');
+  var qDate = document.getElementById('qDate');
+  if (obDate) obDate.value = today;
+  if (qDate) qDate.value = today;
+  loadAdminNotices();
+}
+
+function renderStaff(data) {
+  var tbody = document.getElementById('staffBody');
+  if (!tbody) return;
+  tbody.innerHTML = data.map(function(s) {
+    return '<tr>' +
+      '<td><span class="team-badge">' + s.team + '</span></td>' +
+      '<td><strong>' + s.name + '</strong></td>' +
+      '<td>' + s.rank + '</td>' +
+      '<td>' + s.role + '</td>' +
+      '<td style="font-size:12px;">' + s.email + '</td>' +
+      '<td><strong>' + s.phone + '</strong></td>' +
+      '<td style="font-size:12px;">' + s.ext + '</td>' +
+      '<td style="font-size:12px;color:var(--mu);">' + s.note + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function filterStaff(q) {
+  renderStaff(STAFF.filter(function(s){
+    return s.name.includes(q)||s.team.includes(q)||s.role.includes(q)||s.rank.includes(q);
+  }));
+}
+
+function populateContactSelect() {
+  var sel = document.getElementById('contactSelect');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">-- 담당자 선택 --</option>';
+  STAFF.forEach(function(s) {
+    if (s.phone !== '-') {
+      var opt = document.createElement('option');
+      opt.value = s.team + ' · ' + s.name + ' ' + s.rank + ' · ' + s.phone;
+      opt.textContent = s.team + ' · ' + s.name + ' ' + s.rank + ' · ' + s.phone;
+      sel.appendChild(opt);
+    }
+  });
+}
+
+// PDF.js 로드
+async function loadPdfJs() {
+  if (pdfjsLib) return pdfjsLib;
+  return new Promise(function(resolve, reject) {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.onload = function() {
+      var lib = window['pdfjs-dist/build/pdf'];
+      lib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      pdfjsLib = lib;
+      resolve(lib);
+    };
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+async function extractPdfText(file) {
+  var lib = await loadPdfJs();
+  var arrayBuffer = await file.arrayBuffer();
+  var pdf = await lib.getDocument({ data: arrayBuffer }).promise;
+  var fullText = '';
+  for (var i = 1; i <= pdf.numPages; i++) {
+    var page = await pdf.getPage(i);
+    var content = await page.getTextContent();
+    fullText += content.items.map(function(item){ return item.str; }).join(' ') + '\n';
+  }
+  return fullText.trim();
+}
+
+function fileToBase64(file) {
+  return new Promise(function(resolve) {
+    var reader = new FileReader();
+    reader.onload = function(e){ resolve(e.target.result.split(',')[1]); };
+    reader.readAsDataURL(file);
+  });
+}
+
+// 파일 드롭
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('over');
+  var file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+}
+
+async function handleFile(file) {
+  if (!file) return;
+  var ta = document.getElementById('resumeText');
+  var zone = document.getElementById('dropZone');
+  zone.innerHTML = '<span class="dicon">⏳</span><h3>파일 읽는 중...</h3><p>' + file.name + '</p>';
+  try {
+    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+      var text = await extractPdfText(file);
+      if (!text || text.length < 20) {
+        ta.value = '';
+        zone.innerHTML = '<span class="dicon">⚠️</span><h3>텍스트 추출 실패</h3><p>스캔된 이미지 PDF입니다.<br>아래 입력란에 직접 붙여넣기 해주세요.</p>';
+        showToast('스캔 PDF는 추출 불가 — 직접 붙여넣기 해주세요.');
+      } else {
+        ta.value = text;
+        zone.innerHTML = '<span class="dicon">✅</span><h3>' + file.name + '</h3><p>PDF 추출 완료 (' + text.length.toLocaleString() + '자) — 아래 분석 버튼을 눌러주세요</p>';
+        showToast('PDF 추출 완료! 분석 버튼을 눌러주세요.');
+      }
+    } else if (file.type.startsWith('image/')) {
+      var b64 = await fileToBase64(file);
+      window._imgB64 = b64;
+      window._imgType = file.type;
+      ta.value = '__IMAGE_RESUME__';
+      zone.innerHTML = '<span class="dicon">🖼</span><h3>' + file.name + '</h3><p>이미지 이력서 감지 — 분석 버튼을 눌러주세요</p>';
+      showToast('이미지 준비 완료! 분석 버튼을 눌러주세요.');
+    } else {
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        ta.value = ev.target.result || '';
+        zone.innerHTML = '<span class="dicon">✅</span><h3>' + file.name + '</h3><p>파일 로드 완료 — 분석 버튼을 눌러주세요</p>';
+        showToast('파일 로드 완료!');
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+  } catch(err) {
+    zone.innerHTML = '<span class="dicon">📄</span><h3>이력서 파일을 여기에 드래그하거나 클릭하세요</h3><p>PDF · Word · 이미지 · 텍스트 파일 지원</p>';
+    showToast('파일 읽기 실패. 직접 붙여넣기 해주세요.');
+    console.error(err);
+  }
+}
+
+// 이력서 분석
+async function analyzeResume() {
+  var rawText = document.getElementById('resumeText').value.trim();
+  var contact = document.getElementById('contactSelect').value || '한윤구 부장 (010-4286-0907)';
+  var isImage = rawText === '__IMAGE_RESUME__';
+
+  if (!rawText) { showToast('이력서 내용을 입력하거나 파일을 업로드해주세요.'); return; }
+
+  var btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"><span class="ldot"></span><span class="ldot"></span><span class="ldot"></span></span> AI 분석 중...';
+
+  var jsonSchema = '{"name":"이름","birth":"생년월일또는나이","phone":"연락처","email":"이메일","address":"주소","education":"최종학력","career_summary":"경력요약2-3줄","skills":"주요스킬자격증","prev_company":"직전직장","prev_role":"직전직책","strength":"강점","join_team":"추정입사팀"}';
+
+  var messages;
+  if (isImage && window._imgB64) {
+    messages = [{role:'user',content:[
+      {type:'image',source:{type:'base64',media_type:window._imgType,data:window._imgB64}},
+      {type:'text',text:'이 이미지는 이력서입니다. 분석해서 JSON만 반환하세요. 다른 텍스트 없이 JSON만. 형식: ' + jsonSchema}
+    ]}];
+  } else {
+    messages = [{role:'user',content:'다음 이력서를 분석해서 JSON만 반환하세요. 다른 텍스트 없이 JSON만. 형식: ' + jsonSchema + '\n\n이력서:\n' + rawText}];
+  }
+
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:messages})
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    var raw = data.content[0].text.replace(/```json|```/g,'').trim();
+    var info;
+    try { info = JSON.parse(raw); }
+    catch(pe) {
+      var m = raw.match(/\{[\s\S]+\}/);
+      if (m) info = JSON.parse(m[0]);
+      else throw new Error('JSON 파싱 실패');
+    }
+    renderInfo(info);
+    await generateWelcomeEmail(info, contact);
+    var resultEl = document.getElementById('resumeResult');
+    if (resultEl) { resultEl.classList.add('show'); resultEl.scrollIntoView({behavior:'smooth'}); }
+  } catch(e) {
+    showToast('분석 중 오류: ' + e.message);
+    console.error(e);
+  }
+  btn.disabled = false;
+  btn.innerHTML = '✨ AI 분석 시작';
+}
+
+function renderInfo(info) {
+  var grid = document.getElementById('infoGrid');
+  if (!grid) return;
+  var fields = [
+    ['이름',info.name],['생년월일/나이',info.birth],
+    ['연락처',info.phone],['이메일',info.email],
+    ['주소',info.address],['최종학력',info.education],
+    ['직전 직장',info.prev_company],['직전 직책',info.prev_role],
+    ['경력 요약',info.career_summary,true],
+    ['주요 스킬',info.skills,true],
+    ['강점',info.strength,true],
+  ];
+  grid.innerHTML = fields.map(function(f){
+    return '<div class="info-item'+(f[2]?' full':'')+'"><div class="lbl">'+f[0]+'</div><div class="val">'+(f[1]||'-')+'</div></div>';
+  }).join('');
+  var infoText = document.getElementById('infoText');
+  if (infoText) infoText.value = fields.map(function(f){return f[0]+': '+(f[1]||'-');}).join('\n');
+}
+
+async function generateWelcomeEmail(info, contact) {
+  var prompt = '리와인드(아이엠그리너) 신입 직원 '+(info.name||'OOO')+'님의 입사 안내 이메일을 작성하세요. 실제 회사 형식:\n\n안녕하세요 [이름]님!!\n리와인드 김지혜 부장입니다^^\n먼저 이렇게 귀한 인연을 시작하게 되어 너무 기쁘고 환영해요!\n앞으로 함께 성장해 나가며 소중한 인연을 이어가기 바래요!\n\n1. 출근 일시\n- 출근 일시: [날짜 미정] 오전 9시 30분\n  (도착하시면 '+contact+'께 연락주세요!)\n- 출근 장소: 서울특별시 서대문구 연희로26 동방빌딩 6층\n\n2. 입사 서류\n1. 최종학교 졸업증명서\n2. 주민등록등본\n3. 가족관계증명서\n4. 급여통장 사본\n5. 증명사진 파일\n6. 채용건강진단서(출근 후 가능)\n\n3. 이메일 계정\n업무용 이메일 아이디를 미리 알려주시면 계정 생성해드립니다.\n예시: greener_kjh@iamgreener.co.kr\n\n연봉계약서 작성을 위해 주민등록번호와 주소, 희망 이메일 아이디를 먼저 회신해 주시면 감사하겠습니다.\n\n발신: 김지혜 부장 (jiheyya@iamgreener.co.kr)\n\n제목줄도 함께 작성하세요. 첫줄: 제목: [제목내용]';
+
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})
+  });
+  var data = await res.json();
+  var text = data.content[0].text;
+  var sm = text.match(/제목:\s*(.+)/);
+  var subjEl = document.getElementById('welcomeSubj');
+  var emailEl = document.getElementById('welcomeEmail');
+  if (subjEl) subjEl.textContent = '제목: '+(sm?sm[1].trim():'[리와인드] '+(info.name||'')+'님 입사 안내');
+  if (emailEl) emailEl.textContent = text.replace(/제목:.+\n?/,'').trim();
+}
+
+function saveToList() { showToast('직원 목록에 저장되었습니다!'); }
+
+// 온보딩 메일
+async function generateOnboarding() {
+  var name = document.getElementById('obName').value.trim();
+  var date = document.getElementById('obDate').value;
+  var role = document.getElementById('obRole').value.trim() || '신입 직원';
+  var age = document.getElementById('obAge').value.trim();
+  var career = document.getElementById('obCareer').value.trim();
+  var note = document.getElementById('obNote').value.trim();
+  if (!name) { showToast('직원 이름을 입력해주세요.'); return; }
+
+  var btn = document.getElementById('obBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"><span class="ldot"></span><span class="ldot"></span><span class="ldot"></span></span> 생성 중...';
+
+  var dateStr = date ? new Date(date).toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'}) : '출근 예정일';
+  var dayLabels = [
+    {d:'D-Day', theme:'환영 인사 + 오늘 할 일 안내'},
+    {d:'Day 1 오후', theme:'첫날 적응 체크 + 질문 유도'},
+    {d:'Day 2', theme:'회사 미션·제품 소개'},
+    {d:'Day 3', theme:'업무 툴 세팅 + 동료 소개'},
+    {d:'Day 4', theme:'리와인드 4R 환경 미션 깊이 알기'},
+    {d:'Day 5', theme:'첫 주 소감 설문 (3가지 질문)'},
+    {d:'Day 7', theme:'첫 주 완주 축하 + 2주차 안내'}
+  ];
+
+  try {
+    var d1Prompt = '리와인드 신입 직원 '+name+'('+role+', '+(age||'')+') 입사 하루 전 팀장들에게 보내는 준비 공지 이메일. 출근일: '+dateStr+'. 발신: 김지혜 부장. 첫줄: 제목: [제목내용]';
+    var r1 = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:d1Prompt}]})
+    });
+    var d1 = await r1.json();
+    var d1text = d1.content[0].text;
+    var d1sm = d1text.match(/제목:\s*(.+)/);
+    document.getElementById('d1Subj').textContent = '제목: '+(d1sm?d1sm[1].trim():'[리와인드] '+name+'님 내일 출근 안내');
+    document.getElementById('d1Email').textContent = d1text.replace(/제목:.+\n?/,'').trim();
+
+    document.getElementById('dayRow').innerHTML = dayLabels.map(function(d,i){
+      return '<div class="dcard" onclick="loadDay('+i+')" id="dcard-'+i+'"><div class="dlbl">'+d.d+'</div><div class="dtitle">'+d.theme+'</div></div>';
+    }).join('');
+
+    generatedDays = dayLabels.map(function(d,i){
+      var p = '리와인드 신입 직원 '+name+'('+role+(age?', '+age:'')+')에게 '+d.d+'에 보내는 온보딩 이메일. 주제: '+d.theme+'. 경력: '+(career||'없음')+'. 따뜻한 톤. 발신: 김지혜 부장. 첫줄: 제목: [제목내용]';
+      return {prompt:p, text:null};
+    });
+
+    document.getElementById('obResult').classList.add('show');
+    document.getElementById('dayDetail').style.display = 'none';
+    await loadDay(0);
+  } catch(e) {
+    showToast('생성 중 오류. 다시 시도해주세요.');
+    console.error(e);
+  }
+  btn.disabled = false;
+  btn.innerHTML = '✨ 온보딩 메일 생성';
+}
+
+async function loadDay(i) {
+  document.querySelectorAll('.dcard').forEach(function(c,j){ c.classList.toggle('sel', j===i); });
+  var detail = document.getElementById('dayDetail');
+  detail.style.display = 'block';
+  if (!generatedDays[i]) return;
+  if (!generatedDays[i].text) {
+    document.getElementById('daySubj').textContent = '생성 중...';
+    document.getElementById('dayEmail').textContent = '';
+    var r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:generatedDays[i].prompt}]})
+    });
+    var d = await r.json();
+    generatedDays[i].text = d.content[0].text;
+  }
+  var text = generatedDays[i].text;
+  var sm = text.match(/제목:\s*(.+)/);
+  document.getElementById('daySubj').textContent = '제목: '+(sm?sm[1].trim():'온보딩 메일');
+  document.getElementById('dayEmail').textContent = text.replace(/제목:.+\n?/,'').trim();
+  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// 서류 관리
+function addDoc() {
+  var emp = document.getElementById('docEmp').value.trim();
+  var type = document.getElementById('docType').value;
+  if (!emp) { showToast('직원 이름을 입력해주세요.'); return; }
+  var list = document.getElementById('docList');
+  var row = document.createElement('div');
+  row.className = 'doc-row';
+  row.innerHTML = '<div class="doc-name">📄 '+type+' <span style="font-size:12px;color:var(--mu);">· '+emp+'</span></div>' +
+    '<div style="display:flex;align-items:center;gap:8px;"><span class="doc-st doc-wait">대기 중</span>' +
+    '<button class="btn btn-s btn-sm" onclick="toggleDoc(this)">완료</button></div>';
+  list.appendChild(row);
+  showToast('서류 항목 추가됨');
+}
+function toggleDoc(btn) {
+  var st = btn.previousElementSibling;
+  if (st.classList.contains('doc-wait')) {
+    st.className = 'doc-st doc-ok'; st.textContent = '제출 완료'; btn.textContent = '취소';
+  } else {
+    st.className = 'doc-st doc-wait'; st.textContent = '대기 중'; btn.textContent = '완료';
+  }
+}
+function filterDocs(q) {
+  document.querySelectorAll('#docList .doc-row').forEach(function(r){
+    r.style.display = r.textContent.includes(q) ? '' : 'none';
+  });
+}
+
+async function genDocGuide() {
+  var emp = document.getElementById('docGuideEmp').value.trim() || '직원';
+  var career = document.getElementById('docGuideCareer').value;
+  var prompt = '리와인드 신입 직원 '+emp+'님('+career+')에게 보내는 입사 서류 안내 이메일. 기본 서류: 1.졸업증명서 2.주민등록등본 3.가족관계증명서 4.급여통장사본 5.증명사진 6.채용건강진단서(출근후)' +
+    (career==='경력' ? ' 경력직 추가: 소득금액증명원, 전년도 근로소득원천징수영수증' : '') +
+    '. 연봉계약서 위해 주민번호, 주소, 희망이메일아이디 먼저 회신 요청. 발신: 김지혜 부장 (jiheyya@iamgreener.co.kr). 첫줄: 제목: [제목내용]';
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+  });
+  var data = await res.json();
+  var text = data.content[0].text;
+  var sm = text.match(/제목:\s*(.+)/);
+  document.getElementById('docGuideSubj').textContent = '제목: '+(sm?sm[1]:'입사 서류 안내');
+  document.getElementById('docGuideEmail').textContent = text.replace(/제목:.+\n?/,'').trim();
+  document.getElementById('docGuideResult').style.display = 'block';
+}
+
+// 질문 게시판
+function markDone(btn) {
+  var item = btn.closest('.q-item');
+  var badge = item.querySelector('.badge');
+  badge.className = 'badge badge-done'; badge.textContent = '답변 완료';
+  btn.remove();
+  updateQBadge();
+}
+async function genAnswer(btn, question) {
+  btn.disabled = true; btn.textContent = '생성 중...';
+  var prompt = '리와인드 신입 직원 질문에 인사담당자로서 친절하게 2-3문장으로 답변하세요. 질문: ' + question;
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,messages:[{role:'user',content:prompt}]})
+  });
+  var data = await res.json();
+  var ansDiv = document.createElement('div');
+  ansDiv.style.cssText = 'background:var(--gp);border:1px solid var(--gm);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.7;';
+  ansDiv.innerHTML = '<strong style="color:var(--g);">AI 답변 초안:</strong><br>' + data.content[0].text;
+  btn.closest('.q-item').appendChild(ansDiv);
+  btn.disabled = false; btn.textContent = 'AI 답변 초안';
+}
+function addQuestion() {
+  var name = document.getElementById('qName').value.trim();
+  var text = document.getElementById('qText').value.trim();
+  var date = document.getElementById('qDate').value;
+  if (!name || !text) { showToast('이름과 질문을 입력해주세요.'); return; }
+  var list = document.getElementById('qList');
+  var item = document.createElement('div');
+  item.className = 'q-item';
+  var safeText = text.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  item.innerHTML = '<div class="q-head"><div class="q-name">'+name+' <span class="badge badge-new">미답변</span></div><div class="q-date">'+date+'</div></div>' +
+    '<div class="q-body">'+text+'</div>' +
+    '<div class="btns"><button class="btn btn-s btn-sm" onclick="markDone(this)">답변 완료</button>' +
+    '<button class="btn btn-a btn-sm" onclick="genAnswer(this,\''+safeText+'\')">AI 답변 초안</button></div>';
+  list.appendChild(item);
+  document.getElementById('qName').value = '';
+  document.getElementById('qText').value = '';
+  updateQBadge();
+  showToast('질문이 추가되었습니다.');
+}
+function updateQBadge() {
+  var badge = document.getElementById('qBadge');
+  if (badge) badge.textContent = document.querySelectorAll('.badge-new').length;
+}
+
+// 근태현황
+var TEAM_MAP = {
+  '안시진':'영업팀','한윤구':'영업팀','구승모':'영업팀','정민주':'영업팀','안주희':'영업팀',
+  '정성원':'마케팅팀','허다람':'마케팅팀','이이현':'마케팅팀',
+  '김성수':'구매팀','김윤경':'구매팀','김민수':'구매팀',
+  '김지혜':'운영팀','안성진':'운영팀','신희연':'운영팀',
+  '김은정':'임원','박원욱':'임원','신정인':'임원'
+};
+var TEAM_ORDER = ['임원','영업팀','마케팅팀','구매팀','운영팀'];
+var ATTEND_SHEET_ID = '1fopcA9GxbmYEipRXdRCKF_TNMg8xlAnZwx-vgJLi8BE';
+var ATTEND_GID = '1656934812';
+
 async function loadAttendData() {
   var loadEl = document.getElementById('attendLoading');
   var wrap = document.getElementById('attendTableWrap');
@@ -1004,10 +1673,8 @@ async function loadAttendData() {
     var text = await res.text();
     var jsonStr = text.replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);\s*$/, '');
     var json = JSON.parse(jsonStr);
-    var table = json.table;
-    var cols = table.cols.map(function(c){ return c.label || c.id; });
-
-    attendAllData = table.rows.map(function(row) {
+    var cols = json.table.cols.map(function(c){ return c.label || c.id; });
+    attendAllData = json.table.rows.map(function(row) {
       var obj = {};
       cols.forEach(function(col, i) {
         var cell = row.c ? row.c[i] : null;
@@ -1016,358 +1683,195 @@ async function loadAttendData() {
       return obj;
     }).filter(function(r){ return r['이름'] || r['직원ID']; });
 
+    renderAttendByTeam();
     renderAttendTable(attendAllData);
-    renderTodayAttend(attendAllData);
-    renderAttendSummary();
     loadEl.style.display = 'none';
     wrap.style.display = 'block';
-    showToast('근태 데이터 ' + attendAllData.length + '건 불러오기 완료!');
+    showToast('근태 데이터 ' + attendAllData.length + '건 로드 완료!');
   } catch(e) {
-    // CSV 재시도
-    try {
-      var csvUrl = 'https://docs.google.com/spreadsheets/d/' + ATTEND_SHEET_ID + '/export?format=csv&gid=' + ATTEND_GID;
-      var res2 = await fetch(csvUrl);
-      if (!res2.ok) throw new Error('CSV 실패');
-      var csv = await res2.text();
-      attendAllData = parseCSV(csv).filter(function(r){ return r['이름']; });
-      renderAttendTable(attendAllData);
-      renderTodayAttend(attendAllData);
-      renderAttendSummary();
-      loadEl.style.display = 'none';
-      wrap.style.display = 'block';
-      showToast('근태 데이터 ' + attendAllData.length + '건 완료!');
-    } catch(e2) {
-      loadEl.innerHTML = '<div style="color:var(--rd);line-height:1.9;">' +
-        '❌ 데이터를 불러오지 못했습니다.<br>' +
-        '구글 시트 공유 설정을 "링크가 있는 모든 사용자 - 뷰어"로 변경 후 Netlify에 올린 파일에서 시도해주세요.<br>' +
-        '<small>' + e2.message + '</small></div>';
-    }
+    loadEl.innerHTML = '<span style="color:#dc2626;">데이터 로드 실패: ' + e.message + '</span>';
+    console.error(e);
   }
 }
 
-function renderTodayAttend(data) {
-  var today = new Date();
-  var todayStr = today.toISOString().split('T')[0]; // yyyy-mm-dd
+function renderAttendByTeam() {
+  var wrap = document.getElementById('teamAttendWrap');
+  var leaveEl = document.getElementById('todayLeave');
+  if (!wrap) return;
+  var dateFilter = document.getElementById('attend-date-filter');
+  var today = (dateFilter && dateFilter.value) ? dateFilter.value : new Date().toISOString().slice(0,10);
 
-  var todayData = data.filter(function(r) {
-    var d = String(r['날짜'] || '').trim();
-    // 다양한 날짜 형식 처리
-    if (!d) return false;
-    try {
-      var parsed = new Date(d.replace(/\. /g,'-').replace(/\./g,'-'));
-      return parsed.toISOString().split('T')[0] === todayStr;
-    } catch(ex) { return false; }
-  });
+  var todayStr = today.replace(/-/g,'.');
+  var todayData = attendAllData.filter(function(r){ return (r['날짜']||'').includes(todayStr) || (r['날짜']||'').includes(today); });
 
-  var el = document.getElementById('todayAttend');
-  if (todayData.length === 0) {
-    el.className = 'hl';
-    el.innerHTML = '오늘 (' + today.toLocaleDateString('ko-KR') + ') 출퇴근 기록이 없습니다.';
-    return;
+  // 오늘 연차
+  var leaveToday = todayData.filter(function(r){ return (r['유형']||r['타입']||r['구분']||'').match(/연차|반차/); });
+  if (leaveEl) {
+    leaveEl.innerHTML = leaveToday.length
+      ? leaveToday.map(function(r){ return '<span style="display:inline-flex;align-items:center;gap:6px;background:#fff3cd;border:1px solid #ffe082;border-radius:20px;padding:4px 12px;margin:3px;font-size:13px;">🏖️ <strong>'+(r['이름']||'')+'</strong> · '+(r['유형']||'연차')+'</span>'; }).join('')
+      : '<span style="color:#888;font-size:13px;">오늘 연차인 직원 없음</span>';
   }
 
-  // 직원별 최신 상태 집계
-  var byPerson = {};
+  // 팀별 그룹핑
+  var byTeam = {};
+  TEAM_ORDER.forEach(function(t){ byTeam[t] = {}; });
   todayData.forEach(function(r) {
-    var name = r['이름'];
-    if (!byPerson[name]) byPerson[name] = {name:name, checkin:'', checkout:'', late:r['지각여부']||'', loc:r['위치일치']||'', workplace:r['근무지']||''};
-    if (r['유형'] === '출근') byPerson[name].checkin = r['시간'];
-    if (r['유형'] === '퇴근') byPerson[name].checkout = r['시간'];
-    if (r['지각여부']) byPerson[name].late = r['지각여부'];
+    var name = r['이름']||'';
+    var team = TEAM_MAP[name]||'기타';
+    if (!byTeam[team]) byTeam[team] = {};
+    if (!byTeam[team][name]) byTeam[team][name] = {name:name,checkin:'',checkout:'',type:'',late:''};
+    var type = r['유형']||r['타입']||r['구분']||'';
+    var time = r['시간']||r['출퇴근시간']||'';
+    if (type.match(/출근|IN/)) byTeam[team][name].checkin = time;
+    else if (type.match(/퇴근|OUT/)) byTeam[team][name].checkout = time;
+    else if (type.match(/연차|반차/)) byTeam[team][name].type = type;
+    if (r['지각']||r['지각여부']) byTeam[team][name].late = '지각';
   });
 
-  var names = Object.keys(byPerson);
-  el.className = '';
-  el.style.cssText = '';
-  el.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:10px;">오늘 ' + today.toLocaleDateString('ko-KR') + ' 출퇴근 기록 ' + names.length + '명</div>' +
-    names.map(function(name) {
-      var p = byPerson[name];
-      var initial = name[0] || '?';
-      var locClass = p.loc === '일치' ? 'loc-ok' : p.loc === '불일치' ? 'loc-ng' : 'loc-ok';
-      var lateHtml = p.late === '지각' ? '<span class="late-badge">지각</span>' : '';
-      return '<div class="attend-row">' +
-        '<div class="attend-left">' +
-          '<div class="attend-avatar">' + initial + '</div>' +
-          '<div><div class="attend-name">' + name + lateHtml + '</div>' +
-          '<div class="attend-sub">' + p.workplace + '</div></div>' +
-        '</div>' +
-        '<div style="display:flex;align-items:center;gap:12px;">' +
-          '<div style="text-align:right;">' +
-            '<div class="attend-time">출근 ' + (p.checkin || '-') + '</div>' +
-            '<div class="attend-time attend-out">퇴근 ' + (p.checkout || '-') + '</div>' +
-          '</div>' +
-          (p.loc ? '<span class="loc-badge ' + locClass + '">' + p.loc + '</span>' : '') +
-        '</div>' +
+  wrap.innerHTML = TEAM_ORDER.map(function(team) {
+    var people = Object.values(byTeam[team]||{});
+    var colors = {'임원':'#e8f5ee','영업팀':'#eff6ff','마케팅팀':'#fdf4ff','구매팀':'#fff7ed','운영팀':'#f0fdf4'};
+    return '<div style="margin-bottom:12px;border:1px solid #e0e0e0;border-radius:10px;overflow:hidden;">' +
+      '<div style="padding:10px 16px;background:'+(colors[team]||'#fff')+';font-size:13px;font-weight:700;border-bottom:1px solid #e0e0e0;">' +
+        team + ' <span style="font-size:11px;font-weight:400;color:#888;">' + people.length + '명</span>' +
+      '</div>' +
+      (people.length ? '<table style="width:100%;border-collapse:collapse;font-size:13px;">' +
+        '<thead><tr style="background:rgba(0,0,0,.03);"><th style="padding:7px 12px;text-align:left;font-size:11px;">이름</th><th style="padding:7px 12px;text-align:left;font-size:11px;">출근</th><th style="padding:7px 12px;text-align:left;font-size:11px;">퇴근</th><th style="padding:7px 12px;text-align:left;font-size:11px;">상태</th></tr></thead>' +
+        '<tbody>' + people.map(function(p){
+          return '<tr><td style="padding:8px 12px;"><strong>'+p.name+'</strong></td>' +
+            '<td style="padding:8px 12px;">'+(p.checkin||'-')+'</td>' +
+            '<td style="padding:8px 12px;">'+(p.checkout||'-')+'</td>' +
+            '<td style="padding:8px 12px;">'+(p.late?'<span style="color:#dc2626;font-size:12px;font-weight:600;">⚠️ 지각</span>':(p.type?p.type:''))+'</td></tr>';
+        }).join('') + '</tbody></table>'
+      : '<div style="padding:14px;color:#888;font-size:13px;">오늘 출근 기록 없음</div>') +
       '</div>';
-    }).join('');
+  }).join('');
 }
 
 function renderAttendTable(data) {
   var tbody = document.getElementById('attendBody');
-  tbody.innerHTML = data.slice(0,200).map(function(r) {
-    var lateStyle = r['지각여부'] === '지각' ? 'color:var(--rd);font-weight:600;' : '';
-    var locStyle = r['위치일치'] === '불일치' ? 'color:var(--rd);' : 'color:var(--g);';
-    var typeStyle = r['유형'] === '출근' ? 'color:var(--g);font-weight:600;' : 'color:var(--mu);';
-    return '<tr>' +
-      '<td><strong>' + (r['이름']||'') + '</strong></td>' +
-      '<td>' + (r['날짜']||'') + '</td>' +
-      '<td><strong>' + (r['시간']||'') + '</strong></td>' +
-      '<td style="' + typeStyle + '">' + (r['유형']||'') + '</td>' +
-      '<td style="' + lateStyle + '">' + (r['지각여부']||'정상') + '</td>' +
-      '<td style="' + locStyle + '">' + (r['위치일치']||'') + '</td>' +
-      '<td style="font-size:12px;">' + (r['근무지']||'') + '</td>' +
-      '<td style="font-size:12px;color:var(--mu);">' + (r['사유']||'') + '</td>' +
+  if (!tbody) return;
+  tbody.innerHTML = data.slice(0,100).map(function(r) {
+    var isLate = (r['지각']||r['지각여부']||'').includes('지각');
+    return '<tr' + (isLate?' style="background:#fef2f2;"':'') + '>' +
+      '<td>'+(TEAM_MAP[r['이름']]||'-')+'</td>' +
+      '<td><strong>'+(r['이름']||'')+'</strong></td>' +
+      '<td>'+(r['날짜']||'')+'</td>' +
+      '<td>'+(r['시간']||r['출퇴근시간']||'')+'</td>' +
+      '<td>'+(r['유형']||r['타입']||r['구분']||'')+'</td>' +
+      '<td>'+(isLate?'<span style="color:#dc2626;font-weight:600;">지각</span>':'')+'</td>' +
+      '<td style="font-size:12px;">'+(r['위치']||r['장소']||'')+'</td>' +
+      '<td style="font-size:12px;">'+(r['비고']||'')+'</td>' +
     '</tr>';
   }).join('');
 }
 
-function filterAttend(key, val) {
-  _attendFilters[key] = val;
+function filterAttend(type, val) {
   var filtered = attendAllData.filter(function(r) {
-    var nameOk = !_attendFilters.name || (r['이름']||'').includes(_attendFilters.name);
-    var dateOk = !_attendFilters.date || (r['날짜']||'').includes(_attendFilters.date);
-    var typeOk = !_attendFilters.type || (r['유형']||'') === _attendFilters.type;
-    var lateOk = !_attendFilters.late || (r['지각여부']||'') === _attendFilters.late;
-    return nameOk && dateOk && typeOk && lateOk;
+    if (type === 'name') return (r['이름']||'').includes(val);
+    if (type === 'date') return (r['날짜']||'').includes(val.replace(/-/g,'.'));
+    if (type === 'type') return !val || (r['유형']||r['타입']||'').includes(val);
+    if (type === 'team') return !val || (TEAM_MAP[r['이름']]||'').includes(val);
+    return true;
   });
   renderAttendTable(filtered);
 }
 
-function renderAttendSummary() {
-  if (!attendAllData.length) return;
-  var days = parseInt(document.getElementById('attendPeriod').value) || 0;
-  var cutoff = days > 0 ? new Date(Date.now() - days * 86400000) : null;
+// 직원 관리
+var employees = JSON.parse(localStorage.getItem('rw_employees') || '[]');
 
-  var filtered = attendAllData.filter(function(r) {
-    if (!cutoff) return true;
-    try {
-      var d = new Date(String(r['날짜']||'').replace(/\. /g,'-').replace(/\./g,'-'));
-      return d >= cutoff;
-    } catch(ex) { return true; }
-  });
-
-  var byPerson = {};
-  filtered.forEach(function(r) {
-    var name = r['이름'];
-    if (!name) return;
-    if (!byPerson[name]) byPerson[name] = {name:name, checkins:0, late:0, locFail:0, days:new Set()};
-    var d = String(r['날짜']||'').trim();
-    if (r['유형'] === '출근') {
-      byPerson[name].checkins++;
-      byPerson[name].days.add(d);
-    }
-    if (r['지각여부'] === '지각') byPerson[name].late++;
-    if (r['위치일치'] === '불일치') byPerson[name].locFail++;
-  });
-
-  var names = Object.keys(byPerson).sort();
-  var el = document.getElementById('attendSummary');
-  if (!names.length) { el.textContent = '데이터가 없습니다.'; return; }
-
-  el.innerHTML = '<div style="overflow-x:auto;"><table class="sum-table">' +
-    '<thead><tr><th>이름</th><th>출근일수</th><th>지각횟수</th><th>위치불일치</th><th>지각률</th><th>평가등급</th></tr></thead>' +
-    '<tbody>' + names.map(function(name) {
-      var p = byPerson[name];
-      var workDays = p.days.size;
-      var lateRate = workDays > 0 ? Math.round(p.late / workDays * 100) : 0;
-      var grade, gradeClass;
-      if (lateRate === 0 && p.locFail === 0) { grade = 'A'; gradeClass = 'score-a'; }
-      else if (lateRate <= 10 && p.locFail <= 1) { grade = 'B'; gradeClass = 'score-b'; }
-      else { grade = 'C'; gradeClass = 'score-c'; }
-      return '<tr>' +
-        '<td><strong>' + name + '</strong></td>' +
-        '<td style="text-align:center;">' + workDays + '일</td>' +
-        '<td style="text-align:center;' + (p.late > 0 ? 'color:var(--rd);font-weight:600;' : '') + '">' + p.late + '회</td>' +
-        '<td style="text-align:center;' + (p.locFail > 0 ? 'color:var(--am);font-weight:600;' : '') + '">' + p.locFail + '회</td>' +
-        '<td style="text-align:center;">' + lateRate + '%</td>' +
-        '<td style="text-align:center;"><span class="score ' + gradeClass + '">' + grade + '</span></td>' +
-      '</tr>';
-    }).join('') +
-    '</tbody></table></div>' +
-    '<div style="margin-top:12px;font-size:11px;color:var(--mu);">A: 지각 0회·위치불일치 0회 / B: 지각률 10% 이하·불일치 1회 이하 / C: 그 외</div>';
-}
-
-
-
-// ── GUIDE CHATBOT ─────────────────────────────────
-var GUIDE_CONTEXT = '당신은 리와인드(아이엠그리너) HR 관리 시스템 전문 도우미입니다.' +
-'인사담당자가 시스템 사용법을 물어보면 친절하고 정확하게 안내하세요.' +
-'\n\n=== 시스템 구성 ===' +
-'\n직원 온보딩 포털: portal.rewind2nature.com/rewind_onboarding_portal_2.html (전 직원용)' +
-'\nHR 관리 시스템: portal.rewind2nature.com/rewind_hr_admin_1.html (인사담당자 전용, 비밀번호: rewind2024)' +
-'\n\n=== 메뉴별 기능 ===' +
-'\n📄 이력서 분석: PDF/이미지/텍스트 이력서 업로드 → AI가 이름·연락처·경력·강점 자동 추출 + 입사 안내 이메일 초안 자동 생성. 출근 연락 담당자를 전체 직원 목록에서 선택 가능.' +
-'\n🚀 온보딩 메일: 직원 정보(이름·출근일·직책·경력) 입력 → D-1 팀장 공지 메일 + 7일 온보딩 이메일 시퀀스 자동 생성. 각 카드 클릭 시 해당 날 이메일 초안 표시.' +
-'\n📁 서류 관리: 제출 서류 현황 관리(완료/대기), 신입/경력 서류 안내문 자동 생성.' +
-'\n💬 질문 게시판: 신입 직원 질문 확인, AI 답변 초안 생성, 답변 완료 처리.' +
-'\n👤 직원 관리: 전체 18명 직원 프로필, 입사일 기준 근속기간·연차 자동계산, 이력서/서류 업로드, 인사이력 타임라인(승진·이동·평가), 퇴사자 관리. 브라우저 로컬 저장소에 저장.' +
-'\n🏖️ 연차 현황: 새로고침 버튼 → 구글 시트 실시간 연동. 오늘 연차자 카드, 전체 내역, 직원별 사용 현황.' +
-'\n⏰ 근태 현황: 새로고침 → 출퇴근 구글 시트 연동. 오늘 출근 현황(출근/퇴근 시간, 지각, 위치), 전체 기록, 직원별 평가등급(A/B/C).' +
-'\n👥 직원 연락처: 18명 전체 연락처, 팀/이름/역할 검색.' +
-'\n📖 사용 안내: 이 페이지. 사용법 AI 도우미 포함.' +
-'\n\n=== 신규 직원 채용 프로세스 ===' +
-'\n1. 이력서 분석 탭 → PDF 드래그앤드롭 또는 텍스트 붙여넣기' +
-'\n2. 출근 연락 담당자 선택 (전체 직원 드롭다운)' +
-'\n3. AI 분석 시작 → 직원 정보 자동 추출' +
-'\n4. 입사 안내 이메일 초안 확인 → 복사 → 이메일 발송' +
-'\n5. 직원 목록에 저장 → 직원 관리 탭에서 추가 정보 입력' +
-'\n\n=== 포털 수정 방법 ===' +
-'\n간단 수정: 온보딩 포털 우상단 🔧 관리자 수정 → 비밀번호(rewind2024) → 직접 수정 → 저장' +
-'\n큰 변경: claude.ai에서 수정 요청 → 파일 받기 → github.com/jungin99/rewind-hr-portal 에서 파일 교체 → Commit changes → 30초 후 자동 반영' +
-'\n\n=== 자주 묻는 문제 ===' +
-'\n연차/근태 안 불러와짐: portal.rewind2nature.com 주소에서 접속 필요(로컬 파일 불가). 구글 시트 공유 설정 확인.' +
-'\n이력서 분석 안됨: 스캔 PDF는 불가. 텍스트 붙여넣기 또는 jpg/png 이미지로 업로드.' +
-'\n직원 정보 초기화: 브라우저 로컬 저장소 사용. 캐시 삭제 시 초기화.' +
-'\n기능 추가/수정: claude.ai에서 자유롭게 요청.' +
-'\n\n=== 직원 연락처 ===' +
-'\n김지혜 부장(운영팀, 재무/인사): 010-7712-1236, jiheyya@iamgreener.co.kr' +
-'\n한윤구 부장(영업팀): 010-4286-0907' +
-'\n안시진 차장(영업팀 팀장): 010-3032-4111' +
-'\n신정인 이사(임원): 010-4426-0617' +
-'\n김은정 대표(임원): 010-2792-4375' +
-'\n박원욱 대표(임원): 010-9513-0202' +
-'\n\n항상 한국어로 친절하고 간결하게 답변하세요.';
-
-var guideChatHistory = [];
-
-function guideQ(q) {
-  document.getElementById('guide-inp').value = q;
-  sendGuide();
-}
-
-async function sendGuide() {
-  var inp = document.getElementById('guide-inp');
-  var text = inp.value.trim();
-  if (!text) return;
-  inp.value = '';
-
-  addGuideMsg(text, 'user');
-  guideChatHistory.push({role:'user', content: text});
-
-  var loadId = 'gl-' + Date.now();
-  var msgs = document.getElementById('guide-msgs');
-  var loadDiv = document.createElement('div');
-  loadDiv.id = loadId;
-  loadDiv.style.cssText = 'display:flex;gap:8px;';
-  loadDiv.innerHTML = '<div style="width:28px;height:28px;background:var(--gm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🌿</div>' +
-    '<div style="background:var(--gp);border:1px solid var(--gm);border-radius:10px;padding:10px 14px;"><span class="loading"><span class="ldot"></span><span class="ldot"></span><span class="ldot"></span></span></div>';
-  msgs.appendChild(loadDiv);
-  msgs.scrollTop = msgs.scrollHeight;
-
-  try {
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST', headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514', max_tokens:600,
-        system: GUIDE_CONTEXT,
-        messages: guideChatHistory
-      })
-    });
-    var data = await res.json();
-    var reply = data.content[0].text;
-    guideChatHistory.push({role:'assistant', content:reply});
-    document.getElementById(loadId).remove();
-    addGuideMsg(reply, 'bot');
-  } catch(e) {
-    document.getElementById(loadId).remove();
-    addGuideMsg('오류가 발생했습니다. 다시 시도해주세요.', 'bot');
-  }
-}
-
-function addGuideMsg(text, role) {
-  var msgs = document.getElementById('guide-msgs');
-  var div = document.createElement('div');
-  div.style.cssText = 'display:flex;gap:8px;' + (role==='user'?'flex-direction:row-reverse;':'');
-  var avatar = role==='user'
-    ? '<div style="width:28px;height:28px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;">나</div>'
-    : '<div style="width:28px;height:28px;background:var(--gm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🌿</div>';
-  var bubble = role==='user'
-    ? '<div style="background:var(--g);color:#fff;border-radius:10px;padding:10px 14px;font-size:13px;line-height:1.7;max-width:80%;">' + text + '</div>'
-    : '<div style="background:var(--gp);border:1px solid var(--gm);border-radius:10px;padding:10px 14px;font-size:13px;line-height:1.7;max-width:80%;">' + text.replace(/\n/g,'<br>') + '</div>';
-  div.innerHTML = avatar + bubble;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-
-// ── 공지사항 관리 (HR Admin) ──────────────────────
-function postNotice() {
-  var title = document.getElementById('n-title').value.trim();
-  var content = document.getElementById('n-content').value.trim();
-  var author = document.getElementById('n-author').value.trim() || '관리자';
-  var isAdmin = document.getElementById('n-important').value === 'true';
-  if (!title || !content) { showToast('제목과 내용을 입력해주세요.'); return; }
-
-  var notices = JSON.parse(localStorage.getItem('rw_notices') || '[]');
-  var newId = notices.length ? Math.max.apply(null, notices.map(function(n){return n.id;})) + 1 : 1;
-  var now = new Date();
-  var date = now.getFullYear() + '.' + String(now.getMonth()+1).padStart(2,'0') + '.' + String(now.getDate()).padStart(2,'0');
-
-  notices.push({ id:newId, title:title, content:content, author:author, date:date, isAdmin:isAdmin });
-  localStorage.setItem('rw_notices', JSON.stringify(notices));
-
-  document.getElementById('n-title').value = '';
-  document.getElementById('n-content').value = '';
-  showToast('공지사항이 게시되었습니다! 직원 포털에서 확인 가능합니다.');
-  loadAdminNotices();
-}
-
-function loadAdminNotices() {
-  var notices = JSON.parse(localStorage.getItem('rw_notices') || '[]');
-  var comments = JSON.parse(localStorage.getItem('rw_comments') || '[]');
-  var list = document.getElementById('adminNoticeList');
-
-  if (!notices.length) {
-    list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu);font-size:13px;">게시된 공지사항이 없습니다.</div>';
+function renderEmployees(data) {
+  var wrap = document.getElementById('employeeList');
+  if (!wrap) return;
+  if (!data || !data.length) {
+    wrap.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu);">등록된 직원이 없습니다. 이력서 분석 후 저장하거나 직접 추가하세요.</div>';
     return;
   }
-
-  list.innerHTML = notices.slice().reverse().map(function(n) {
-    var cmtCount = comments.filter(function(c){ return c.noticeId === n.id; }).length;
-    return '<div style="border:1px solid var(--bd);border-radius:10px;padding:14px 16px;background:var(--w);">' +
-      '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;">' +
-        '<div style="font-size:13.5px;font-weight:600;">' + (n.isAdmin ? '📌 ' : '') + n.title + '</div>' +
-        '<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:10px;">' +
-          '<span style="font-size:11px;color:var(--mu);">' + n.date + '</span>' +
-          '<button class="btn btn-sm" style="background:var(--rdp);color:var(--rd);border:1px solid var(--rdm);padding:3px 10px;font-size:11px;" onclick="deleteNotice(' + n.id + ')">삭제</button>' +
-        '</div>' +
-      '</div>' +
-      '<div style="font-size:12.5px;color:var(--mu);">작성자: ' + n.author + ' · 댓글 ' + cmtCount + '개</div>' +
+  wrap.innerHTML = data.map(function(e, i) {
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border:1px solid var(--bdr);border-radius:10px;margin-bottom:8px;background:#fff;">' +
+      '<div><div style="font-size:14px;font-weight:600;">' + e.name + ' <span style="font-size:12px;color:var(--mu);">' + (e.rank||'') + ' · ' + (e.team||'') + '</span></div>' +
+      '<div style="font-size:12px;color:var(--mu);margin-top:2px;">' + (e.phone||'') + ' · ' + (e.email||'') + '</div></div>' +
+      '<button onclick="deleteEmployee(' + i + ')" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;">삭제</button>' +
     '</div>';
   }).join('');
+}
 
-  // 댓글 목록
-  var cmtList = document.getElementById('adminCmtList');
-  var allCmts = comments.slice().reverse();
-  if (!allCmts.length) {
-    cmtList.innerHTML = '<div style="text-align:center;padding:20px;color:var(--mu);font-size:13px;">댓글이 없습니다.</div>';
+function deleteEmployee(i) {
+  if (!confirm('이 직원을 삭제할까요?')) return;
+  employees.splice(i, 1);
+  localStorage.setItem('rw_employees', JSON.stringify(employees));
+  renderEmployees(employees);
+}
+
+// 공지 관리
+function loadAdminNotices() {
+  var list = document.getElementById('adminNoticeList');
+  if (!list) return;
+  var notices = JSON.parse(localStorage.getItem('rw_notices') || '[]').reverse();
+  if (!notices.length) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--mu);">등록된 공지사항이 없습니다.</div>';
     return;
   }
-  cmtList.innerHTML = allCmts.map(function(c) {
-    var notice = notices.find(function(n){ return n.id === c.noticeId; });
-    return '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;">' +
-      '<div style="font-size:12px;color:var(--mu);margin-bottom:4px;">' +
-        '공지: <strong>' + (notice ? notice.title : '삭제된 공지') + '</strong>' +
-      '</div>' +
+  list.innerHTML = notices.map(function(n) {
+    return '<div style="border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:#fff;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">' +
+      '<strong style="font-size:14px;">' + n.title + '</strong>' +
       '<div style="display:flex;align-items:center;gap:8px;">' +
-        '<span style="font-size:13px;font-weight:600;color:var(--g);">' + c.name + '</span>' +
-        '<span style="font-size:11px;color:var(--mu);">' + c.date + '</span>' +
-      '</div>' +
-      '<div style="font-size:13px;margin-top:4px;line-height:1.6;">' + c.text + '</div>' +
-    '</div>';
+      '<span style="font-size:12px;color:var(--mu);">' + n.date + '</span>' +
+      '<button onclick="deleteNotice(' + n.id + ')" style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;">삭제</button>' +
+      '</div></div>' +
+      '<div style="font-size:13px;color:#555;white-space:pre-wrap;">' + n.content + '</div>' +
+      '</div>';
   }).join('');
 }
 
 function deleteNotice(id) {
-  if (!confirm('이 공지사항을 삭제하시겠습니까?')) return;
+  if (!confirm('공지를 삭제할까요?')) return;
   var notices = JSON.parse(localStorage.getItem('rw_notices') || '[]');
   notices = notices.filter(function(n){ return n.id !== id; });
   localStorage.setItem('rw_notices', JSON.stringify(notices));
-  showToast('공지사항이 삭제되었습니다.');
   loadAdminNotices();
+  showToast('공지사항이 삭제되었습니다.');
 }
 
-// UTILS
+// 사용 안내 AI 챗봇
+async function sendGuide() {
+  var input = document.getElementById('guide-chat-input');
+  var text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addGuideMsg(text, 'user');
+  var loadDiv = addGuideMsg('생성 중...', 'bot');
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:500,
+        system:'리와인드(아이엠그리너) HR 관리 시스템 사용법 안내 AI입니다. 친절하고 간결하게 답변하세요.',
+        messages:[{role:'user',content:text}]
+      })
+    });
+    var data = await res.json();
+    loadDiv.textContent = data.content[0].text;
+  } catch(e) {
+    loadDiv.textContent = '오류가 발생했습니다. 다시 시도해주세요.';
+  }
+}
+function addGuideMsg(text, role) {
+  var msgs = document.getElementById('guide-chat-msgs');
+  if (!msgs) return document.createElement('div');
+  var div = document.createElement('div');
+  div.style.cssText = role === 'user'
+    ? 'background:var(--g);color:#fff;border-radius:8px;padding:10px 14px;font-size:13px;align-self:flex-end;max-width:80%;margin-left:auto;'
+    : 'background:var(--gp);border:1px solid var(--gm);border-radius:8px;padding:10px 14px;font-size:13px;max-width:90%;';
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+// 유틸
 function copyText(id) {
   var el = document.getElementById(id);
   var text = el.tagName === 'TEXTAREA' ? el.value : el.innerText;
@@ -1375,8 +1879,7 @@ function copyText(id) {
 }
 function showToast(msg) {
   var t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+  if (t) { t.textContent = msg; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 2500); }
 }
 </script>
 </body>
