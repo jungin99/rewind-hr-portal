@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리와인드 직원 포털</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --g:#1a6b4a;--gl:#2d8f63;--gd:#0f3d2a;--gp:#e8f5ee;--gm:#c3e6d1;
+  --teal:#0d7c6a;--em:#00a878;
+  --bg:#f0f7f3;--w:#fff;--tx:#1c2b22;--mu:#5a7066;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden;min-height:100vh;}
+
+/* BG */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;}
+.bg-orb:nth-child(1){width:700px;height:700px;background:#1a6b4a;top:-200px;left:-200px;animation:orb 20s ease-in-out infinite;}
+.bg-orb:nth-child(2){width:500px;height:500px;background:#0d7c6a;bottom:-150px;right:-150px;animation:orb 25s ease-in-out infinite reverse;}
+.bg-orb:nth-child(3){width:350px;height:350px;background:#00a878;top:50%;left:55%;animation:orb 18s ease-in-out infinite 8s;}
+@keyframes orb{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,-40px);}}
+
+/* LAYOUT */
+.wrap{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
+
+/* HEADER */
+header{padding:24px 40px;display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-icon{width:40px;height:40px;background:var(--g);border-radius:12px;display:flex;align-items:center;justify-content:center;}
+.brand-icon svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;}
+.brand-name{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:.08em;color:var(--g);text-transform:uppercase;}
+.brand-sub{font-size:11px;color:var(--mu);margin-top:1px;}
+.header-date{font-size:12px;color:var(--mu);text-align:right;line-height:1.6;}
+.header-date strong{color:var(--g);font-weight:600;}
+
+/* HERO */
+.hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px 20px;text-align:center;}
+
+.hero-tag{display:inline-block;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--g);background:var(--gp);border:1px solid var(--gm);padding:5px 16px;border-radius:20px;margin-bottom:28px;animation:fadeUp .6s ease both;}
+
+.hero-slogan-en{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,72px);font-weight:300;line-height:1.15;color:var(--gd);letter-spacing:-.01em;margin-bottom:16px;animation:fadeUp .7s ease .1s both;}
+.hero-slogan-en em{font-style:italic;color:var(--g);}
+
+.hero-slogan-ko{font-size:clamp(14px,2vw,18px);color:var(--mu);font-weight:300;line-height:1.8;margin-bottom:48px;animation:fadeUp .7s ease .2s both;}
+.hero-slogan-ko strong{color:var(--g);font-weight:500;}
+
+/* 4R BADGES */
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:56px;animation:fadeUp .7s ease .3s both;}
+.badge{background:rgba(26,107,74,.08);border:1px solid var(--gm);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--g);font-weight:500;}
+
+/* QUICK MENU */
+.menu-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:20px;animation:fadeUp .7s ease .35s both;}
+
+.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:720px;width:100%;margin-bottom:28px;animation:fadeUp .7s ease .4s both;}
+
+.menu-card{background:var(--w);border:1px solid var(--gm);border-radius:18px;padding:22px 16px 18px;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;overflow:hidden;}
+.menu-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gp),transparent);opacity:0;transition:opacity .2s;}
+.menu-card:hover{border-color:var(--g);transform:translateY(-4px);box-shadow:0 12px 32px rgba(26,107,74,.12);}
+.menu-card:hover::before{opacity:1;}
+.menu-card:hover .menu-icon{background:var(--g);}
+.menu-card:hover .menu-icon svg{stroke:#fff;}
+.menu-card:hover .menu-icon span{color:#fff;}
+
+.menu-icon{width:52px;height:52px;background:var(--gp);border-radius:14px;display:flex;align-items:center;justify-content:center;transition:background .2s;position:relative;z-index:1;}
+.menu-icon svg{width:24px;height:24px;fill:none;stroke:var(--g);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s;}
+.menu-icon span{font-size:24px;line-height:1;}
+
+.menu-label{font-size:12.5px;font-weight:600;color:var(--tx);position:relative;z-index:1;text-align:center;line-height:1.4;}
+.menu-desc{font-size:11px;color:var(--mu);position:relative;z-index:1;text-align:center;line-height:1.4;}
+
+/* 메인 CTA */
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;animation:fadeUp .7s ease .5s both;margin-bottom:48px;}
+
+.btn-cta{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:'Noto Sans KR',sans-serif;text-decoration:none;transition:all .2s;}
+.btn-main{background:var(--g);color:#fff;box-shadow:0 4px 20px rgba(26,107,74,.25);}
+.btn-main:hover{background:var(--gl);transform:translateY(-2px);box-shadow:0 8px 28px rgba(26,107,74,.3);}
+.btn-hr{background:var(--w);color:var(--g);border:1.5px solid var(--gm);}
+.btn-hr:hover{border-color:var(--g);background:var(--gp);}
+
+/* MISSION STRIP */
+.mission-strip{background:var(--g);padding:20px 40px;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;}
+.mission-item{display:flex;align-items:center;gap:10px;}
+.mission-dot{width:8px;height:8px;background:rgba(255,255,255,.4);border-radius:50%;}
+.mission-text{font-size:12px;color:rgba(255,255,255,.8);letter-spacing:.02em;}
+.mission-text strong{color:#fff;font-weight:600;}
+
+/* FOOTER */
+footer{padding:20px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.footer-left{font-size:11px;color:var(--mu);}
+.footer-links{display:flex;gap:16px;}
+.footer-links a{font-size:11px;color:var(--mu);text-decoration:none;}
+.footer-links a:hover{color:var(--g);}
+
+/* NOTICE TICKER */
+.ticker{background:rgba(26,107,74,.06);border-top:1px solid var(--gm);border-bottom:1px solid var(--gm);padding:10px 0;overflow:hidden;position:relative;}
+.ticker-inner{display:flex;gap:60px;animation:ticker 30s linear infinite;white-space:nowrap;width:max-content;}
+.ticker-inner:hover{animation-play-state:paused;}
+.ticker-item{font-size:12px;color:var(--mu);display:flex;align-items:center;gap:8px;}
+.ticker-item::before{content:'🌿';font-size:12px;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--w);border-radius:20px;padding:32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.15);}
+.modal h3{font-size:18px;font-weight:600;margin-bottom:8px;color:var(--g);}
+.modal p{font-size:13.5px;color:var(--mu);line-height:1.7;margin-bottom:24px;}
+.modal-btns{display:flex;gap:10px;justify-content:center;}
+.modal-close{background:var(--gp);color:var(--g);border:1px solid var(--gm);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+
+
+/* LOGIN */
+.login-screen{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;}
+.login-screen.hide{display:none;}
+.login-card{background:var(--w);border:1px solid var(--gm);border-radius:24px;padding:48px 40px;width:100%;max-width:420px;text-align:center;box-shadow:0 20px 60px rgba(26,107,74,.12);}
+.login-logo{width:56px;height:56px;background:var(--g);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.login-logo svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--gd);margin-bottom:6px;}
+.login-title em{font-style:italic;color:var(--g);}
+.login-sub{font-size:13px;color:var(--mu);margin-bottom:32px;line-height:1.6;}
+.login-field{margin-bottom:14px;text-align:left;}
+.login-field label{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin-bottom:6px;}
+.login-input{width:100%;border:1.5px solid var(--gm);border-radius:10px;padding:12px 16px;font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;color:var(--tx);transition:border-color .15s;background:var(--bg);}
+.login-input:focus{border-color:var(--g);}
+.login-btn{width:100%;background:var(--g);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:background .15s;margin-top:6px;}
+.login-btn:hover{background:var(--gl);}
+.login-err{color:#dc2626;font-size:12px;margin-top:8px;display:none;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca;}
+.login-footer{font-size:11px;color:var(--mu);margin-top:20px;line-height:1.7;}
+
+/* OTP */
+.otp-section{display:none;}
+.otp-section.show{display:block;}
+.email-section{}
+.otp-digits{display:flex;gap:8px;justify-content:center;margin:16px 0;}
+.otp-digit{width:44px;height:52px;border:1.5px solid var(--gm);border-radius:10px;text-align:center;font-size:22px;font-weight:600;color:var(--g);font-family:'DM Sans',sans-serif;outline:none;}
+.otp-digit:focus{border-color:var(--g);}
+.otp-info{font-size:12.5px;color:var(--mu);margin-bottom:16px;line-height:1.7;}
+.otp-resend{background:none;border:none;color:var(--g);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline;}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .menu-grid{grid-template-columns:repeat(3,1fr);gap:10px;}
+  header{padding:16px 20px;}
+  .mission-strip{gap:16px;padding:16px 20px;}
+  footer{padding:16px 20px;}
+  .hero{padding:24px 16px 16px;}
+}
+@media(max-width:400px){
+  .menu-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('cdnhrK5H8fLDWczcA');</script>
+</head>
+<body>
+
+
+<!-- 로그인 화면 -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4"/><circle cx="12" cy="12" r="2"/></svg>
+    </div>
+    <div class="login-title">Be Kind <em>Rewind</em></div>
+    <div class="login-sub">직원 전용 포털입니다<br>등록된 이메일로 인증 후 입장하세요</div>
+
+    <!-- 이메일 입력 -->
+    <div class="email-section" id="emailSection">
+      <div class="login-field">
+        <label>이메일 주소</label>
+        <input class="login-input" type="email" id="loginEmail" placeholder="your@iamgreener.co.kr" onkeydown="if(event.key==='Enter')sendOtp()">
+      </div>
+      <div class="login-err" id="loginErr"></div>
+      <button class="login-btn" onclick="sendOtp()" id="otpBtn">인증 코드 받기 →</button>
+      <div class="login-footer">
+        @iamgreener.co.kr · @rewind2nature.com · 승인된 개인 이메일<br>
+        문의: 김지혜 차장 (jiheyya@naver.com)
+      </div>
+    </div>
+
+    <!-- OTP 입력 -->
+    <div class="otp-section" id="otpSection">
+      <div class="otp-info" id="otpInfo"></div>
+      <div class="otp-digits">
+        <input class="otp-digit" type="text" maxlength="1" id="d0" oninput="otpMove(0)">
+        <input class="otp-digit" type="text" maxlength="1" id="d1" oninput="otpMove(1)">
+        <input class="otp-digit" type="text" maxlength="1" id="d2" oninput="otpMove(2)">
+        <input class="otp-digit" type="text" maxlength="1" id="d3" oninput="otpMove(3)">
+        <input class="otp-digit" type="text" maxlength="1" id="d4" oninput="otpMove(4)">
+        <input class="otp-digit" type="text" maxlength="1" id="d5" oninput="otpMove(5)">
+      </div>
+      <button class="login-btn" onclick="verifyOtp()">입장하기 →</button>
+      <div class="login-err" id="otpErr"></div>
+      <div style="margin-top:14px;">
+        <button class="otp-resend" onclick="backToEmail()">← 이메일 다시 입력</button>
+        &nbsp;·&nbsp;
+        <button class="otp-resend" onclick="sendOtp()">코드 재발송</button>
+      </div>
+      <div class="login-footer">
+        인증 코드는 10분간 유효합니다<br>
+        이메일이 오지 않으면 스팸함을 확인해주세요
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="bg">
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4"/><circle cx="12" cy="12" r="2"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Rewind</div>
+        <div class="brand-sub">직원 포털 · Employee Portal</div>
+      </div>
+    </div>
+    <div class="header-date" id="headerDate"></div>
+  </header>
+
+  <!-- NOTICE TICKER -->
+  <div class="ticker">
+    <div class="ticker-inner" id="tickerInner">
+      <span class="ticker-item">리와인드 직원 포털에 오신 것을 환영합니다</span>
+      <span class="ticker-item">연차 신청은 포털에서 바로 가능합니다</span>
+      <span class="ticker-item">출퇴근 체크를 잊지 마세요</span>
+      <span class="ticker-item">궁금한 점은 온보딩 포털에서 확인하세요</span>
+      <span class="ticker-item">Be Kind Rewind — for the planet 🌊</span>
+      <span class="ticker-item">리와인드 직원 포털에 오신 것을 환영합니다</span>
+      <span class="ticker-item">연차 신청은 포털에서 바로 가능합니다</span>
+      <span class="ticker-item">출퇴근 체크를 잊지 마세요</span>
+      <span class="ticker-item">궁금한 점은 온보딩 포털에서 확인하세요</span>
+      <span class="ticker-item">Be Kind Rewind — for the planet 🌊</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+
+    <div class="hero-tag">리와인드 · 아이엠그리너 직원 전용</div>
+
+    <div class="hero-slogan-en">
+      Be Kind <em>Rewind</em><br>for the planet
+    </div>
+
+    <div class="hero-slogan-ko">
+      <strong>일회용품을 만들지만, 쓰레기는 만들지 않습니다</strong><br>
+      우리의 작은 실천이 에메랄드빛 바다를 지켜냅니다
+    </div>
+
+    <div class="badges">
+      <span class="badge">♻️ Replace · 대체</span>
+      <span class="badge">🔄 Recycle · 재활용</span>
+      <span class="badge">✨ Reuse · 재사용</span>
+      <span class="badge">🌿 Repeat · 반복</span>
+    </div>
+
+    <!-- 퀵메뉴 -->
+    <div class="menu-title">바로가기 메뉴</div>
+
+    <div class="menu-grid">
+
+      <!-- 온보딩 포털 -->
+      <a class="menu-card" href="rewind_onboarding_portal_2.html">
+        <div class="menu-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="menu-label">온보딩 포털</div>
+        <div class="menu-desc">회사 정보 · 규정 · 챗봇</div>
+      </a>
+
+      <!-- 연차 신청 -->
+      <a class="menu-card" href="https://forms.gle/1cBNKsrX1y9ftxuE7" target="_blank">
+        <div class="menu-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+        </div>
+        <div class="menu-label">연차 신청</div>
+        <div class="menu-desc">구글 폼 바로가기</div>
+      </a>
+
+      <!-- 출퇴근 체크 -->
+      <a class="menu-card" href="https://script.google.com/a/macros/iamgreener.co.kr/s/AKfycbwetHubM8XYBymM6wK4sbfcqPl-Mgi-ENgC0LMYwgRRZZK1_uKkhR_zDWCY4qGkXSs/exec" target="_blank">
+        <div class="menu-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="menu-label">출퇴근 체크</div>
+        <div class="menu-desc">출근 · 퇴근 등록</div>
+      </a>
+
+      <!-- 공지사항 -->
+      <a class="menu-card" href="#" onclick="showNotice(); return false;">
+        <div class="menu-icon">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <div class="menu-label">공지사항</div>
+        <div class="menu-desc">회사 공지 확인</div>
+      </a>
+
+      <!-- 결재 요청 -->
+      <a class="menu-card" href="#" onclick="showPayment(); return false;">
+        <div class="menu-icon">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="menu-label">결재 요청</div>
+        <div class="menu-desc">비용 청구 · 승인</div>
+      </a>
+
+      <!-- 증명서 발급 -->
+      <a class="menu-card" href="#" onclick="showCert(); return false;">
+        <div class="menu-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="menu-label">증명서 발급</div>
+        <div class="menu-desc">재직 · 경력 증명</div>
+      </a>
+
+      <!-- HR 관리 (인사담당자) -->
+      <a class="menu-card" href="rewind_hr_admin_1.html">
+        <div class="menu-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="menu-label">HR 관리</div>
+        <div class="menu-desc">인사담당자 전용</div>
+      </a>
+
+      <!-- 회사 홈페이지 -->
+      <a class="menu-card" href="https://rewind2nature.com" target="_blank">
+        <div class="menu-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div class="menu-label">공식 홈페이지</div>
+        <div class="menu-desc">rewind2nature.com</div>
+      </a>
+
+    </div>
+
+    <div class="cta-row">
+      <a href="rewind_onboarding_portal_2.html" class="btn-cta btn-main">
+        🏠 온보딩 포털 바로가기
+      </a>
+      <a href="rewind_hr_admin_1.html" class="btn-cta btn-hr">
+        🔧 HR 관리 시스템
+      </a>
+    </div>
+
+  </div>
+
+  <!-- MISSION STRIP -->
+  <div class="mission-strip">
+    <div class="mission-item">
+      <div class="mission-dot"></div>
+      <div class="mission-text"><strong>Be Kind Rewind</strong> — for the planet</div>
+    </div>
+    <div class="mission-item">
+      <div class="mission-dot"></div>
+      <div class="mission-text">자원선순환으로 <strong>플라스틱 쓰레기 문제</strong> 해결</div>
+    </div>
+    <div class="mission-item">
+      <div class="mission-dot"></div>
+      <div class="mission-text"><strong>700여 파트너사</strong>와 함께하는 소셜벤처</div>
+    </div>
+    <div class="mission-item">
+      <div class="mission-dot"></div>
+      <div class="mission-text">고객센터 <strong>1522-5710</strong> · 평일 10~16시</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">(주)리와인드 · 서울 서대문구 연희로26 동방빌딩 · © 2026</div>
+    <div class="footer-links">
+      <a href="https://rewind2nature.com" target="_blank">홈페이지</a>
+      <a href="https://www.instagram.com/iamgreener_official/" target="_blank">인스타그램</a>
+      <a href="http://blog.naver.com/iamgreener" target="_blank">블로그</a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- 공지사항 모달 (게시판) -->
+<div class="modal-bg" id="noticeModal">
+  <div class="modal" style="max-width:620px;width:95%;max-height:88vh;overflow-y:auto;text-align:left;padding:28px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-size:17px;font-weight:600;color:var(--g);">📢 공지사항</div>
+      <button class="modal-close" onclick="closeModal('noticeModal')">✕</button>
+    </div>
+    <div id="noticeList" style="display:flex;flex-direction:column;gap:12px;min-height:80px;"></div>
+    <div style="border-top:1px solid var(--gm);margin-top:20px;padding-top:16px;">
+      <div style="font-size:12.5px;font-weight:600;color:var(--g);margin-bottom:10px;">💬 질문 · 댓글 남기기</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input id="cmtName" class="login-input" placeholder="이름" style="width:100px;padding:8px 12px;font-size:13px;">
+        <input id="cmtText" class="login-input" placeholder="내용을 입력하세요..." style="flex:1;padding:8px 12px;font-size:13px;" onkeydown="if(event.key==='Enter')addComment()">
+        <button class="login-btn" onclick="addComment()" style="width:60px;padding:8px;font-size:13px;">등록</button>
+      </div>
+      <div id="cmtList" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 결재 요청 모달 -->
+<div class="modal-bg" id="paymentModal">
+  <div class="modal" style="max-width:580px;width:95%;max-height:88vh;overflow-y:auto;text-align:left;padding:28px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-size:17px;font-weight:600;color:var(--g);">💳 결재 요청 안내</div>
+      <button class="modal-close" onclick="closeModal('paymentModal')">✕</button>
+    </div>
+
+    <a href="https://forms.gle/PHmVuz56LuXGCtzT8" target="_blank"
+       style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--g);color:#fff;border-radius:12px;padding:14px;text-decoration:none;font-size:14px;font-weight:600;margin-bottom:20px;">
+      📝 결재 요청 신청서 바로가기 →
+    </a>
+
+    <div style="display:flex;flex-direction:column;gap:12px;font-size:13px;">
+
+      <div style="background:var(--gp);border:1px solid var(--gm);border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:600;color:var(--g);margin-bottom:8px;">✅ 결재 승인 기준</div>
+        <div style="line-height:1.9;color:var(--tx);">
+          · 외화 <strong>$100 이상</strong> 또는 한화 <strong>10만원 이상</strong>은 팀장 결재 필요<br>
+          · 기준 금액 이상 시 해당 팀장님께 승인요청 메일 자동 발송<br>
+          · 팀원 → 각 팀장 → 담당 임원<br>
+          · 대한항공 → 박원욱 대표
+        </div>
+      </div>
+
+      <div style="background:var(--gp);border:1px solid var(--gm);border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:600;color:var(--g);margin-bottom:8px;">📅 결재 일정</div>
+        <div style="line-height:1.9;color:var(--tx);">
+          · 신청 마감: 매주 <strong>화요일 오후 5시</strong> 이전 신청 + 팀장 승인 완료<br>
+          · 결재 진행: 매주 <strong>수요일 업무시간</strong> 중 순차 진행<br>
+          · 보통 수요일 낮까지 완료 (상황에 따라 지연 가능)<br>
+          · 수요일 외 결제 필요 시 <strong>사전에 김지혜 차장 연락 필수</strong> (대한항공 제외)
+        </div>
+      </div>
+
+      <div style="background:var(--gp);border:1px solid var(--gm);border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:600;color:var(--g);margin-bottom:8px;">🔔 결재 결과 알림</div>
+        <div style="line-height:1.9;color:var(--tx);">
+          · 결제 완료 시: 신청자에게 <strong>완료 메일</strong> 자동 발송<br>
+          · 반려 시: 신청자에게 <strong>반려 메일</strong> 자동 발송 (사유는 팀장 확인)<br>
+          · 수정 필요 시: 신청서 재작성 → 마지막에 <strong>'재신청'</strong> 선택 + 사유 작성
+        </div>
+      </div>
+
+      <div style="background:var(--gp);border:1px solid var(--gm);border-radius:10px;padding:14px 16px;">
+        <div style="font-weight:600;color:var(--g);margin-bottom:8px;">🔍 결재 현황 확인</div>
+        <div style="line-height:1.9;color:var(--tx);margin-bottom:10px;">
+          승인대기 / 승인 / 반려 / 결제완료 실시간 확인 가능 (조회 전용)
+        </div>
+        <a href="https://docs.google.com/spreadsheets/d/1fcZA2z1sK4KAhnTcBjQdz7JI8eJAall5g0k3QmGesQM/edit?usp=sharing" target="_blank"
+           style="display:inline-flex;align-items:center;gap:6px;background:var(--w);border:1px solid var(--gm);border-radius:8px;padding:8px 14px;text-decoration:none;font-size:12.5px;color:var(--g);font-weight:600;">
+          📊 결제 현황 시트 바로가기 →
+        </a>
+      </div>
+
+      <div style="font-size:12px;color:var(--mu);text-align:center;padding-top:4px;">
+        문의: 운영팀 김지혜 차장 · jiheyya@naver.com · 010-7712-1236
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 증명서 발급 모달 -->
+<div class="modal-bg" id="certModal">
+  <div class="modal" style="max-width:480px;width:95%;text-align:left;padding:28px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-size:17px;font-weight:600;color:var(--g);">📄 증명서 발급 요청</div>
+      <button class="modal-close" onclick="closeModal('certModal')">✕</button>
+    </div>
+    <div style="background:var(--gp);border:1px solid var(--gm);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.8;color:var(--mu);">
+      재직증명서, 경력증명서 등 발급 요청은 아래 양식을 작성해주세요.<br>
+      운영팀 <strong style="color:var(--g);">김지혜 차장</strong>님께 자동으로 이메일이 발송됩니다.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div>
+        <label style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);display:block;margin-bottom:5px;">이름 *</label>
+        <input class="login-input" id="cert-name" placeholder="홍길동" style="padding:10px 14px;font-size:13.5px;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);display:block;margin-bottom:5px;">이메일 *</label>
+        <input class="login-input" id="cert-email" placeholder="your@email.com" style="padding:10px 14px;font-size:13.5px;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);display:block;margin-bottom:5px;">증명서 종류 *</label>
+        <select class="login-input" id="cert-type" style="padding:10px 14px;font-size:13.5px;background:var(--bg);">
+          <option value="">선택하세요</option>
+          <option>재직증명서</option>
+          <option>경력증명서</option>
+          <option>급여확인서</option>
+          <option>기타</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);display:block;margin-bottom:5px;">제출처 / 용도</label>
+        <input class="login-input" id="cert-purpose" placeholder="예: 은행 제출용, 대출 심사 등" style="padding:10px 14px;font-size:13.5px;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);display:block;margin-bottom:5px;">요청 사항</label>
+        <textarea class="login-input" id="cert-note" placeholder="기타 요청사항이 있으면 입력해주세요" style="padding:10px 14px;font-size:13.5px;resize:vertical;min-height:70px;"></textarea>
+      </div>
+      <div id="cert-err" style="color:#dc2626;font-size:12px;display:none;padding:8px 12px;background:#fef2f2;border-radius:8px;"></div>
+      <button class="login-btn" onclick="submitCert()" id="certSubmitBtn">📧 발급 요청 보내기</button>
+    </div>
+    <div style="font-size:11.5px;color:var(--mu);margin-top:12px;text-align:center;">
+      문의: 김지혜 차장 · jiheyya@naver.com · 010-7712-1236
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ── 로그인 ──────────────────────────────────────
+var ALLOWED_EMAILS = ["greener_kim@iamgreener.co.kr", "eddy_park@iamgreener.co.kr", "jungin_shin@iamgreener.co.kr", "greener_asj@rewind2nature.com", "yghan@rewind2nature.com", "ksm@rewind2nature.com", "98gusdl52@rewind2nature.com", "juhee_an@rewind2nature.com", "greener_sw@rewind2nature.com", "greener_hdr@rewind2nature.com", "22hyun@rewind2nature.com", "kss1224@rewind2nature.com", "yunkk@rewind2nature.com", "minnwaterr@rewind2nature.com", "jiheyya@naver.com", "greener_an@rewind2nature.com", "greener_hys@rewind2nature.com", "hana@iamgreener.co.kr", "zall0555@iamgreener.co.kr"];
+var EMAIL_NAMES = {"greener_kim@iamgreener.co.kr": "김은정", "eddy_park@iamgreener.co.kr": "박원욱", "jungin_shin@iamgreener.co.kr": "신정인", "greener_asj@rewind2nature.com": "안시진", "yghan@rewind2nature.com": "한윤구", "ksm@rewind2nature.com": "구승모", "98gusdl52@rewind2nature.com": "정민주", "juhee_an@rewind2nature.com": "안주희", "greener_sw@rewind2nature.com": "정성원", "greener_hdr@rewind2nature.com": "허다람", "22hyun@rewind2nature.com": "이이현", "kss1224@rewind2nature.com": "김성수", "yunkk@rewind2nature.com": "김윤경", "minnwaterr@rewind2nature.com": "김민수", "jiheyya@naver.com": "김지혜", "greener_an@rewind2nature.com": "안성진", "greener_hys@rewind2nature.com": "신희연", "hana@iamgreener.co.kr": "김하나", "zall0555@iamgreener.co.kr": "유태근"};
+var _otp = '';
+var _otpEmail = '';
+var _otpExpiry = 0;
+
+// 세션 확인
+(function() {
+  var sess = sessionStorage.getItem('rw_auth');
+  if (sess) {
+    var d = JSON.parse(sess);
+    if (d.expiry > Date.now()) {
+      document.getElementById('loginScreen').classList.add('hide');
+      showWelcome(d.name);
+      return;
+    }
+  }
+  // 로그인 필요
+})();
+
+function showWelcome(name) {
+  var el = document.getElementById('headerDate');
+  if (el) {
+    var now = new Date();
+    var days = ['일','월','화','수','목','금','토'];
+    var d = now.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+    var t = now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+    el.innerHTML = '<strong>' + d + ' (' + days[now.getDay()] + ')</strong><br>' + t + '&nbsp;&nbsp;<span style="color:var(--g);font-weight:600;">👋 ' + name + '님</span>';
+  }
+}
+
+async function sendOtp() {
+  var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  var errEl = document.getElementById('loginErr');
+  errEl.style.display = 'none';
+
+  if (!email) { showErr(errEl, '이메일을 입력해주세요.'); return; }
+
+  // 허용 이메일 확인
+  if (!ALLOWED_EMAILS.includes(email)) {
+    // 도메인 체크 (회사 이메일)
+    var domain = email.split('@')[1];
+    if (domain !== 'iamgreener.co.kr' && domain !== 'rewind2nature.com') {
+      showErr(errEl, '등록되지 않은 이메일입니다.\n문의: 김지혜 차장 (jiheyya@naver.com)');
+      return;
+    }
+  }
+
+  var btn = document.getElementById('otpBtn');
+  btn.textContent = '발송 중...'; btn.disabled = true;
+
+  // OTP 생성
+  _otp = Math.floor(100000 + Math.random() * 900000).toString();
+  _otpEmail = email;
+  _otpExpiry = Date.now() + 10 * 60 * 1000; // 10분
+
+  // EmailJS로 발송 (설정 전에는 콘솔에 표시)
+  console.log('OTP:', _otp, '→', email);
+
+  try {
+    await emailjs.send('service_hr', 'template_8cpbi1u', {
+      to_email: email,
+      otp_code: _otp,
+      user_name: EMAIL_NAMES[email] || email.split('@')[0]
+    });
+  } catch(e) {
+    // 발송 실패 시 화면에 표시 (백업)
+    console.error('EmailJS 오류:', e);
+    alert('이메일 발송에 실패했습니다.\n인증 코드: ' + _otp + '\n\n직접 입력해 주세요.');
+  }
+
+  btn.textContent = '인증 코드 받기 →'; btn.disabled = false;
+
+  // OTP 화면으로 전환
+  var name = EMAIL_NAMES[email] || email.split('@')[0];
+  document.getElementById('otpInfo').innerHTML =
+    '<strong>' + name + '</strong>님의 이메일<br><strong>' + email + '</strong><br>로 인증 코드를 발송했습니다.';
+  document.getElementById('emailSection').style.display = 'none';
+  document.getElementById('otpSection').classList.add('show');
+  document.getElementById('d0').focus();
+}
+
+function otpMove(idx) {
+  var val = document.getElementById('d' + idx).value;
+  if (val && idx < 5) document.getElementById('d' + (idx+1)).focus();
+  // 6자리 다 입력되면 자동 확인
+  var code = '';
+  for(var i=0;i<6;i++) code += document.getElementById('d'+i).value;
+  if (code.length === 6) setTimeout(verifyOtp, 200);
+}
+
+function verifyOtp() {
+  var code = '';
+  for(var i=0;i<6;i++) code += document.getElementById('d'+i).value;
+  var errEl = document.getElementById('otpErr');
+
+  if (code.length < 6) { showErr(errEl, '6자리 코드를 입력해주세요.'); return; }
+  if (Date.now() > _otpExpiry) { showErr(errEl, '인증 코드가 만료됐습니다. 재발송해주세요.'); return; }
+  if (code !== _otp) { showErr(errEl, '인증 코드가 틀렸습니다.'); return; }
+
+  // 인증 성공
+  var name = EMAIL_NAMES[_otpEmail] || _otpEmail.split('@')[0];
+  sessionStorage.setItem('rw_auth', JSON.stringify({
+    email: _otpEmail, name: name,
+    expiry: Date.now() + 8 * 60 * 60 * 1000 // 8시간
+  }));
+
+  // 로그인 화면 숨기기 (애니메이션)
+  var screen = document.getElementById('loginScreen');
+  screen.style.transition = 'opacity .4s';
+  screen.style.opacity = '0';
+  setTimeout(function(){ screen.classList.add('hide'); }, 400);
+  showWelcome(name);
+}
+
+function backToEmail() {
+  document.getElementById('emailSection').style.display = 'block';
+  document.getElementById('otpSection').classList.remove('show');
+  document.getElementById('loginErr').style.display = 'none';
+  for(var i=0;i<6;i++) document.getElementById('d'+i).value = '';
+}
+
+function showErr(el, msg) {
+  el.textContent = msg; el.style.display = 'block';
+}
+
+
+// 날짜 표시
+function updateDate() {
+  var now = new Date();
+  var days = ['일','월','화','수','목','금','토'];
+  var d = now.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  var t = now.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('headerDate').innerHTML =
+    '<strong>' + d + ' (' + days[now.getDay()] + ')</strong><br>' + t;
+}
+updateDate();
+setInterval(updateDate, 30000);
+
+// 모달
+function showNotice(){ loadNotices(); document.getElementById('noticeModal').classList.add('open'); }
+function showPayment(){ document.getElementById('paymentModal').classList.add('open'); }
+function showCert(){
+  // 로그인된 사용자 정보 자동 입력
+  var sess = sessionStorage.getItem('rw_auth');
+  if (sess) {
+    var d = JSON.parse(sess);
+    document.getElementById('cert-name').value = d.name || '';
+    document.getElementById('cert-email').value = d.email || '';
+  }
+  document.getElementById('certModal').classList.add('open');
+}
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(function(m){
+  m.addEventListener('click', function(e){ if(e.target===m) m.classList.remove('open'); });
+});
+
+// ── 공지사항 게시판 ──────────────────────────────
+var NOTICES = JSON.parse(localStorage.getItem('rw_notices') || '[]');
+var COMMENTS = JSON.parse(localStorage.getItem('rw_comments') || '[]');
+
+// 기본 공지사항 (비어있으면 샘플 추가)
+if (NOTICES.length === 0) {
+  NOTICES = [
+    { id:1, title:'리와인드 직원 포털 오픈 안내', content:'안녕하세요! 리와인드 직원 전용 포털이 오픈되었습니다.\n출퇴근 체크, 연차 신청, 공지사항 확인 등 업무 관련 모든 것을 이곳에서 확인하세요.\n포털 관련 문의는 운영팀 김지혜 차장에게 연락주세요.', author:'김지혜 차장', date:'2026.05.22', isAdmin:true }
+  ];
+  localStorage.setItem('rw_notices', JSON.stringify(NOTICES));
+}
+
+function loadNotices() {
+  var list = document.getElementById('noticeList');
+  if (!NOTICES.length) {
+    list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mu);font-size:13px;">등록된 공지사항이 없습니다.</div>';
+    return;
+  }
+  list.innerHTML = NOTICES.slice().reverse().map(function(n) {
+    var cmts = COMMENTS.filter(function(c){ return c.noticeId === n.id; });
+    var cmtHtml = cmts.map(function(c) {
+      return '<div style="background:var(--bg);border-radius:8px;padding:8px 12px;margin-top:6px;">' +
+        '<span style="font-size:12px;font-weight:600;color:var(--g);">' + c.name + '</span>' +
+        '<span style="font-size:11px;color:var(--mu);margin-left:8px;">' + c.date + '</span>' +
+        '<div style="font-size:12.5px;margin-top:3px;line-height:1.6;">' + c.text + '</div></div>';
+    }).join('');
+    return '<div style="border:1px solid var(--gm);border-radius:12px;padding:16px 18px;background:var(--w);">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;">' +
+        '<div style="font-size:14px;font-weight:600;">' + (n.isAdmin ? '📌 ' : '') + n.title + '</div>' +
+        '<div style="font-size:11px;color:var(--mu);flex-shrink:0;margin-left:12px;">' + n.date + '</div>' +
+      '</div>' +
+      '<div style="font-size:13px;line-height:1.8;color:var(--tx);white-space:pre-wrap;margin-bottom:10px;">' + n.content + '</div>' +
+      '<div style="font-size:11.5px;color:var(--mu);">작성자: ' + n.author + '</div>' +
+      (cmtHtml ? '<div style="margin-top:10px;">' + cmtHtml + '</div>' : '') +
+    '</div>';
+  }).join('');
+
+  // 댓글란에 공지 선택
+  var sel = '<select id="cmtNoticeId" class="login-input" style="width:100%;padding:8px 12px;font-size:12.5px;background:var(--bg);margin-bottom:8px;">';
+  NOTICES.slice().reverse().forEach(function(n){ sel += '<option value="'+n.id+'">'+n.title+'</option>'; });
+  sel += '</select>';
+  var cmtList = document.getElementById('cmtList');
+  if (cmtList && !document.getElementById('cmtNoticeId')) {
+    cmtList.insertAdjacentHTML('beforebegin', sel);
+  }
+}
+
+function addComment() {
+  var name = document.getElementById('cmtName').value.trim();
+  var text = document.getElementById('cmtText').value.trim();
+  var selEl = document.getElementById('cmtNoticeId');
+  var noticeId = selEl ? parseInt(selEl.value) : (NOTICES.length ? NOTICES[0].id : 1);
+  if (!name || !text) { alert('이름과 내용을 입력해주세요.'); return; }
+  var now = new Date();
+  var date = now.getFullYear() + '.' + String(now.getMonth()+1).padStart(2,'0') + '.' + String(now.getDate()).padStart(2,'0');
+  COMMENTS.push({ noticeId:noticeId, name:name, text:text, date:date });
+  localStorage.setItem('rw_comments', JSON.stringify(COMMENTS));
+  document.getElementById('cmtName').value = '';
+  document.getElementById('cmtText').value = '';
+  loadNotices();
+}
+
+// ── 증명서 발급 요청 ──────────────────────────────
+async function submitCert() {
+  var name = document.getElementById('cert-name').value.trim();
+  var email = document.getElementById('cert-email').value.trim();
+  var type = document.getElementById('cert-type').value;
+  var purpose = document.getElementById('cert-purpose').value.trim();
+  var note = document.getElementById('cert-note').value.trim();
+  var errEl = document.getElementById('cert-err');
+  errEl.style.display = 'none';
+
+  if (!name || !email || !type) { errEl.textContent = '이름, 이메일, 증명서 종류는 필수입니다.'; errEl.style.display = 'block'; return; }
+
+  var btn = document.getElementById('certSubmitBtn');
+  btn.textContent = '발송 중...'; btn.disabled = true;
+
+  var body = '증명서 발급 요청이 접수되었습니다.%0A%0A' +
+    '이름: ' + name + '%0A' +
+    '이메일: ' + email + '%0A' +
+    '증명서 종류: ' + type + '%0A' +
+    '제출처/용도: ' + (purpose || '미입력') + '%0A' +
+    '요청사항: ' + (note || '없음') + '%0A%0A' +
+    '리와인드 직원 포털에서 자동 발송';
+
+  // EmailJS 또는 mailto로 발송
+  try {
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: 'jiheyya@naver.com',
+      applicant_name: name,
+      applicant_email: email,
+      cert_type: type,
+      purpose: purpose || '미입력',
+      note: note || '없음'
+    });
+    alert('✅ 발급 요청이 전송되었습니다!\n김지혜 차장님이 확인 후 처리해 드립니다.');
+    closeModal('certModal');
+    document.getElementById('cert-name').value = '';
+    document.getElementById('cert-type').value = '';
+    document.getElementById('cert-purpose').value = '';
+    document.getElementById('cert-note').value = '';
+  } catch(e) {
+    errEl.textContent = '발송 중 오류가 발생했습니다. jiheyya@naver.com으로 직접 이메일 부탁드립니다.';
+    errEl.style.display = 'block';
+  }
+  btn.textContent = '📧 발급 요청 보내기'; btn.disabled = false;
+}
+</script>
+</body>
+</html>
