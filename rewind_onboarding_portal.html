@@ -1114,14 +1114,9 @@
         </div>
       </div>
 
-
-
-      </div>
       <!-- ORG -->
       
-      <div       </div>
-
-id="page-org" class="page">
+      <div id="page-org" class="page">
         <div class="section-header"><h2>👥 조직도 & 팀 소개</h2></div>
 
         
@@ -3680,6 +3675,193 @@ function toggleDone(cb) {
   const label = cb.parentElement.querySelector('label');
   label.classList.toggle('done', cb.checked);
 }
+// ── 업무 매뉴얼 팀별 접근 제어 ─────────────────────────
+
+var MANUAL_TEAMS = {
+  'manual-sales':    { name:'영업팀',   icon:'💼' },
+  'manual-marketing':{ name:'마케팅팀', icon:'📣' },
+  'manual-purchase': { name:'구매팀',   icon:'🛒' },
+  'manual-ops':      { name:'운영팀',   icon:'⚙️' }
+};
+
+var TEAM_EMAILS = {
+  '영업팀':    'greener_asj@iamgreener.co.kr',
+  '마케팅팀':  'greener_sw@iamgreener.co.kr',
+  '구매팀':    'kss1224@iamgreener.co.kr',
+  '운영팀':    'jiheyya@iamgreener.co.kr'
+};
+
+var ALL_MANUALS = ['manual-sales','manual-marketing','manual-purchase','manual-ops'];
+var ALL_TEAMS   = ['영업팀','마케팅팀','구매팀','운영팀'];
+var FULL_ACCESS = ['신정인','김지혜','안시진','박원욱','신희연'];
+
+var _pendingPage = '';
+var _pendingTeam = '';
+var _userTeam    = '';
+
+// VIP 전체 허용 설정
+function checkVipAccess(userName) {
+  if (!userName) return;
+  if (FULL_ACCESS.some(function(n){ return userName.includes(n); })) {
+    ALL_MANUALS.forEach(function(m){
+      ALL_TEAMS.forEach(function(t){
+        localStorage.setItem('rw_manual_access_'+m+'_from_'+t, 'granted');
+      });
+    });
+  }
+}
+// 페이지 로드 시 자동 적용
+(function(){
+  // VIP 5인 자동 전체 허용 (이름 저장 없이도 적용)
+  // 단, 이 기기에서만 유효
+  var savedName = localStorage.getItem('rw_user_name') || '';
+  if (savedName) { checkVipAccess(savedName); return; }
+  
+  // 처음 방문 시 이름 확인 후 VIP이면 자동 저장
+  // (이름 입력은 생략 가능 — 모달에서 팀 선택 시 자동 VIP 체크)
+})();
+
+// 이름 저장 함수 (OTP 로그인 후 호출)
+// 처음 방문 시 이름 입력 받기
+window.addEventListener('load', function() {
+  var saved = localStorage.getItem('rw_user_name');
+  if (!saved) {
+    setTimeout(function() {
+      var name = prompt('안녕하세요! 리와인드 온보딩 포털입니다.\n본인 이름을 입력해주세요\n(팀 매뉴얼 접근 권한 설정에 사용됩니다)', '');
+      if (name && name.trim()) {
+        localStorage.setItem('rw_user_name', name.trim());
+        checkVipAccess(name.trim());
+      }
+    }, 800);
+  } else {
+    checkVipAccess(saved);
+  }
+});
+
+function saveUserName(name) {
+  localStorage.setItem('rw_user_name', name);
+  checkVipAccess(name);
+}
+
+function openManualTeamSelect(pageId, teamName) {
+  _pendingPage = pageId;
+  _pendingTeam = teamName;
+
+  // VIP: 모든 팀에서 접근 허용된 경우 바로 열기
+  var allGranted = ALL_TEAMS.every(function(t){
+    return localStorage.getItem('rw_manual_access_'+pageId+'_from_'+t) === 'granted';
+  });
+  if (allGranted) { showPage(pageId, null); return; }
+
+  var modal = document.getElementById('manualTeamModal');
+  if (!modal) { showPage(pageId, null); return; }
+
+  document.getElementById('manualTeamSelectView').style.display = 'block';
+  document.getElementById('manualAccessDenied').style.display  = 'none';
+  document.getElementById('manualRequestSent').style.display   = 'none';
+  document.getElementById('manualTeamModalTitle').textContent  = teamName + ' 매뉴얼';
+  document.getElementById('manualTeamModalSub').textContent    = '본인 소속 팀을 선택하면 바로 열립니다';
+
+  var btns = document.getElementById('manualTeamBtns');
+  btns.innerHTML = '';
+  Object.keys(MANUAL_TEAMS).forEach(function(pid) {
+    var t = MANUAL_TEAMS[pid];
+    var isTarget = (pid === pageId);
+    var btn = document.createElement('button');
+    btn.style.cssText = 'display:flex;align-items:center;gap:12px;width:100%;padding:13px 16px;border:1px solid '+(isTarget?'var(--green)':'#e0e0e0')+';border-radius:10px;background:'+(isTarget?'var(--green-pale)':'#fff')+';cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:600;text-align:left;margin-bottom:6px;';
+    btn.innerHTML = '<span style="font-size:20px;">'+t.icon+'</span><span>'+t.name+'</span>'+(isTarget?'<span style="margin-left:auto;font-size:11px;color:var(--green);background:#c3e6d1;padding:2px 8px;border-radius:10px;">보려는 매뉴얼</span>':'');
+    btn.onclick = (function(tName, tPid){ return function(){ selectMyTeam(tName, tPid, pageId); }; })(t.name, pid);
+    btns.appendChild(btn);
+  });
+  modal.style.display = 'flex';
+}
+
+function selectMyTeam(myTeam, myPageId, targetPageId) {
+  _userTeam = myTeam;
+  if (myPageId === targetPageId) {
+    closeManualTeamModal(); showPage(targetPageId, null); return;
+  }
+  var key = 'rw_manual_access_'+targetPageId+'_from_'+myTeam;
+  if (localStorage.getItem(key) === 'granted') {
+    closeManualTeamModal(); showPage(targetPageId, null); return;
+  }
+  document.getElementById('manualTeamSelectView').style.display = 'none';
+  document.getElementById('manualAccessDenied').style.display  = 'block';
+  var tName = MANUAL_TEAMS[targetPageId] ? MANUAL_TEAMS[targetPageId].name : targetPageId;
+  document.getElementById('accessDeniedMsg').textContent = tName + ' 매뉴얼 접근 불가';
+  document.getElementById('accessDeniedSub').textContent = myTeam+' 소속으로는 '+tName+' 매뉴얼에 접근할 수 없습니다. 접근 허용 요청을 보내면 신정인 이사가 검토 후 허용합니다.';
+}
+
+function closeManualTeamModal() {
+  var m = document.getElementById('manualTeamModal');
+  if (m) m.style.display = 'none';
+}
+
+async function sendAccessRequest() {
+  var btn = document.getElementById('accessRequestBtn');
+  btn.disabled = true; btn.textContent = '발송 중...';
+  var tName = MANUAL_TEAMS[_pendingPage] ? MANUAL_TEAMS[_pendingPage].name : _pendingTeam;
+  var requesterName = prompt('본인 이름을 입력해주세요:', '');
+  if (!requesterName) { btn.disabled=false; btn.textContent='📧 접근 허용 요청하기'; return; }
+  var accessKey = 'rw_manual_access_'+_pendingPage+'_from_'+_userTeam;
+  try {
+    await emailjs.send('service_hr','template_0d8vuxl',{
+      to_email:'jungin_shin@iamgreener.co.kr',
+      applicant_name: requesterName,
+      applicant_email: TEAM_EMAILS[_userTeam]||'',
+      cert_type:'[매뉴얼 접근 요청] '+tName+' 매뉴얼',
+      purpose: _userTeam+' 소속 '+requesterName+'님이 '+tName+' 매뉴얼 접근 요청',
+      note:'요청자: '+requesterName+' / 소속팀: '+_userTeam+' / 요청 매뉴얼: '+tName+' / 허용: HR어드민 > 사용안내 > 팀 매뉴얼 접근 허용 관리'
+    });
+    document.getElementById('manualAccessDenied').style.display = 'none';
+    document.getElementById('manualRequestSent').style.display  = 'block';
+    document.getElementById('manualTeamModalTitle').textContent = '요청 완료';
+  } catch(e) {
+    alert('발송 실패. jungin_shin@iamgreener.co.kr 로 직접 연락해주세요.');
+    btn.disabled=false; btn.textContent='📧 접근 허용 요청하기';
+  }
+}
+
+document.addEventListener('click', function(e){
+  var m = document.getElementById('manualTeamModal');
+  if (m && e.target === m) closeManualTeamModal();
+});
+
+// ── 팀별 AI 도우미 ───────────────────────────────────
+async function sendTeamAI(aiId, context) {
+  var input = document.getElementById(aiId+'-input');
+  var msgs  = document.getElementById(aiId+'-msgs');
+  var text  = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  var uDiv = document.createElement('div');
+  uDiv.style.cssText = 'background:var(--green);color:#fff;border-radius:8px;padding:8px 12px;font-size:12.5px;align-self:flex-end;max-width:85%;margin-left:auto;';
+  uDiv.textContent = text;
+  msgs.appendChild(uDiv);
+
+  var lDiv = document.createElement('div');
+  lDiv.style.cssText = 'background:var(--green-pale);border:1px solid var(--green-mid);border-radius:8px;padding:8px 12px;font-size:12.5px;';
+  lDiv.textContent = '...';
+  msgs.appendChild(lDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,
+        system:context+' 짧고 친절하게 답변하세요.',
+        messages:[{role:'user',content:text}]})
+    });
+    var data = await res.json();
+    lDiv.textContent = data.content[0].text;
+  } catch(e) {
+    lDiv.textContent = '오류가 발생했습니다. 다시 시도해주세요.';
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
 </script>
 
 <!-- 관리자 모달 -->
@@ -3736,6 +3918,15 @@ function toggleDone(cb) {
 const ADMIN_PW = 'rewind2024';
 let isLoggedIn = false;
 function openAdmin() {
+  // 이름 저장 (VIP 접근 허용용)
+  var savedName = localStorage.getItem('rw_user_name');
+  if (!savedName) {
+    var inputName = prompt('본인 이름을 입력해주세요 (매뉴얼 접근 권한 설정용)', '');
+    if (inputName && inputName.trim()) {
+      localStorage.setItem('rw_user_name', inputName.trim());
+      if (typeof saveUserName === 'function') saveUserName(inputName.trim());
+    }
+  }
   document.getElementById('admin-modal').classList.add('open');
   if (isLoggedIn) showEditPanel();
 }
@@ -3782,7 +3973,7 @@ function saveChanges() {
   const t=document.getElementById('save-toast');
   t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500);
 }
-<\/script>
+</script>
 
 
 <!-- 업무 매뉴얼 팀 선택 모달 -->
