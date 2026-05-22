@@ -830,7 +830,7 @@
         <div class="checklist">
           <h3>📌 첫 주 이내</h3>
           <div class="check-item"><input type="checkbox" id="c6" onchange="toggleDone(this)"><label for="c6">이 온보딩 포털 전체 읽기</label></div>
-          <div class="check-item"><input type="checkbox" id="c7" onchange="toggleDone(this)"><label for="c7">업무 툴(슬랙, 노션 등) 설치 및 로그인</label></div>
+          <div class="check-item"><input type="checkbox" id="c7" onchange="toggleDone(this)"><label for="c7">업무 툴 설치 및 로그인 (<a onclick="showPage('tools', document.querySelector('[onclick*=tools]'))" style="color:var(--green);cursor:pointer;">업무 툴 가이드 →</a>)</label></div>
           <div class="check-item"><input type="checkbox" id="c8" onchange="toggleDone(this)"><label for="c8">복무규정 숙지</label></div>
           <div class="check-item"><input type="checkbox" id="c9" onchange="toggleDone(this)"><label for="c9">담당 업무 파악 및 인수인계</label></div>
           <div class="check-item"><input type="checkbox" id="c10" onchange="toggleDone(this)"><label for="c10">비상 연락망 저장</label></div>
@@ -1042,17 +1042,127 @@
         </div>
       </div>
 
+        <!-- 판매 채널 -->
+        <div class="info-block">
+          <h3>🛒 직영 판매 채널</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+            <a href="https://smartstore.naver.com/iamgreener" target="_blank"
+              style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:22px;">🟢</span>
+              <div><div style="font-size:13px;font-weight:600;">스마트스토어</div><div style="font-size:11px;color:var(--green);">smartstore.naver.com/iamgreener</div></div>
+            </a>
+            <a href="https://blog.naver.com/iamgreener" target="_blank"
+              style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:22px;">📝</span>
+              <div><div style="font-size:13px;font-weight:600;">네이버 블로그</div><div style="font-size:11px;color:var(--green);">blog.naver.com/iamgreener</div></div>
+            </a>
+            <a href="https://www.instagram.com/iamgreener_official/" target="_blank"
+              style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:22px;">📸</span>
+              <div><div style="font-size:13px;font-weight:600;">인스타그램</div><div style="font-size:11px;color:var(--green);">@iamgreener_official</div></div>
+            </a>
+            <a href="https://rewind2nature.com" target="_blank"
+              style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);text-decoration:none;color:inherit;">
+              <span style="font-size:22px;">🌐</span>
+              <div><div style="font-size:13px;font-weight:600;">공식 홈페이지</div><div style="font-size:11px;color:var(--green);">rewind2nature.com</div></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- 공식 파트너사 -->
+        <div class="info-block">
+          <h3>🤝 공식 파트너사 (위탁 판매)</h3>
+          <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:12px;">아이엠그리너 제품을 위탁 판매하는 공식 파트너사입니다.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="https://re-ground.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">(주)리그라운드</div><div style="font-size:11px;color:#888;">스스·자사몰·쿠팡·오픈마켓 + 오프라인</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://www.bigcoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">(주)세이지그린 — 빅커피</div><div style="font-size:11px;color:#888;">자사몰·고도몰</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://www.caffemuseo.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">주식회사 뮤제오</div><div style="font-size:11px;color:#888;">자사몰·이마트 + 오프라인</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://bakingmon.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">(주)SPC GFS — 베이킹몬</div><div style="font-size:11px;color:#888;">자사몰</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://nauspack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">(주)나우스 — 나우스팩</div><div style="font-size:11px;color:#888;">자사몰</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://www.cntmart.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">(주)대상다이브스 — 씨앤티마트</div><div style="font-size:11px;color:#888;">자사몰</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://npackage.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">주식회사 세경인터내셔널</div><div style="font-size:11px;color:#888;">스마트스토어 셀러 유통</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://napkinkorea.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">(주)한창인터내셔날 — 냅킨코리아</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://www.megacoffee.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">(주)비앤씨인터내셔널 — 메가커피</div><div style="font-size:11px;color:#888;">자사몰</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://www.happypack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">(주)삼신상사 — 해피팩</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://packagelab.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">주식회사 제삼 — 패키지랩</div><div style="font-size:11px;color:#888;">자사몰</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://cookapack.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">쿡앤팩</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+            <a href="https://ourpack.co.kr" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);text-decoration:none;color:inherit;">
+              <div><div style="font-size:13px;font-weight:600;">아워팩 주식회사</div></div>
+              <span style="color:var(--green);font-size:12px;">→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 기업 유통사 -->
+        <div class="info-block">
+          <h3>🏢 기업 유통사</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">CJ프레시웨이</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">현대그린푸드</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">아이마켓코리아</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">아워홈</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">푸디스트</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">엠즈푸드시스템</div>
+            <div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;font-weight:600;">신세계푸드 HD현대글로벌</div>
+          </div>
+        </div>
+
       <!-- ORG -->
       <div id="page-org" class="page">
         <div class="section-header"><h2>👥 조직도 & 팀 소개</h2></div>
 
         <div class="info-block">
           <h3>🏢 경영진</h3>
-          <ul>
-            <li><strong>대표이사 김은정</strong> — 창업자, 경영 총괄</li>
-            <li><strong>공동대표 박원욱</strong> — 사업 개발 총괄</li>
-            <li><strong>개인정보보호책임자 신정인</strong> — 경영지원</li>
-          </ul>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+            <div class="person-card" style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;">
+              <div style="width:38px;height:38px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">은정</div>
+              <div><strong style="font-size:14px;">김은정 대표이사</strong><div style="font-size:12px;color:var(--text-muted);">창업자 · 경영 총괄</div><div style="font-size:12px;color:var(--green);">greener_kim@iamgreener.co.kr · 010-2792-4375</div></div>
+            </div>
+            <div class="person-card" style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;">
+              <div style="width:38px;height:38px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">원욱</div>
+              <div><strong style="font-size:14px;">박원욱 공동대표</strong><div style="font-size:12px;color:var(--text-muted);">사업 개발 총괄 · 영업·구매·대한항공 직결</div><div style="font-size:12px;color:var(--green);">eddy_park@iamgreener.co.kr · 010-9513-0202</div></div>
+            </div>
+            <div class="person-card" style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;">
+              <div style="width:38px;height:38px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;">정인</div>
+              <div><strong style="font-size:14px;">신정인 이사</strong><div style="font-size:12px;color:var(--text-muted);">마케팅 · 운영 · 부산지사</div><div style="font-size:12px;color:var(--green);">jungin_shin@iamgreener.co.kr · 010-4426-0617</div></div>
+            </div>
+          </div>
         </div>
 
         <div class="info-block">
@@ -1118,11 +1228,18 @@
           <table class="rules-table">
             <tr><th>구분</th><th>내용</th></tr>
             <tr><td>기본</td><td>업무 관련 비용은 <strong>법인카드</strong>로 결제</td></tr>
-            <tr><td>현금 결제</td><td>플로우 '결재요청(현금)' 게시판에 요청</td></tr>
-            <tr><td>개인 선지출</td><td>플로우 '결재요청(현금)' 게시판에 요청</td></tr>
+            <tr><td>현금 결제</td><td>결제 요청으로 신청</td></tr>
+            <tr><td>개인 선지출</td><td>결제 요청으로 신청</td></tr>
             <tr><td>야근 식대</td><td>15,000원 이내 / 본인 퇴근시간 이후 2시간 이상 근무 시</td></tr>
-            <tr><td>야근 교통비</td><td>대중교통 종료 후 야근 시만 해당 / 사전 승인 필수 (담당: 김지혜 부장, 신정인 이사)</td></tr>
-            <tr><td>비품 신청</td><td>플로우 비품 신청 게시판에 요청</td></tr>
+            <tr><td>야근 교통비</td><td>
+  부득이한 경우 해당 팀 팀장 사전 승인 필수<br>
+  대중교통 종료 후 야근 시에만 해당
+  <button onclick="document.getElementById('overtimeModal').style.display='flex'" 
+    style="display:block;margin-top:6px;background:var(--green-pale);color:var(--green);border:1px solid var(--green-mid);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;font-family:inherit;">
+    📝 야근 승인 신청
+  </button>
+</td></tr>
+            <tr><td>비품 신청</td><td>구글 챗에서 신청 (링크 추가 예정)</td></tr>
           </table>
           <div class="highlight-box" style="margin-top:12px;">⚠️ 야근은 부득이한 상황이 아니면 지양해 주세요.</div>
         </div>
@@ -1141,6 +1258,80 @@
             </td></tr>
             <tr><td>📖 도서 구매</td><td>업무 및 자기개발 도서 구입 지원 / 김지혜 부장에게 구입 요청<br><span style="font-size:12px;color:#666;">읽은 후 회사 서재에 비치</span></td></tr>
           </table>
+        </div>
+
+
+        <!-- 자기개발비 신청 -->
+        <div class="info-block">
+          <h3>📚 자기개발비 신청</h3>
+          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.8;">
+            💡 신청 내용은 <strong>김지혜 부장</strong>에게 이메일로 자동 전달됩니다.
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청자 이름 *</label>
+              <input id="dev-name" placeholder="홍길동" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">용도 (어디에 어떻게 사용할지) *</label>
+              <input id="dev-purpose" placeholder="예: 헬스장 월 이용권, 영어 학원 수강료 등" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">금액 *</label>
+              <input id="dev-amount" placeholder="예: 50,000원" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">결제 방식 *</label>
+              <select id="dev-type" onchange="toggleDevType()" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;background:#fff;font-family:inherit;">
+                <option value="">선택하세요</option>
+                <option value="paid">이미 결제했어요 (환급 요청)</option>
+                <option value="request">결제 요청 (선결제 요청)</option>
+              </select>
+            </div>
+            <div id="dev-paid-section" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
+              <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:8px;">📎 이미 결제하신 경우</div>
+              <div style="font-size:13px;line-height:1.8;color:#555;">
+                영수증/결제내역서를 첨부해서 이메일로 보내주세요.<br>
+                신청 완료 후 김지혜 부장이 확인 후 처리해 드립니다.
+              </div>
+              <textarea id="dev-receipt" placeholder="결제 내역 입력 (날짜, 금액, 사용처 등)" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;resize:vertical;min-height:60px;font-family:inherit;box-sizing:border-box;margin-top:8px;"></textarea>
+            </div>
+            <div id="dev-request-section" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
+              <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:8px;">💳 결제 요청하시는 경우</div>
+              <div style="font-size:13px;line-height:1.8;color:#555;">
+                신청 완료 후 김지혜 부장이 확인하여<br>
+                • 법인카드 사용 가능한 경우: 결제 방법 안내<br>
+                • 현금 필요한 경우: 결제 요청으로 처리
+              </div>
+              <input id="dev-how" placeholder="결제 방법 또는 요청 사항 입력" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;margin-top:8px;"></div>
+            <div id="dev-err" style="color:#dc2626;font-size:12px;display:none;padding:8px;background:#fef2f2;border-radius:8px;"></div>
+            <button onclick="submitDevAllowance()" style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;">
+              📨 자기개발비 신청하기
+            </button>
+          </div>
+        </div>
+
+        <!-- 도서 구매 신청 -->
+        <div class="info-block">
+          <h3>📖 도서 구매 신청</h3>
+          <div style="background:var(--green-pale);border:1px solid var(--green-mid);border-radius:10px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.8;">
+            💡 신청 완료 후 <strong>김지혜 부장</strong>이 구매 처리합니다.<br>
+            구매된 도서는 읽은 후 회사 서재에 비치해 주세요.
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청자 이름 *</label>
+              <input id="book-name" placeholder="홍길동" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">도서명 *</label>
+              <input id="book-title" placeholder="책 제목을 입력하세요" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">저자 / 출판사</label>
+              <input id="book-author" placeholder="저자명 / 출판사명" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+            <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청 이유</label>
+              <textarea id="book-reason" placeholder="업무 관련 또는 자기개발에 어떻게 도움이 될지 간단히 적어주세요" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;resize:vertical;min-height:60px;font-family:inherit;box-sizing:border-box;"></textarea></div>
+            <div id="book-err" style="color:#dc2626;font-size:12px;display:none;padding:8px;background:#fef2f2;border-radius:8px;"></div>
+            <button onclick="submitBookRequest()" style="background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;">
+              📚 도서 구매 신청하기
+            </button>
+          </div>
+
+          <!-- 도서 구매 목록 -->
+          <div style="margin-top:20px;">
+            <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:10px;">📋 구매된 도서 목록</div>
+            <div id="book-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+            <div id="book-empty" style="font-size:13px;color:var(--text-muted);padding:16px;text-align:center;background:var(--bg);border-radius:8px;">아직 구매된 도서가 없습니다.</div>
+          </div>
         </div>
 
         <div class="info-block">
@@ -1209,21 +1400,37 @@
               <td>💬 <strong>구글 챗</strong></td>
               <td>기본 소통</td>
               <td>채팅방 생성 → 팀원 초대 → 메시지 전송<br><span style="font-size:12px;color:#666;">파일 첨부, 이모지, @멘션 기능 활용</span></td>
+              <td style="font-size:12px;white-space:nowrap;">
+                <a href="https://apps.apple.com/app/google-chat/id1163852619" target="_blank" style="color:var(--green);display:block;margin-bottom:3px;">🍎 iOS</a>
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.dynamite" target="_blank" style="color:var(--green);display:block;">🤖 Android</a>
+              </td>
             </tr>
             <tr>
               <td>📅 <strong>구글 캘린더</strong></td>
               <td>일정 공유</td>
               <td>새 일정 만들기 → 참석자 추가 → 저장<br><span style="font-size:12px;color:#666;">팀 캘린더 구독으로 전체 일정 확인 가능</span></td>
+              <td style="font-size:12px;white-space:nowrap;">
+                <a href="https://apps.apple.com/app/google-calendar/id909319292" target="_blank" style="color:var(--green);display:block;margin-bottom:3px;">🍎 iOS</a>
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.calendar" target="_blank" style="color:var(--green);display:block;">🤖 Android</a>
+              </td>
             </tr>
             <tr>
               <td>✅ <strong>구글 태스크</strong></td>
               <td>업무 관리</td>
               <td>할 일 추가 → 기한 설정 → 완료 체크<br><span style="font-size:12px;color:#666;">캘린더와 연동되어 마감일 자동 표시</span></td>
+              <td style="font-size:12px;white-space:nowrap;">
+                <a href="https://apps.apple.com/app/google-tasks/id1353634006" target="_blank" style="color:var(--green);display:block;margin-bottom:3px;">🍎 iOS</a>
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.tasks" target="_blank" style="color:var(--green);display:block;">🤖 Android</a>
+              </td>
             </tr>
             <tr>
               <td>📁 <strong>구글 드라이브</strong></td>
               <td>파일 공유</td>
               <td>파일 업로드 → 공유 → 권한 설정<br><span style="font-size:12px;color:#666;">리와인드 공유 드라이브에서 회사 자료 확인</span></td>
+              <td style="font-size:12px;white-space:nowrap;">
+                <a href="https://apps.apple.com/app/google-drive/id507874739" target="_blank" style="color:var(--green);display:block;margin-bottom:3px;">🍎 iOS</a>
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.docs" target="_blank" style="color:var(--green);display:block;">🤖 Android</a>
+              </td>
             </tr>
           </table>
         </div>
@@ -1232,17 +1439,31 @@
         <div class="info-block">
           <h3>💼 주요 업무 시스템</h3>
           <table class="rules-table">
-            <tr><th>시스템</th><th>용도</th><th>계정 신청</th></tr>
-            <tr><td>📊 <strong>이카운트 ERP</strong></td><td>판매 입력, 재무, 발주서, 거래명세서</td><td>김지혜 부장에게 요청</td></tr>
-            <tr><td>✍️ <strong>모두사인</strong></td><td>전자 계약서 작성 및 서명</td><td>담당 팀장에게 요청</td></tr>
+            <tr><th>시스템</th><th>용도</th><th>사이트</th><th>계정 신청</th></tr>
+            <tr>
+              <td>📊 <strong>이카운트 ERP</strong></td>
+              <td>판매 입력, 재무, 발주서, 거래명세서</td>
+              <td><a href="https://www.ecount.com" target="_blank" style="color:var(--green);font-size:12px;">ecount.com →</a></td>
+              <td>김지혜 부장에게 요청</td>
+            </tr>
+            <tr>
+              <td>✍️ <strong>모두사인</strong></td>
+              <td>전자 계약서 작성 및 서명</td>
+              <td><a href="https://www.modusign.co.kr" target="_blank" style="color:var(--green);font-size:12px;">modusign.co.kr →</a></td>
+              <td>담당 팀장에게 요청</td>
+            </tr>
             <tr>
               <td>🚚 <strong>이지어드민</strong></td>
               <td>물류 관리 (출고, 재고)</td>
-              <td><a href="https://www.ezadmin.co.kr" target="_blank" style="color:var(--green);">ezadmin.co.kr</a><br>
-                <span style="font-size:12px;color:#666;">계정 신청: 다올시스템 김진국 본부장<br>📞 010-5589-4370</span>
-              </td>
+              <td><a href="https://www.ezadmin.co.kr" target="_blank" style="color:var(--green);font-size:12px;">ezadmin.co.kr →</a></td>
+              <td><span style="font-size:12px;">다올시스템 김진국 본부장<br>📞 010-5589-4370</span></td>
             </tr>
-            <tr><td>🖥️ <strong>Microsoft 365</strong></td><td>Word, Excel, PowerPoint (구독 서비스)</td><td>김지혜 부장에게 계정 요청<br><span style="font-size:12px;color:#666;">별도 설치 불필요</span></td></tr>
+            <tr>
+              <td>🖥️ <strong>Microsoft 365</strong></td>
+              <td>Word, Excel, PowerPoint (구독 서비스)</td>
+              <td><a href="https://www.office.com" target="_blank" style="color:var(--green);font-size:12px;">office.com →</a></td>
+              <td>김지혜 부장에게 계정 요청<br><span style="font-size:12px;color:#666;">별도 설치 불필요</span></td>
+            </tr>
           </table>
         </div>
 
@@ -1254,6 +1475,7 @@
             <tr><td>주소</td><td>서울특별시 서대문구 연희로 26, 5층 리와인드 (03784)</td></tr>
             <tr><td>사업자등록번호</td><td>790-88-01207</td></tr>
             <tr><td>모바일 FAX</td><td>0507-562-4375</td></tr>
+            <tr><td>공식 이메일</td><td><a href="mailto:contact@iamgreener.co.kr" style="color:var(--green);">contact@iamgreener.co.kr</a></td></tr>
             <tr><td>고객센터</td><td>1522-5710 (평일 10:00~16:00)</td></tr>
           </table>
         </div>
@@ -1334,45 +1556,54 @@
 
         <div class="info-block">
           <h3>🏢 회사 공식 연락처</h3>
-          <ul>
-            <li><strong>고객센터:</strong> <span id="ed-tel">1522-5710</span></li>
-            <li><strong>운영시간:</strong> 평일 10:00~16:00 (점심 12:00~13:00)</li>
-            <li><strong>주소:</strong> 서울특별시 서대문구 연희로 26, 5층</li>
-            <li><strong>공식 이메일:</strong> bekind-rewind@naver.com</li>
-            <li><strong>홈페이지:</strong> <a href="https://rewind2nature.com" target="_blank" style="color:var(--green)">rewind2nature.com</a></li>
-          </ul>
+          <table class="rules-table">
+            <tr><td>고객센터</td><td><a href="tel:1522-5710" style="color:var(--green);font-weight:600;">1522-5710</a> (평일 10:00~16:00)</td></tr>
+            <tr><td>공식 이메일</td><td><a href="mailto:contact@iamgreener.co.kr" style="color:var(--green);">contact@iamgreener.co.kr</a></td></tr>
+            <tr><td>주소</td><td>서울특별시 서대문구 연희로 26, 5층 리와인드</td></tr>
+            <tr><td>홈페이지</td><td><a href="https://rewind2nature.com" target="_blank" style="color:var(--green);">rewind2nature.com</a></td></tr>
+            <tr><td>인스타그램</td><td><a href="https://www.instagram.com/iamgreener_official/" target="_blank" style="color:var(--green);">@iamgreener_official</a></td></tr>
+          </table>
         </div>
 
-        <div class="contacts-grid">
-          <div class="contact-card">
-            <h4>경영지원 / 인사 담당</h4>
-            <div class="role">입사 서류, 계약, 급여 관련</div>
-            <a href="#"><span id="ed-contact1" style="font-size:12.5px;color:var(--text-muted);">담당자에게 문의</span>
-          </div>
-          <div class="contact-card">
-            <h4>IT / 시스템 담당</h4>
-            <div class="role">계정 발급, 시스템 접속 오류</div>
-            <a href="#"><span id="ed-contact2" style="font-size:12.5px;color:var(--text-muted);">담당자에게 문의</span>
-          </div>
-          <div class="contact-card">
-            <h4>마케팅팀</h4>
-            <div class="role">SNS, 캠페인, 홍보물 관련</div>
-            <a href="https://www.instagram.com/iamgreener_official/" target="_blank">@iamgreener_official</a>
-          </div>
-          <div class="contact-card">
-            <h4>고객센터</h4>
-            <div class="role">제품 주문, 거래처 문의</div>
-            <a href="tel:1522-5710">1522-5710</a>
-          </div>
+        <div class="info-block">
+          <h3>👤 업무별 담당자</h3>
+          <table class="rules-table">
+            <tr><th>업무</th><th>담당자</th><th>연락처</th></tr>
+            <tr>
+              <td><strong>경영지원 / 인사</strong><br><span style="font-size:12px;color:#666;">입사 서류, 계약, 급여 관련</span></td>
+              <td>김지혜 부장</td>
+              <td><a href="tel:010-7712-1236" style="color:var(--green);">010-7712-1236</a><br>
+                <a href="mailto:jiheyya@iamgreener.co.kr" style="color:var(--green);font-size:12px;">jiheyya@iamgreener.co.kr</a></td>
+            </tr>
+            <tr>
+              <td><strong>IT / 시스템</strong><br><span style="font-size:12px;color:#666;">계정 발급, 시스템 접속 오류</span></td>
+              <td>신정인 이사</td>
+              <td><a href="tel:010-4426-0617" style="color:var(--green);">010-4426-0617</a><br>
+                <a href="mailto:jungin_shin@iamgreener.co.kr" style="color:var(--green);font-size:12px;">jungin_shin@iamgreener.co.kr</a></td>
+            </tr>
+            <tr>
+              <td><strong>마케팅 / 홍보</strong><br><span style="font-size:12px;color:#666;">SNS, 캠페인, 홍보물 관련</span></td>
+              <td>정성원 과장</td>
+              <td><a href="tel:010-9216-4499" style="color:var(--green);">010-9216-4499</a><br>
+                <a href="mailto:greener_sw@iamgreener.co.kr" style="color:var(--green);font-size:12px;">greener_sw@iamgreener.co.kr</a></td>
+            </tr>
+            <tr>
+              <td><strong>고객센터 / CS</strong><br><span style="font-size:12px;color:#666;">제품 주문, 거래처 문의</span></td>
+              <td>신희연 대리</td>
+              <td><a href="tel:1522-5710" style="color:var(--green);">1522-5710</a><br>
+                <a href="tel:010-9288-0827" style="color:var(--green);font-size:12px;">010-9288-0827</a></td>
+            </tr>
+            <tr>
+              <td><strong>물류 / 창고</strong><br><span style="font-size:12px;color:#666;">출고, 재고, 배송 관련</span></td>
+              <td>안성진 실장</td>
+              <td><a href="tel:010-2866-5803" style="color:var(--green);">010-2866-5803</a><br>
+                <a href="mailto:greener_an@iamgreener.co.kr" style="color:var(--green);font-size:12px;">greener_an@iamgreener.co.kr</a></td>
+            </tr>
+          </table>
         </div>
 
-        <div class="highlight-box" style="margin-top:20px;">
-          💡 내부 연락망(팀별 담당자 정보)은 입사 시 별도로 공유됩니다. 이 포털에 추가가 필요하면 담당자에게 요청하세요.
-        </div>
       </div>
 
-
-      <!-- 영업팀 매뉴얼 -->
       <div id="page-manual-sales" class="page">
         <div class="manual-hero">
           <div class="team-icon">💼</div>
@@ -1390,27 +1621,27 @@
           <div class="manual-section-body">
             <div class="person-card">
               <div class="person-avatar">시진</div>
-              <div class="person-info"><strong>안시진 차장 (팀장)</strong><span>주문제작 총괄 · 팀 리드</span></div>
+              <div class="person-info"><strong>안시진 차장 (팀장)</strong><span>주문제작 총괄 · 팀 리드</span><div style="font-size:11px;color:var(--green);">greener_asj@iamgreener.co.kr</div></div>
               <div class="person-contact">010-3032-4111<br>070-4217-5365</div>
             </div>
             <div class="person-card">
               <div class="person-avatar">윤구</div>
-              <div class="person-info"><strong>한윤구 부장</strong><span>영업 총괄 · 신규 거래처 개발</span></div>
+              <div class="person-info"><strong>한윤구 부장</strong><span>영업 총괄 · 신규 거래처 개발</span><div style="font-size:11px;color:var(--green);">yghan@iamgreener.co.kr</div></div>
               <div class="person-contact">010-4286-0907<br>070-7726-5072</div>
             </div>
             <div class="person-card">
               <div class="person-avatar">승모</div>
-              <div class="person-info"><strong>구승모 과장</strong><span>대한항공 전담 · 중국 현지 담당</span></div>
+              <div class="person-info"><strong>구승모 과장</strong><span>대한항공 전담 · 중국 현지 담당</span><div style="font-size:11px;color:var(--green);">ksm@iamgreener.co.kr</div></div>
               <div class="person-contact">010-4132-2959<br>📍 중국 현지</div>
             </div>
             <div class="person-card">
               <div class="person-avatar">민주</div>
-              <div class="person-info"><strong>정민주 대리</strong><span>유통 채널 담당</span></div>
+              <div class="person-info"><strong>정민주 대리</strong><span>유통 채널 담당</span><div style="font-size:11px;color:var(--green);">98gusdl52@iamgreener.co.kr</div></div>
               <div class="person-contact">010-9173-5738<br>📍 부산지사</div>
             </div>
             <div class="person-card">
               <div class="person-avatar">주희</div>
-              <div class="person-info"><strong>안주희 사원</strong><span>주문제작 지원</span></div>
+              <div class="person-info"><strong>안주희 사원</strong><span>주문제작 지원</span><div style="font-size:11px;color:var(--green);">juhee_an@iamgreener.co.kr</div></div>
               <div class="person-contact">010-8824-3142<br>070-4217-0727</div>
             </div>
           </div>
@@ -1550,7 +1781,7 @@
             <table class="manual-table">
               <tr><th>유형</th><th>프로세스</th></tr>
               <tr><td>반품</td><td>이지어드민 CS창 발주내역 조회 → 회수 구글시트 작성 → 이지어드민 회수 처리</td></tr>
-              <tr><td>불량 (교환/환불)</td><td>이지어드민 조회 → 불량내용/생산일자 확인 → 플로우 VOC방 등록 → 구매팀 공유 → 처리</td></tr>
+              <tr><td>불량 (교환/환불)</td><td>이지어드민 조회 → 불량내용/생산일자 확인 → VOC방 등록 → 구매팀 공유 → 처리</td></tr>
               <tr><td>오배송</td><td>이지어드민 조회 → 회수/오배송 구글시트 작성 → 이지어드민 교환 처리 → 물류방2 공유<br><span style="font-size:12px;color:#666;">물류 과실 오배송은 물류 정산 시 차감!</span></td></tr>
               <tr><td>고객변심</td><td>배송비 고객 부담, 제품 회수 후 확인 → 교환 or 환불</td></tr>
             </table>
@@ -1636,17 +1867,17 @@
           <div class="manual-section-body">
             <div class="person-card">
               <div class="person-avatar">성원</div>
-              <div class="person-info"><strong>정성원 과장 (팀장)</strong><span>디자인 총괄 · 팀 리드</span></div>
+              <div class="person-info"><strong>정성원 과장 (팀장)</strong><span>디자인 총괄 · 팀 리드</span><div style="font-size:11px;color:var(--green);">greener_sw@iamgreener.co.kr</div></div>
               <div class="person-contact">010-9216-4499</div>
             </div>
             <div class="person-card">
               <div class="person-avatar">다람</div>
-              <div class="person-info"><strong>허다람 과장</strong><span>홍보 · PR · 언론 대응</span></div>
+              <div class="person-info"><strong>허다람 과장</strong><span>홍보 · PR · 언론 대응</span><div style="font-size:11px;color:var(--green);">greener_hdr@iamgreener.co.kr</div></div>
               <div class="person-contact">010-9083-9095<br>070-7700-5375</div>
             </div>
             <div class="person-card">
               <div class="person-avatar">이현</div>
-              <div class="person-info"><strong>이이현 대리</strong><span>MD · 상품기획</span></div>
+              <div class="person-info"><strong>이이현 대리</strong><span>MD · 상품기획</span><div style="font-size:11px;color:var(--green);">22hyun@iamgreener.co.kr</div></div>
               <div class="person-contact">010-7464-8668</div>
             </div>
           </div>
@@ -1702,6 +1933,35 @@
 
         <div class="manual-section">
           <div class="manual-section-header" onclick="toggleSection(this)">
+            <h3>🛒 온라인몰 MD 업무</h3>
+            <span class="manual-toggle">▼</span>
+          </div>
+          <div class="manual-section-body">
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">운영 채널: 스마트스토어 · 카페24(자사몰) · 쿠팡 · 배민상회 · 신세계몰 · 토스 · 함께누리몰 · G마켓/옥션 · 올웨이즈</p>
+            <table class="manual-table">
+              <tr><th>요일</th><th>오전 업무</th><th>오후 업무</th></tr>
+              <tr><td><strong>월</strong></td><td>온라인몰 성과지표 작성 / 주요 일정 체크</td><td>쿠팡 화물차 입고 업무</td></tr>
+              <tr><td><strong>화</strong></td><td>채널 모니터링 / 쿠팡 오결합·노출제한 상품 체크</td><td>쿠팡 택배 입고 업무</td></tr>
+              <tr><td><strong>수</strong></td><td>채널 모니터링</td><td>신제품 등록 / 프로모션 관리 / 온라인몰 마스터파일 업데이트</td></tr>
+              <tr><td><strong>목·금</strong></td><td>채널 모니터링</td><td>쿠팡 입출고 현황 체크</td></tr>
+            </table>
+            <p style="font-weight:600;color:var(--green);margin:14px 0 8px;">월간 주요 업무</p>
+            <table class="manual-table">
+              <tr><th>시점</th><th>업무</th></tr>
+              <tr><td>W1</td><td>물류 정산 내역 확인 후 안성진 실장에게 메일 회신 / 쿠팡 정산 내역 구글시트 기입</td></tr>
+              <tr><td>W2</td><td>배민상회 기획전 신청서 작성 (재고 확인, 할인률 논의)</td></tr>
+              <tr><td>W3</td><td>배민상회 기획전 가격 수정</td></tr>
+              <tr><td>W4</td><td>시장조사</td></tr>
+            </table>
+            <div class="tip-box" style="margin-top:10px;">
+              💡 품절 관리: 품절 단톡방 공유 항목 실시간 처리 / 항목 많을 시 신희연 대리와 분담<br>
+              💡 성과지표: 허다람 과장 전달 엑셀 파일에 주 1회(월요일) 기입 후 제출
+            </div>
+          </div>
+        </div>
+
+        <div class="manual-section">
+          <div class="manual-section-header" onclick="toggleSection(this)">
             <h3>❓ 자주 묻는 질문</h3>
             <span class="manual-toggle">▼</span>
           </div>
@@ -1711,6 +1971,7 @@
               <tr><td>디자인 파일은 어디에 보관하나요?</td><td>마케팅팀 공유 드라이브 → 디자인 폴더</td></tr>
               <tr><td>외부 행사 홍보물 제작 요청은?</td><td>정성원 팀장에게 일정과 요구사항 전달</td></tr>
               <tr><td>언론 문의가 들어오면?</td><td>허다람 과장에게 즉시 연결</td></tr>
+              <tr><td>쿠팡 입고 일정은?</td><td>매주 목/금 입고 가능 / 안성진 실장과 협의</td></tr>
             </table>
           </div>
         </div>
@@ -1734,17 +1995,17 @@
           <div class="manual-section-body">
             <div class="person-card">
               <div class="person-avatar">성수</div>
-              <div class="person-info"><strong>김성수 과장</strong><span>구매 총괄 · 공급업체 협상</span></div>
+              <div class="person-info"><strong>김성수 과장</strong><span>구매 총괄 · 공급업체 협상</span><div style="font-size:11px;color:var(--green);">kss1224@iamgreener.co.kr</div></div>
               <div class="person-contact">010-7107-9522</div>
             </div>
             <div class="person-card">
               <div class="person-avatar">윤경</div>
-              <div class="person-info"><strong>김윤경 사원</strong><span>구매 지원 · 발주 관리</span></div>
+              <div class="person-info"><strong>김윤경 사원</strong><span>구매 지원 · 발주 관리</span><div style="font-size:11px;color:var(--green);">yunkk@iamgreener.co.kr</div></div>
               <div class="person-contact">010-9353-3235<br>070-4215-5070</div>
             </div>
             <div class="person-card">
               <div class="person-avatar">민수</div>
-              <div class="person-info"><strong>김민수 사원</strong><span>구매 지원 · 재고 관리</span></div>
+              <div class="person-info"><strong>김민수 사원</strong><span>구매 지원 · 재고 관리</span><div style="font-size:11px;color:var(--green);">minnwaterr@iamgreener.co.kr</div></div>
               <div class="person-contact">010-9956-4800<br>070-4217-5364</div>
             </div>
           </div>
@@ -1880,12 +2141,12 @@
             </div>
             <div class="person-card">
               <div class="person-avatar">성진</div>
-              <div class="person-info"><strong>안성진 실장</strong><span>물류 총괄 · 창고 관리</span></div>
+              <div class="person-info"><strong>안성진 실장</strong><span>물류 총괄 · 창고 관리</span><div style="font-size:11px;color:var(--green);">greener_an@iamgreener.co.kr</div></div>
               <div class="person-contact">010-2866-5803<br>📍 김포창고</div>
             </div>
             <div class="person-card">
               <div class="person-avatar">희연</div>
-              <div class="person-info"><strong>신희연 대리</strong><span>CS · 고객 응대</span></div>
+              <div class="person-info"><strong>신희연 대리</strong><span>CS · 고객 응대</span><div style="font-size:11px;color:var(--green);">greener_hys@iamgreener.co.kr</div></div>
               <div class="person-contact">010-9288-0827<br>070-4217-5366<br>📍 부산지사</div>
             </div>
             <div class="person-card">
@@ -2267,6 +2528,38 @@
       </div>
     </div>
 
+    <!-- 야근 승인 신청 모달 -->
+    <div id="overtimeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:16px;padding:28px;max-width:460px;width:92%;max-height:85vh;overflow-y:auto;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div style="font-size:16px;font-weight:600;color:#dc2626;">🌙 야근 승인 신청</div>
+          <button onclick="document.getElementById('overtimeModal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;">✕</button>
+        </div>
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;color:#dc2626;">
+          부득이한 경우에만 팀장 승인 후 진행하세요.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">신청자 이름 *</label>
+            <input id="ot-name" placeholder="홍길동" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">부서 / 팀 *</label>
+            <select id="ot-dept" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;background:#fff;font-family:inherit;">
+              <option value="">선택하세요</option>
+              <option>영업팀</option><option>마케팅팀</option><option>구매팀</option><option>운영팀</option>
+            </select></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">야근 날짜 *</label>
+            <input id="ot-date" type="date" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">예상 퇴근 시간 *</label>
+            <input id="ot-time" placeholder="예: 23:00" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit;box-sizing:border-box;"></div>
+          <div><label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">야근 사유 *</label>
+            <textarea id="ot-reason" placeholder="야근이 필요한 이유를 구체적으로 작성해주세요" style="border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;resize:vertical;min-height:70px;font-family:inherit;box-sizing:border-box;"></textarea></div>
+          <div id="ot-err" style="color:#dc2626;font-size:12px;display:none;padding:8px;background:#fef2f2;border-radius:8px;"></div>
+          <button onclick="submitOvertime()" style="background:#dc2626;color:#fff;border:none;border-radius:10px;padding:12px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;">
+            📨 팀장에게 승인 요청
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- 거래처 수정 모달 -->
     <div id="clientModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;">
       <div style="background:#fff;border-radius:16px;padding:28px;max-width:500px;width:92%;max-height:85vh;overflow-y:auto;">
@@ -2361,8 +2654,7 @@
         </a>
         <p style="margin-top:10px;font-size:12px;color:var(--text-muted);">링크가 연결되지 않으면 정성원 과장에게 문의하세요.</p>
       </div>
-    </div>
-
+      </div>
     </div><!-- /content -->
   </main>
 </div>
@@ -2420,7 +2712,7 @@ async function sendChat() {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -2609,7 +2901,7 @@ async function sendWorkChat() {
 
   try {
     var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body: JSON.stringify({
         model:'claude-sonnet-4-20250514', max_tokens:600,
         system: WORK_CONTEXT,
@@ -2984,6 +3276,167 @@ function filterClients() {
   renderClients(filtered);
 }
 
+
+// ── 자기개발비/도서/야근 ──────────────────────────
+function toggleDevType() {
+  var val = document.getElementById('dev-type').value;
+  document.getElementById('dev-paid-section').style.display = val === 'paid' ? 'block' : 'none';
+  document.getElementById('dev-request-section').style.display = val === 'request' ? 'block' : 'none';
+}
+
+async function submitDevAllowance() {
+  var name = document.getElementById('dev-name').value.trim();
+  var purpose = document.getElementById('dev-purpose').value.trim();
+  var amount = document.getElementById('dev-amount').value.trim();
+  var type = document.getElementById('dev-type').value;
+  var errEl = document.getElementById('dev-err');
+  errEl.style.display = 'none';
+
+  if (!name || !purpose || !amount || !type) {
+    errEl.textContent = '필수 항목을 모두 입력해주세요.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  var detail = type === 'paid'
+    ? '결제 완료 (환급 요청)\n결제 내역: ' + (document.getElementById('dev-receipt').value || '미입력')
+    : '선결제 요청\n요청 사항: ' + (document.getElementById('dev-how').value || '미입력');
+
+  try {
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: 'jiheyya@iamgreener.co.kr',
+      applicant_name: name,
+      applicant_email: name,
+      cert_type: '자기개발비 신청',
+      purpose: purpose + ' / ' + amount,
+      note: detail
+    });
+    alert('✅ 자기개발비 신청이 완료되었습니다!\n김지혜 부장님이 확인 후 처리해 드립니다.');
+    document.getElementById('dev-name').value = '';
+    document.getElementById('dev-purpose').value = '';
+    document.getElementById('dev-amount').value = '';
+    document.getElementById('dev-type').value = '';
+    document.getElementById('dev-paid-section').style.display = 'none';
+    document.getElementById('dev-request-section').style.display = 'none';
+  } catch(e) {
+    errEl.textContent = '발송 실패. jiheyya@iamgreener.co.kr 로 직접 이메일 보내주세요.';
+    errEl.style.display = 'block';
+  }
+}
+
+async function submitBookRequest() {
+  var name = document.getElementById('book-name').value.trim();
+  var title = document.getElementById('book-title').value.trim();
+  var author = document.getElementById('book-author').value.trim();
+  var reason = document.getElementById('book-reason').value.trim();
+  var errEl = document.getElementById('book-err');
+  errEl.style.display = 'none';
+
+  if (!name || !title) {
+    errEl.textContent = '신청자 이름과 도서명은 필수입니다.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: 'jiheyya@iamgreener.co.kr',
+      applicant_name: name,
+      applicant_email: name,
+      cert_type: '도서 구매 신청',
+      purpose: title + (author ? ' / ' + author : ''),
+      note: reason || '없음'
+    });
+
+    // localStorage에 도서 목록 저장
+    var books = JSON.parse(localStorage.getItem('rw_books') || '[]');
+    books.unshift({ title: title, author: author, date: new Date().toLocaleDateString('ko-KR'), name: name });
+    localStorage.setItem('rw_books', JSON.stringify(books));
+    renderBookList();
+
+    alert('✅ 도서 구매 신청이 완료되었습니다!\n김지혜 부장님이 구매 처리해 드립니다.');
+    document.getElementById('book-name').value = '';
+    document.getElementById('book-title').value = '';
+    document.getElementById('book-author').value = '';
+    document.getElementById('book-reason').value = '';
+  } catch(e) {
+    errEl.textContent = '발송 실패. jiheyya@iamgreener.co.kr 로 직접 이메일 보내주세요.';
+    errEl.style.display = 'block';
+  }
+}
+
+function renderBookList() {
+  var books = JSON.parse(localStorage.getItem('rw_books') || '[]');
+  var listEl = document.getElementById('book-list');
+  var emptyEl = document.getElementById('book-empty');
+  if (!listEl) return;
+  if (!books.length) {
+    listEl.innerHTML = '';
+    if (emptyEl) emptyEl.style.display = 'block';
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = 'none';
+  listEl.innerHTML = books.map(function(b, i) {
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;">' +
+      '<div><div style="font-size:13.5px;font-weight:600;">📚 ' + b.title + '</div>' +
+      '<div style="font-size:12px;color:var(--text-muted);">' + (b.author || '') + ' · ' + b.date + '</div></div>' +
+      '</div>';
+  }).join('');
+}
+
+async function submitOvertime() {
+  var name = document.getElementById('ot-name').value.trim();
+  var dept = document.getElementById('ot-dept').value;
+  var date = document.getElementById('ot-date').value;
+  var time = document.getElementById('ot-time').value.trim();
+  var reason = document.getElementById('ot-reason').value.trim();
+  var errEl = document.getElementById('ot-err');
+  errEl.style.display = 'none';
+
+  if (!name || !dept || !date || !time || !reason) {
+    errEl.textContent = '필수 항목을 모두 입력해주세요.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // 팀장 이메일 매핑
+  var teamLeaders = {
+    '영업팀': 'greener_asj@iamgreener.co.kr',
+    '마케팅팀': 'greener_sw@iamgreener.co.kr',
+    '구매팀': 'kss1224@iamgreener.co.kr',
+    '운영팀': 'jiheyya@iamgreener.co.kr'
+  };
+
+  try {
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: teamLeaders[dept] || 'jiheyya@iamgreener.co.kr',
+      applicant_name: name,
+      applicant_email: dept,
+      cert_type: '야근 승인 요청',
+      purpose: date + ' / 예상 퇴근: ' + time,
+      note: reason
+    });
+    document.getElementById('overtimeModal').style.display = 'none';
+    alert('✅ 야근 승인 요청이 팀장님께 전달되었습니다.\n승인 후 야근을 진행해 주세요.');
+    document.getElementById('ot-name').value = '';
+    document.getElementById('ot-dept').value = '';
+    document.getElementById('ot-date').value = '';
+    document.getElementById('ot-time').value = '';
+    document.getElementById('ot-reason').value = '';
+  } catch(e) {
+    errEl.textContent = '발송 실패. 팀장님께 직접 연락하세요.';
+    errEl.style.display = 'block';
+  }
+}
+
+// 페이지 로드 시 도서 목록 렌더링
+document.addEventListener('DOMContentLoaded', function() {
+  renderBookList();
+});
+
+function openAdmin() {
+  window.location.href = 'rewind_hr_admin.html';
+}
 function toggleDone(cb) {
   const label = cb.parentElement.querySelector('label');
   label.classList.toggle('done', cb.checked);

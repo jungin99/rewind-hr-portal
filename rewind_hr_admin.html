@@ -223,22 +223,48 @@ select.fi{background:var(--w);}
     <div class="brand-tag">Rewind</div>
     <h1>HR 관리 시스템</h1>
     <p>인사담당자 전용 페이지입니다</p>
+    <select class="inp" id="userSelect" style="cursor:pointer;" onchange="document.getElementById('pwInp').value='';">
+      <option value="">담당자 선택</option>
+      <option value="jungin">신정인 이사</option>
+      <option value="jihye">김지혜 부장</option>
+    </select>
     <input class="inp" type="password" id="pwInp" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')doLogin()">
     <div class="err-msg" id="loginErr">비밀번호가 틀렸습니다</div>
     <button class="btn-full" onclick="doLogin()">로그인</button>
-    <p class="hint-txt">기본 비밀번호: rewind2024</p>
+    <p class="hint-txt" style="color:transparent;font-size:10px;">·</p>
+  </div>
+</div>
+
+<!-- 비밀번호 변경 모달 -->
+<div id="pwChangeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:28px;max-width:400px;width:90%;">
+    <div style="font-size:16px;font-weight:700;color:var(--g);margin-bottom:16px;">🔑 비밀번호 변경</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:13px;color:#666;" id="pwChangeUser"></div>
+      <input type="password" id="pwCurrent" placeholder="현재 비밀번호" class="inp" style="margin:0;">
+      <input type="password" id="pwNew" placeholder="새 비밀번호" class="inp" style="margin:0;">
+      <input type="password" id="pwNew2" placeholder="새 비밀번호 확인" class="inp" style="margin:0;">
+      <div id="pwChangeErr" style="color:#dc2626;font-size:12px;display:none;"></div>
+      <button onclick="savePwChange()" class="btn-full" style="margin:0;">변경 완료</button>
+      <button onclick="document.getElementById('pwChangeModal').style.display='none'" 
+        style="background:none;border:none;color:#888;font-size:13px;cursor:pointer;padding:4px;">취소</button>
+    </div>
   </div>
 </div>
 
 <!-- APP -->
-<div class="app" id="mainApp">
+<div class="app" id="mainApp" style="display:none;">
   <header class="topbar">
     <div class="top-l">
       <span class="top-brand">Rewind</span>
       <span class="top-sub">HR 관리 시스템</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <span style="font-size:12px;color:var(--mu);">인사담당자 전용</span>
+      <span style="font-size:12px;color:var(--mu);" id="loggedInName">인사담당자 전용</span>
+      <button onclick="openPwChange()" 
+        style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;">
+        🔑 비밀번호 변경
+      </button>
       <button class="btn-logout" onclick="doLogout()">로그아웃</button>
     </div>
   </header>
@@ -252,8 +278,6 @@ select.fi{background:var(--w);}
     <div class="tab" onclick="showTab('leave',this)">🏖️ 연차 현황</div>
     <div class="tab" onclick="showTab('attend',this)">⏰ 근태 현황</div>
     <div class="tab" onclick="showTab('staff',this)">👥 직원 연락처</div>
-    <div class="tab" onclick="showTab('guide',this)">📖 사용 안내</div>
-    <div class="tab" onclick="showTab('notice',this)">📢 공지 관리</div>
     <div class="tab" onclick="showTab('guide',this)">📖 사용 안내</div>
     <div class="tab" onclick="showTab('notice',this)">📢 공지 관리</div>
   </div>
@@ -611,14 +635,28 @@ select.fi{background:var(--w);}
     <div class="panel" id="tab-attend">
       <div class="ptitle">⏰ 근태 현황</div>
 
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
-          <div class="ctitle" style="margin-bottom:0;">📍 오늘 출근 현황</div>
-          <button class="btn btn-p btn-sm" onclick="loadAttendData()">🔄 새로고침</button>
+      <!-- 오늘 연차인 사람 -->
+      <div class="card" style="background:linear-gradient(135deg,#fff8e1,#fffde7);border:1px solid #ffe082;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="ctitle" style="margin-bottom:0;color:#f59e0b;">🏖️ 오늘 연차인 직원</div>
+          <div style="display:flex;gap:8px;"><button class="btn btn-sm" onclick="loadAttendData()" style="background:#f59e0b;color:#fff;border:none;">🔄 새로고침</button><button class="btn btn-sm" onclick="sendAllLateNotices()" style="background:#dc2626;color:#fff;border:none;">⏰ 지각자 알림 발송</button></div>
         </div>
-        <div id="todayAttend" class="hl">새로고침 버튼을 눌러 데이터를 불러오세요.</div>
+        <div id="todayLeave" style="font-size:13.5px;color:#666;">새로고침 버튼을 눌러 데이터를 불러오세요.</div>
       </div>
 
+      <!-- 팀별 오늘 출근 현황 -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div class="ctitle" style="margin-bottom:0;">📍 오늘 출근 현황 (팀별)</div>
+          <input type="date" id="attend-date-filter" style="font-size:12px;padding:5px 10px;border:1px solid #ddd;border-radius:6px;" 
+            onchange="renderAttendByTeam()">
+        </div>
+        <div id="teamAttendWrap">
+          <div style="text-align:center;padding:24px;color:var(--mu);">새로고침 버튼을 눌러주세요</div>
+        </div>
+      </div>
+
+      <!-- 전체 근태 기록 -->
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
           <div class="ctitle" style="margin-bottom:0;">📋 전체 근태 기록</div>
@@ -629,11 +667,15 @@ select.fi{background:var(--w);}
               <option value="">전체</option>
               <option value="출근">출근</option>
               <option value="퇴근">퇴근</option>
+              <option value="연차">연차</option>
+              <option value="반차">반차</option>
             </select>
-            <select class="fi" style="font-size:12px;padding:5px 10px;" onchange="filterAttend('late',this.value)">
-              <option value="">지각여부 전체</option>
-              <option value="지각">지각만</option>
-              <option value="">정상</option>
+            <select class="fi" style="font-size:12px;padding:5px 10px;" onchange="filterAttend('team',this.value)">
+              <option value="">팀 전체</option>
+              <option value="영업팀">영업팀</option>
+              <option value="마케팅팀">마케팅팀</option>
+              <option value="구매팀">구매팀</option>
+              <option value="운영팀">운영팀</option>
             </select>
           </div>
         </div>
@@ -642,8 +684,7 @@ select.fi{background:var(--w);}
           <table class="staff-table" id="attendTable">
             <thead>
               <tr>
-                <th>이름</th><th>날짜</th><th>시간</th><th>유형</th>
-                <th>지각여부</th><th>위치</th><th>근무지</th><th>사유</th>
+                <th>팀</th><th>이름</th><th>날짜</th><th>출근</th><th>퇴근</th><th>유형</th><th>지각여부</th><th>비고</th>
               </tr>
             </thead>
             <tbody id="attendBody"></tbody>
@@ -651,1111 +692,303 @@ select.fi{background:var(--w);}
         </div>
       </div>
 
-      <div class="card">
-        <div class="ctitle">📊 직원별 근태 요약 (인사평가 활용)</div>
-        <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-          <div class="fg" style="flex:0 0 auto;">
-            <label>조회 기간</label>
-            <select class="fi" style="font-size:12px;padding:5px 10px;" id="attendPeriod" onchange="renderAttendSummary()">
-              <option value="7">최근 7일</option>
-              <option value="30" selected>최근 30일</option>
-              <option value="90">최근 90일</option>
-              <option value="0">전체</option>
-            </select>
-          </div>
-        </div>
-        <div id="attendSummary" style="text-align:center;padding:20px;color:var(--mu);font-size:13px;">
-          데이터를 불러온 후 표시됩니다.
-        </div>
-      </div>
     </div>
 
-    <!-- ⑨ 직원 연락처 -->
+    <!-- 직원 연락처 -->
     <div class="panel" id="tab-staff">
       <div class="ptitle">👥 직원 연락처</div>
       <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-          <div class="ctitle" style="margin-bottom:0;">전체 직원 목록</div>
-          <input class="fi" style="width:200px;" placeholder="이름/팀 검색..." oninput="filterStaff(this.value)">
-        </div>
-        <div style="overflow-x:auto;">
-          <table class="staff-table" id="staffTable">
-            <thead>
-              <tr>
-                <th>팀</th><th>이름</th><th>직급</th><th>담당</th>
-                <th>이메일</th><th>휴대폰</th><th>내선</th><th>비고</th>
-              </tr>
-            </thead>
-            <tbody id="staffBody"></tbody>
-          </table>
-        </div>
+        <div id="staffListAdmin"></div>
       </div>
     </div>
 
-  </div>
-
-    <!-- 📖 사용 안내 -->
+    <!-- 사용 안내 -->
     <div class="panel" id="tab-guide">
-      <div class="ptitle">📖 HR 관리 시스템 사용 안내</div>
+      <div class="ptitle">📖 사용 안내</div>
 
-      <div class="card">
-        <div class="ctitle">🌐 시스템 URL</div>
-        <table class="staff-table">
-          <thead><tr><th>구분</th><th>주소</th><th>대상</th></tr></thead>
-          <tbody>
-            <tr><td>직원 온보딩 포털</td><td><a href="https://portal.rewind2nature.com/rewind_onboarding_portal_2.html" target="_blank" style="color:var(--bl);">portal.rewind2nature.com/rewind_onboarding_portal_2.html</a></td><td>전 직원</td></tr>
-            <tr><td><strong>HR 관리 시스템</strong></td><td><a href="https://portal.rewind2nature.com/rewind_hr_admin_1.html" target="_blank" style="color:var(--bl);">portal.rewind2nature.com/rewind_hr_admin_1.html</a></td><td><strong>인사담당자 전용</strong></td></tr>
-          </tbody>
-        </table>
-        <div class="hl" style="margin-top:12px;">접속 비밀번호: <strong>rewind2024</strong></div>
-      </div>
-
-      <div class="card">
-        <div class="ctitle">🗂️ 메뉴별 기능</div>
-        <table class="staff-table">
-          <thead><tr><th>메뉴</th><th>기능</th></tr></thead>
-          <tbody>
-            <tr><td>📄 이력서 분석</td><td>PDF/이미지 업로드 → AI 직원 정보 추출 + 입사 안내 이메일 자동 생성</td></tr>
-            <tr><td>🚀 온보딩 메일</td><td>D-1 팀장 공지 + 7일 온보딩 이메일 시퀀스 자동 생성</td></tr>
-            <tr><td>📁 서류 관리</td><td>제출 서류 현황 관리, 안내문 자동 생성</td></tr>
-            <tr><td>💬 질문 게시판</td><td>신입 직원 질문 확인, AI 답변 초안 생성</td></tr>
-            <tr><td>👤 직원 관리</td><td>프로필, 입사일·근속기간·연차 자동계산, 인사이력 타임라인, 퇴사자 관리</td></tr>
-            <tr><td>🏖️ 연차 현황</td><td>오늘 연차자 실시간, 전체 내역, 직원별 사용 현황 (구글 시트 연동)</td></tr>
-            <tr><td>⏰ 근태 현황</td><td>오늘 출근, 지각·위치불일치, 직원별 평가등급 A/B/C (구글 시트 연동)</td></tr>
-            <tr><td>👥 직원 연락처</td><td>전체 18명 연락처, 팀/이름 검색</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="card">
-        <div class="ctitle">✅ 업무별 사용법</div>
-        <div style="margin-bottom:16px;">
-          <div style="font-size:13.5px;font-weight:600;color:var(--g);margin-bottom:10px;">신규 직원 채용 시</div>
-          <div style="display:flex;flex-direction:column;gap:7px;">
-            <div style="display:flex;gap:8px;align-items:flex-start;"><span style="background:var(--g);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;flex-shrink:0;margin-top:2px;">1</span><span style="font-size:13px;">📄 이력서 분석 탭 → PDF 드래그앤드롭</span></div>
-            <div style="display:flex;gap:8px;align-items:flex-start;"><span style="background:var(--g);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;flex-shrink:0;margin-top:2px;">2</span><span style="font-size:13px;">출근 연락 담당자 선택 → AI 분석 시작</span></div>
-            <div style="display:flex;gap:8px;align-items:flex-start;"><span style="background:var(--g);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;flex-shrink:0;margin-top:2px;">3</span><span style="font-size:13px;">이메일 초안 확인 → 📋 복사 → 이메일 발송</span></div>
-            <div style="display:flex;gap:8px;align-items:flex-start;"><span style="background:var(--g);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;flex-shrink:0;margin-top:2px;">4</span><span style="font-size:13px;">💾 직원 목록 저장 → 👤 직원 관리에서 추가 정보 입력</span></div>
+      <!-- AI 도우미 (맨 위) -->
+      <div class="card" style="background:linear-gradient(135deg,#e8f5ee,#f0fdf4);border:1px solid var(--gm);">
+        <div class="ctitle">🤖 HR 시스템 AI 도우미</div>
+        <p style="font-size:13px;color:#555;margin-bottom:12px;">HR 시스템 사용법, 직원 관리, 채용 프로세스 등 무엇이든 물어보세요!</p>
+        <div id="guide-chat-msgs" style="min-height:120px;max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:10px;padding:10px;background:#fff;border-radius:8px;">
+          <div style="background:var(--gp);border:1px solid var(--gm);border-radius:8px;padding:10px 14px;font-size:13px;">
+            안녕하세요! HR 시스템 AI 도우미입니다. 사용법이 궁금하신가요? 🌿
           </div>
-        </div>
-        <div style="height:1px;background:var(--bd);margin:14px 0;"></div>
-        <div style="margin-bottom:16px;">
-          <div style="font-size:13.5px;font-weight:600;color:var(--g);margin-bottom:6px;">온보딩 이메일 발송</div>
-          <div style="font-size:13px;line-height:1.8;">🚀 온보딩 메일 탭 → 직원 이름·출근일·직책·경력 입력 → 생성 → 각 카드 클릭 → 복사 → 발송</div>
-        </div>
-        <div style="height:1px;background:var(--bd);margin:14px 0;"></div>
-        <div style="margin-bottom:16px;">
-          <div style="font-size:13.5px;font-weight:600;color:var(--g);margin-bottom:6px;">연차·근태 현황 확인</div>
-          <div style="font-size:13px;line-height:1.8;">해당 탭 클릭 → 🔄 새로고침 버튼 → 구글 시트 실시간 연동</div>
-        </div>
-        <div style="height:1px;background:var(--bd);margin:14px 0;"></div>
-        <div>
-          <div style="font-size:13.5px;font-weight:600;color:var(--g);margin-bottom:6px;">포털 내용 수정</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div style="background:var(--gp);border:1px solid var(--gm);border-radius:8px;padding:12px;">
-              <div style="font-size:12.5px;font-weight:600;color:var(--g);margin-bottom:4px;">간단 수정 — 관리자 모드</div>
-              <div style="font-size:12px;line-height:1.7;">온보딩 포털 → 우상단 🔧 관리자 수정 → 비밀번호 → 수정 → 저장</div>
-            </div>
-            <div style="background:var(--blp);border:1px solid var(--blm);border-radius:8px;padding:12px;">
-              <div style="font-size:12.5px;font-weight:600;color:var(--bl);margin-bottom:4px;">큰 변경 — Claude 요청</div>
-              <div style="font-size:12px;line-height:1.7;">claude.ai → 수정 요청 → 파일 받기 → GitHub 업로드 → 자동 반영</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="ctitle">❓ 자주 묻는 질문</div>
-        <div style="display:flex;flex-direction:column;gap:12px;">
-          <div style="border-bottom:1px solid var(--bd);padding-bottom:10px;">
-            <div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:3px;">Q. 연차/근태가 안 불러와져요</div>
-            <div style="font-size:12.5px;line-height:1.7;">A. portal.rewind2nature.com 주소에서 접속 필요 (로컬 파일 불가). 구글 시트 공유: 링크가 있는 모든 사용자 - 뷰어</div>
-          </div>
-          <div style="border-bottom:1px solid var(--bd);padding-bottom:10px;">
-            <div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:3px;">Q. 이력서 분석이 안 돼요</div>
-            <div style="font-size:12.5px;line-height:1.7;">A. 스캔 PDF는 텍스트 추출 불가. 텍스트 붙여넣기 또는 이미지(jpg/png) 파일로 업로드하세요.</div>
-          </div>
-          <div style="border-bottom:1px solid var(--bd);padding-bottom:10px;">
-            <div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:3px;">Q. 직원 정보가 저장이 안 돼요</div>
-            <div style="font-size:12.5px;line-height:1.7;">A. 브라우저 로컬 저장소 사용. 같은 브라우저에서만 유지. 캐시 삭제 시 초기화됩니다.</div>
-          </div>
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:3px;">Q. 기능 추가나 수정이 필요해요</div>
-            <div style="font-size:12.5px;line-height:1.7;">A. claude.ai에서 자유롭게 요청하세요. "연차 신청 기능 추가해줘", "인사평가 항목 넣어줘" 등</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="ctitle">💬 사용법 AI 도우미</div>
-        <div class="hl" style="margin-bottom:12px;">HR 시스템 사용법이 궁금하면 여기서 바로 물어보세요!</div>
-        <div id="guide-msgs" style="min-height:80px;max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:10px;"></div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-          <button class="btn btn-s btn-sm" onclick="guideQ('이력서 분석 어떻게 해요?')">이력서 분석</button>
-          <button class="btn btn-s btn-sm" onclick="guideQ('연차 현황 어떻게 확인해요?')">연차 확인</button>
-          <button class="btn btn-s btn-sm" onclick="guideQ('온보딩 메일 어떻게 보내요?')">온보딩 메일</button>
-          <button class="btn btn-s btn-sm" onclick="guideQ('직원 정보 어떻게 수정해요?')">직원 정보</button>
-          <button class="btn btn-s btn-sm" onclick="guideQ('포털 내용 어떻게 수정해요?')">포털 수정</button>
-          <button class="btn btn-s btn-sm" onclick="guideQ('근태 평가등급은 어떻게 산출되나요?')">근태 평가</button>
         </div>
         <div style="display:flex;gap:8px;">
-          <input class="fi" id="guide-inp" placeholder="사용법 질문을 입력하세요..." style="flex:1;" onkeydown="if(event.key==='Enter')sendGuide()">
-          <button class="btn btn-p btn-sm" onclick="sendGuide()">전송</button>
+          <input id="guide-chat-input" placeholder="질문을 입력하세요..." onkeydown="if(event.key==='Enter')sendGuideChat()"
+            style="flex:1;border:1px solid var(--gm);border-radius:8px;padding:9px 12px;font-size:13px;outline:none;font-family:inherit;">
+          <button onclick="sendGuideChat()" style="background:var(--g);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer;">➤</button>
         </div>
       </div>
 
+      <!-- 탭별 사용법 -->
+      <div class="card">
+        <div class="ctitle">📋 탭별 주요 기능</div>
+        <table class="staff-table">
+          <thead><tr><th>탭</th><th>기능</th><th>사용법</th></tr></thead>
+          <tbody>
+            <tr><td>📄 이력서 분석</td><td>AI 이력서 분석 + 입사 안내 메일 생성</td><td>PDF/이미지 드래그 → AI 분석 시작</td></tr>
+            <tr><td>🚀 온보딩 메일</td><td>7일 온보딩 이메일 자동 발송</td><td>직원 선택 → 메일 내용 확인 → 발송</td></tr>
+            <tr><td>👤 직원 관리</td><td>직원 정보 추가/수정/삭제</td><td>직원 추가 버튼 → 정보 입력 → 저장</td></tr>
+            <tr><td>🏖️ 연차 현황</td><td>구글 시트 연동 연차 현황</td><td>새로고침 → 직원별 잔여 연차 확인</td></tr>
+            <tr><td>⏰ 근태 현황</td><td>팀별 출퇴근 현황 + 오늘 연차 표시</td><td>새로고침 → 팀별/날짜별 필터링</td></tr>
+            <tr><td>📢 공지 관리</td><td>공지 작성 → 전체 직원 이메일 자동 발송</td><td>제목/내용 입력 → 공지 등록</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-  </div>
-
-    <!-- 📢 공지 관리 -->
+    <!-- 공지 관리 -->
     <div class="panel" id="tab-notice">
       <div class="ptitle">📢 공지사항 관리</div>
-
       <div class="card">
-        <div class="ctitle">✏️ 공지사항 작성</div>
-        <div class="frow one">
-          <div class="fg"><label>제목 *</label><input class="fi" id="n-title" placeholder="공지사항 제목을 입력하세요"></div>
-        </div>
-        <div class="frow one">
-          <div class="fg"><label>내용 *</label><textarea class="fta" id="n-content" style="min-height:120px;" placeholder="공지사항 내용을 입력하세요..."></textarea></div>
-        </div>
-        <div class="frow">
-          <div class="fg"><label>작성자</label><input class="fi" id="n-author" value="김지혜 부장"></div>
-          <div class="fg"><label>중요 공지 여부</label>
-            <select class="fi" id="n-important">
-              <option value="false">일반 공지</option>
-              <option value="true">📌 중요 공지 (핀 고정)</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn btn-p" onclick="postNotice()">📢 공지 게시하기</button>
-      </div>
-
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <div class="ctitle" style="margin-bottom:0;">📋 게시된 공지사항</div>
-          <button class="btn btn-s btn-sm" onclick="loadAdminNotices()">🔄 새로고침</button>
-        </div>
-        <div id="adminNoticeList" style="display:flex;flex-direction:column;gap:10px;">
-          <div style="text-align:center;padding:24px;color:var(--mu);font-size:13px;">새로고침 버튼을 눌러주세요</div>
+        <div class="ctitle">✏️ 새 공지 작성</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <input id="noticeTitle" placeholder="공지 제목" class="fi" style="font-size:14px;padding:10px 14px;">
+          <textarea id="noticeContent" placeholder="공지 내용을 입력하세요..." class="fi" style="font-size:13.5px;padding:10px 14px;min-height:120px;resize:vertical;"></textarea>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" id="noticeSendEmail" checked style="width:16px;height:16px;">
+            <span>전체 직원에게 이메일 발송 (18명)</span>
+          </label>
+          <button onclick="postNoticeNew()" class="btn btn-p">📢 공지 등록 및 발송</button>
         </div>
       </div>
-
       <div class="card">
-        <div class="ctitle">💬 직원 댓글 현황</div>
-        <div id="adminCmtList" style="display:flex;flex-direction:column;gap:8px;">
-          <div style="text-align:center;padding:20px;color:var(--mu);font-size:13px;">공지사항을 새로고침하면 함께 표시됩니다.</div>
-        </div>
+        <div class="ctitle">📋 등록된 공지사항</div>
+        <div id="adminNoticeList"></div>
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /content -->
 
-<div class="toast" id="toast"></div>
+  </div><!-- /container -->
+
+</div><!-- /app -->
 
 <script>
-const ADMIN_PW = 'rewind2024';
+// ── 비밀번호 관리 ──────────────────────────────────
+// 초기 비밀번호 (해시 없이 localStorage에 저장, 첫 실행 시 기본값 설정)
+function getPw(user) {
+  return localStorage.getItem('rw_pw_' + user) || (user === 'jungin' ? 'rewind2024' : 'rewind2024');
+}
 
-const STAFF = [
-  {team:'임원',name:'김은정',rank:'대표이사',role:'신사업',email:'greener_kim@iamgreener.co.kr',phone:'010-2792-4375',ext:'-',note:''},
-  {team:'임원',name:'박원욱',rank:'대표이사',role:'영업, 구매',email:'eddy_park@iamgreener.co.kr',phone:'010-9513-0202',ext:'-',note:''},
-  {team:'임원',name:'신정인',rank:'이사',role:'마케팅, 운영',email:'jungin_shin@iamgreener.co.kr',phone:'010-4426-0617',ext:'-',note:'부산지사'},
-  {team:'영업팀',name:'안시진',rank:'팀장/차장',role:'주문제작',email:'greener_asj@iamgreener.co.kr',phone:'010-3032-4111',ext:'070-4217-5365',note:''},
-  {team:'영업팀',name:'한윤구',rank:'부장',role:'영업',email:'yghan@iamgreener.co.kr',phone:'010-4286-0907',ext:'070-7726-5072',note:''},
-  {team:'영업팀',name:'구승모',rank:'과장',role:'대한항공 전담',email:'ksm@iamgreener.co.kr',phone:'010-4132-2959',ext:'-',note:'중국'},
-  {team:'영업팀',name:'정민주',rank:'대리',role:'유통',email:'98gusdl52@iamgreener.co.kr',phone:'010-9173-5738',ext:'-',note:'부산지사'},
-  {team:'영업팀',name:'안주희',rank:'사원',role:'주문제작',email:'juhee_an@iamgreener.co.kr',phone:'010-8824-3142',ext:'070-4217-0727',note:''},
-  {team:'마케팅팀',name:'정성원',rank:'팀장/과장',role:'디자인',email:'greener_sw@iamgreener.co.kr',phone:'010-9216-4499',ext:'-',note:''},
-  {team:'마케팅팀',name:'허다람',rank:'과장',role:'홍보',email:'greener_hdr@iamgreener.co.kr',phone:'010-9083-9095',ext:'070-7700-5375',note:''},
-  {team:'마케팅팀',name:'이이현',rank:'대리',role:'MD',email:'22hyun@iamgreener.co.kr',phone:'010-7464-8668',ext:'-',note:''},
-  {team:'구매팀',name:'김성수',rank:'과장',role:'구매',email:'kss1224@iamgreener.co.kr',phone:'010-7107-9522',ext:'-',note:''},
-  {team:'구매팀',name:'김윤경',rank:'사원',role:'구매',email:'yunkk@iamgreener.co.kr',phone:'010-9353-3235',ext:'070-4215-5070',note:''},
-  {team:'구매팀',name:'김민수',rank:'사원',role:'구매',email:'minnwaterr@iamgreener.co.kr',phone:'010-9956-4800',ext:'070-4217-5364',note:''},
-  {team:'운영팀',name:'김지혜',rank:'팀장/차장',role:'재무, 인사, 노무',email:'jiheyya@iamgreener.co.kr',phone:'010-7712-1236',ext:'-',note:'제주'},
-  {team:'운영팀',name:'안성진',rank:'실장',role:'물류',email:'greener_an@iamgreener.co.kr',phone:'010-2866-5803',ext:'-',note:'김포창고'},
-  {team:'운영팀',name:'신희연',rank:'대리',role:'CS',email:'greener_hys@iamgreener.co.kr',phone:'010-9288-0827',ext:'070-4217-5366',note:'부산지사'},
-  {team:'운영팀',name:'유태근',rank:'대리',role:'물류',email:'-',phone:'-',ext:'-',note:'김포창고'},
-];
-
-let pdfjsLib = null;
-let generatedDays = [];
-
-// LOGIN
 function doLogin() {
-  if (document.getElementById('pwInp').value === ADMIN_PW) {
+  var user = document.getElementById('userSelect').value;
+  var pw = document.getElementById('pwInp').value;
+  var errEl = document.getElementById('loginErr');
+  
+  if (!user) {
+    errEl.textContent = '담당자를 선택해주세요.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!pw) {
+    errEl.textContent = '비밀번호를 입력해주세요.';
+    errEl.style.display = 'block';
+    return;
+  }
+  
+  if (pw === getPw(user)) {
+    errEl.style.display = 'none';
     document.getElementById('loginWrap').style.display = 'none';
-    document.getElementById('mainApp').classList.add('on');
-    initApp();
+    document.getElementById('mainApp').style.display = 'block';
+    // 로그인 사용자 저장
+    sessionStorage.setItem('rw_admin_user', user);
+    sessionStorage.setItem('rw_admin_name', user === 'jungin' ? '신정인 이사' : '김지혜 부장');
+    // 로그인 이름 표시
+    var nameEl = document.getElementById('loggedInName');
+    if (nameEl) nameEl.textContent = (user === 'jungin' ? '신정인 이사' : '김지혜 부장') + ' 로그인 중';
+    loadAdminNotices();
   } else {
-    document.getElementById('loginErr').style.display = 'block';
-  }
-}
-function doLogout() {
-  document.getElementById('loginWrap').style.display = 'flex';
-  document.getElementById('mainApp').classList.remove('on');
-  document.getElementById('pwInp').value = '';
-}
-document.getElementById('pwInp').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-
-function initApp() {
-  renderStaff(STAFF);
-  populateContactSelect();
-  var today = new Date().toISOString().split('T')[0];
-  document.getElementById('obDate').value = today;
-  document.getElementById('qDate').value = today;
-  // 기존 직원 데이터에 STAFF 기본값 자동 채우기
-  if (employees.length === 0) {
-    STAFF.forEach(function(s) {
-      employees.push({
-        name: s.name, team: s.team, rank: s.rank, role: s.role,
-        email: s.email, phone: s.phone, status: 'active',
-        joindate: '', leavedate: '', birth: '', address: '', note: '',
-        timeline: [], files: [], updatedAt: new Date().toISOString()
-      });
-    });
-    saveEmpStorage();
-  }
-  renderEmpList(employees);
-}
-
-function populateContactSelect() {
-  var sel = document.getElementById('contactSelect');
-  STAFF.forEach(function(s) {
-    if (s.phone !== '-') {
-      var opt = document.createElement('option');
-      opt.value = s.name + ' ' + s.rank + ' (' + s.phone + ')';
-      opt.textContent = s.team + ' · ' + s.name + ' ' + s.rank + ' · ' + s.phone;
-      sel.appendChild(opt);
-    }
-  });
-}
-
-// TABS
-function showTab(id, el) {
-  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
-  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); });
-  document.getElementById('tab-' + id).classList.add('on');
-  el.classList.add('on');
-}
-
-// STAFF
-function renderStaff(data) {
-  var tbody = document.getElementById('staffBody');
-  tbody.innerHTML = data.map(function(s) {
-    return '<tr>' +
-      '<td><span class="team-badge team-' + s.team.replace('팀','') + '">' + s.team + '</span></td>' +
-      '<td><strong>' + s.name + '</strong></td>' +
-      '<td>' + s.rank + '</td>' +
-      '<td>' + s.role + '</td>' +
-      '<td style="font-size:12px;">' + s.email + '</td>' +
-      '<td><strong>' + s.phone + '</strong></td>' +
-      '<td style="font-size:12px;">' + s.ext + '</td>' +
-      '<td style="font-size:12px;color:var(--mu);">' + s.note + '</td>' +
-    '</tr>';
-  }).join('');
-}
-function filterStaff(q) {
-  renderStaff(STAFF.filter(function(s){
-    return s.name.includes(q)||s.team.includes(q)||s.role.includes(q)||s.rank.includes(q);
-  }));
-}
-
-// PDF.js
-function loadPdfJs() {
-  if (pdfjsLib) return Promise.resolve(pdfjsLib);
-  // head에서 미리 로드됨
-  var lib = window['pdfjs-dist/build/pdf'] || window.pdfjsLib;
-  if (lib) {
-    lib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    pdfjsLib = lib;
-    return Promise.resolve(lib);
-  }
-  // 혹시 로드 안됐으면 동적 로드
-  return new Promise(function(resolve, reject) {
-    var s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-    s.onload = function() {
-      var lib2 = window['pdfjs-dist/build/pdf'];
-      lib2.GlobalWorkerOptions.workerSrc =
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      pdfjsLib = lib2;
-      resolve(lib2);
-    };
-    s.onerror = reject;
-    document.head.appendChild(s);
-  });
-}
-
-async function extractPdfText(file) {
-  var lib = await loadPdfJs();
-  var arrayBuffer = await file.arrayBuffer();
-  var pdf = await lib.getDocument({ data: arrayBuffer }).promise;
-  var fullText = '';
-  for (var i = 1; i <= pdf.numPages; i++) {
-    var page = await pdf.getPage(i);
-    var content = await page.getTextContent();
-    fullText += content.items.map(function(item){ return item.str; }).join(' ') + '\n';
-  }
-  return fullText.trim();
-}
-
-function fileToBase64(file) {
-  return new Promise(function(resolve) {
-    var reader = new FileReader();
-    reader.onload = function(e){ resolve(e.target.result.split(',')[1]); };
-    reader.readAsDataURL(file);
-  });
-}
-
-// FILE HANDLER
-function onDrop(e) {
-  e.preventDefault();
-  document.getElementById('dropZone').classList.remove('over');
-  var file = e.dataTransfer.files[0];
-  if (file) handleFile(file);
-}
-
-async function handleFile(file) {
-  if (!file) return;
-  var ta = document.getElementById('resumeText');
-  var zone = document.getElementById('dropZone');
-  zone.innerHTML = '<span class="dicon">⏳</span><h3>파일 읽는 중...</h3><p>' + file.name + '</p>';
-  try {
-    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-      var text = await extractPdfText(file);
-      if (!text || text.length < 20) {
-        ta.value = '';
-        zone.innerHTML = '<span class="dicon">⚠️</span><h3>텍스트 추출 실패</h3><p>스캔된 이미지 PDF입니다.<br>아래 입력란에 직접 붙여넣기 해주세요.</p>';
-        showToast('스캔 PDF는 추출 불가 — 직접 붙여넣기 해주세요.');
-      } else {
-        ta.value = text;
-        zone.innerHTML = '<span class="dicon">✅</span><h3>' + file.name + '</h3><p>PDF 추출 완료 (' + text.length.toLocaleString() + '자) — 아래 분석 버튼을 눌러주세요</p>';
-        showToast('PDF 추출 완료! 분석 버튼을 눌러주세요.');
-      }
-    } else if (file.type.startsWith('image/')) {
-      var b64 = await fileToBase64(file);
-      window._imgB64 = b64;
-      window._imgType = file.type;
-      ta.value = '__IMAGE_RESUME__';
-      zone.innerHTML = '<span class="dicon">🖼</span><h3>' + file.name + '</h3><p>이미지 이력서 — 분석 버튼을 눌러주세요</p>';
-      showToast('이미지 준비 완료! 분석 버튼을 눌러주세요.');
-    } else {
-      var reader = new FileReader();
-      reader.onload = function(e){
-        ta.value = e.target.result || '';
-        zone.innerHTML = '<span class="dicon">✅</span><h3>' + file.name + '</h3><p>파일 로드 완료 — 분석 버튼을 눌러주세요</p>';
-        showToast('파일 로드 완료!');
-      };
-      reader.readAsText(file, 'utf-8');
-    }
-  } catch(err) {
-    zone.innerHTML = '<span class="dicon">📄</span><h3>이력서 파일을 여기에 드래그하거나 클릭하세요</h3><p>PDF · Word · 이미지 · 텍스트 지원</p>';
-    showToast('파일 읽기 실패. 직접 붙여넣기 해주세요.');
-    console.error(err);
+    errEl.textContent = '비밀번호가 틀렸습니다.';
+    errEl.style.display = 'block';
+    document.getElementById('pwInp').value = '';
+    document.getElementById('pwInp').focus();
   }
 }
 
-// ANALYZE RESUME
-async function analyzeResume() {
-  var rawText = document.getElementById('resumeText').value.trim();
-  var contact = document.getElementById('contactSelect').value || '한윤구 부장 (010-4286-0907)';
-  var isImage = rawText === '__IMAGE_RESUME__';
+function openPwChange() {
+  var user = sessionStorage.getItem('rw_admin_user');
+  var name = sessionStorage.getItem('rw_admin_name');
+  document.getElementById('pwChangeUser').textContent = name + '의 비밀번호 변경';
+  document.getElementById('pwCurrent').value = '';
+  document.getElementById('pwNew').value = '';
+  document.getElementById('pwNew2').value = '';
+  document.getElementById('pwChangeErr').style.display = 'none';
+  document.getElementById('pwChangeModal').style.display = 'flex';
+}
 
-  if (!rawText) { showToast('이력서 내용을 입력하거나 파일을 업로드해주세요.'); return; }
+function savePwChange() {
+  var user = sessionStorage.getItem('rw_admin_user');
+  var current = document.getElementById('pwCurrent').value;
+  var newPw = document.getElementById('pwNew').value;
+  var newPw2 = document.getElementById('pwNew2').value;
+  var errEl = document.getElementById('pwChangeErr');
+  errEl.style.display = 'none';
 
-  var btn = document.getElementById('analyzeBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="loading"><span class="ldot"></span><span class="ldot"></span><span class="ldot"></span></span> AI 분석 중...';
-
-  var jsonSchema = '{"name":"이름","birth":"생년월일또는나이","phone":"연락처","email":"이메일","address":"주소","education":"최종학력","career_summary":"경력요약2-3줄","skills":"주요스킬자격증","prev_company":"직전직장","prev_role":"직전직책","strength":"강점","join_team":"추정입사팀"}';
-
-  var messages;
-  if (isImage && window._imgB64) {
-    messages = [{
-      role: 'user',
-      content: [
-        { type: 'image', source: { type: 'base64', media_type: window._imgType, data: window._imgB64 } },
-        { type: 'text', text: '이 이미지는 이력서입니다. 분석해서 JSON만 반환하세요. 다른 텍스트 없이 JSON만. 형식: ' + jsonSchema }
-      ]
-    }];
-  } else {
-    messages = [{
-      role: 'user',
-      content: '다음 이력서를 분석해서 JSON만 반환하세요. 다른 텍스트 없이 JSON만. 형식: ' + jsonSchema + '\n\n이력서:\n' + rawText
-    }];
+  if (current !== getPw(user)) {
+    errEl.textContent = '현재 비밀번호가 틀렸습니다.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (newPw.length < 6) {
+    errEl.textContent = '새 비밀번호는 6자 이상이어야 합니다.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (newPw !== newPw2) {
+    errEl.textContent = '새 비밀번호가 일치하지 않습니다.';
+    errEl.style.display = 'block';
+    return;
   }
 
-  try {
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: messages })
-    });
-    var data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    var raw = data.content[0].text.replace(/```json|```/g,'').trim();
-    var info;
-    try { info = JSON.parse(raw); }
-    catch(pe) {
-      var m = raw.match(/\{[\s\S]+\}/);
-      if (m) info = JSON.parse(m[0]);
-      else throw new Error('JSON 파싱 실패: ' + raw.substring(0,100));
-    }
-    renderInfo(info);
-    await generateWelcomeEmail(info, contact);
-    document.getElementById('resumeResult').classList.add('show');
-    document.getElementById('resumeResult').scrollIntoView({behavior:'smooth'});
-  } catch(e) {
-    showToast('분석 중 오류: ' + e.message);
-    console.error(e);
-  }
-  btn.disabled = false;
-  btn.innerHTML = '✨ AI 분석 시작';
+  localStorage.setItem('rw_pw_' + user, newPw);
+  document.getElementById('pwChangeModal').style.display = 'none';
+  alert('✅ 비밀번호가 변경되었습니다!');
 }
+</script>
 
-function renderInfo(info) {
-  var grid = document.getElementById('infoGrid');
-  var fields = [
-    ['이름', info.name], ['생년월일/나이', info.birth],
-    ['연락처', info.phone], ['이메일', info.email],
-    ['주소', info.address], ['최종학력', info.education],
-    ['직전 직장', info.prev_company], ['직전 직책', info.prev_role],
-    ['경력 요약', info.career_summary, true],
-    ['주요 스킬', info.skills, true],
-    ['강점', info.strength, true],
-  ];
-  grid.innerHTML = fields.map(function(f){
-    return '<div class="info-item' + (f[2]?' full':'') + '"><div class="lbl">' + f[0] + '</div><div class="val">' + (f[1]||'-') + '</div></div>';
-  }).join('');
-  document.getElementById('infoText').value = fields.map(function(f){ return f[0]+': '+(f[1]||'-'); }).join('\n');
-}
+<script>
 
-async function generateWelcomeEmail(info, contact) {
-  var prompt = '리와인드(아이엠그리너) 신입 직원 ' + (info.name||'OOO') + '님의 입사 안내 이메일을 작성하세요.\n\n' +
-    '아래 실제 회사에서 사용하는 메일 형식을 그대로 따르세요:\n\n' +
-    '안녕하세요 [이름]님!!\n리와인드 김지혜 부장입니다^^\n먼저 이렇게 귀한 인연을 시작하게 되어 너무 기쁘고 환영해요!\n앞으로 함께 성장해 나가며 소중한 인연을 이어가기 바래요!\n\n' +
-    '1. 출근 일시\n- 출근 일시: [날짜 미정 - 추후 안내] 오전 9시 30분\n  (도착하시면 ' + contact + '께 연락주세요!)\n- 출근 장소: 서울특별시 서대문구 연희로26 동방빌딩 6층\n\n' +
-    '2. 입사 서류\n기본 제출 서류:\n1. 최종학교 졸업증명서\n2. 주민등록등본\n3. 가족관계증명서\n4. 급여통장 사본\n5. 증명사진 파일\n6. 채용건강진단서 (출근 후 제출 가능)\n\n' +
-    '3. 이메일 계정\n업무용 이메일 아이디를 미리 알려주시면 계정을 생성해두겠습니다.\n예시: greener_kjh@iamgreener.co.kr\n\n' +
-    '연봉계약서 작성을 위해 주민등록번호와 주소, 희망 이메일 아이디를 먼저 회신해 주시면 감사하겠습니다.\n\n' +
-    '발신: 김지혜 부장 (jiheyya@iamgreener.co.kr)\n\n' +
-    '제목줄도 함께 작성하세요. 첫줄: 제목: [제목내용]';
 
-  var res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1200, messages: [{role:'user', content: prompt}] })
-  });
-  var data = await res.json();
-  var text = data.content[0].text;
-  var sm = text.match(/제목:\s*(.+)/);
-  document.getElementById('welcomeSubj').textContent = '제목: ' + (sm ? sm[1].trim() : '[리와인드] ' + (info.name||'') + '님 입사 안내');
-  document.getElementById('welcomeEmail').textContent = text.replace(/제목:.+\n?/,'').trim();
-}
+// ── 새 공지 탭 전용 postNotice ──────────────────────
+async async function postNoticeNew() {
+  var title = document.getElementById('noticeTitle').value.trim();
+  var content = document.getElementById('noticeContent').value.trim();
+  var sendEmail = document.getElementById('noticeSendEmail').checked;
+  
+  if (!title || !content) { showToast('제목과 내용을 입력해주세요.'); return; }
 
-function saveToList() { showToast('직원 목록에 저장되었습니다!'); }
+  // localStorage에 저장
+  var notices = JSON.parse(localStorage.getItem('rw_notices') || '[]');
+  var now = new Date();
+  var date = now.getFullYear() + '.' + String(now.getMonth()+1).padStart(2,'0') + '.' + String(now.getDate()).padStart(2,'0');
+  var newId = notices.length ? Math.max.apply(null, notices.map(function(n){return n.id;})) + 1 : 1;
+  notices.push({ id:newId, title:title, content:content, author:'관리자', date:date, isAdmin:true });
+  localStorage.setItem('rw_notices', JSON.stringify(notices));
 
-// ONBOARDING
-async function generateOnboarding() {
-  var name = document.getElementById('obName').value.trim();
-  var date = document.getElementById('obDate').value;
-  var role = document.getElementById('obRole').value.trim() || '신입 직원';
-  var age = document.getElementById('obAge').value.trim();
-  var career = document.getElementById('obCareer').value.trim();
-  var note = document.getElementById('obNote').value.trim();
-  if (!name) { showToast('직원 이름을 입력해주세요.'); return; }
-
-  var btn = document.getElementById('obBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="loading"><span class="ldot"></span><span class="ldot"></span><span class="ldot"></span></span> 생성 중...';
-
-  var dateStr = date ? new Date(date).toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'}) : '출근 예정일';
-
-  var d1Prompt = '리와인드(아이엠그리너) 신입 직원 ' + name + '(' + role + ', ' + (age||'') + ') 입사 하루 전 팀장들에게 보내는 준비 공지 이메일을 작성하세요.\n' +
-    '출근일: ' + dateStr + '\n주요 경력: ' + (career||'없음') + '\n특이사항: ' + (note||'없음') + '\n\n' +
-    'Google Just-in-Time 방식으로 팀장이 즉시 실행할 5가지 체크리스트 포함:\n' +
-    '1. 자리 및 장비 준비\n2. 역할과 책임 논의 일정\n3. 버디(동료 멘토) 지정\n4. 팀 소개 일정\n5. 첫 주 업무 계획\n\n' +
-    '이력서 분석 기반으로 ' + name + '님의 경력과 강점도 요약해서 팀장들이 참고할 수 있게 해주세요.\n' +
-    '발신: 김지혜 부장. 첫줄: 제목: [제목내용]';
-
-  try {
-    var r1 = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1200, messages:[{role:'user',content:d1Prompt}]})
-    });
-    var d1 = await r1.json();
-    var d1text = d1.content[0].text;
-    var d1sm = d1text.match(/제목:\s*(.+)/);
-    document.getElementById('d1Subj').textContent = '제목: ' + (d1sm ? d1sm[1].trim() : '[리와인드] ' + name + '님 내일 출근 - 준비 체크리스트');
-    document.getElementById('d1Email').textContent = d1text.replace(/제목:.+\n?/,'').trim();
-
-    var dayLabels = [
-      {d:'D-Day', theme:'환영 인사 + 오늘 할 일 안내'},
-      {d:'Day 1 오후', theme:'첫날 적응 체크 + 질문 유도'},
-      {d:'Day 2', theme:'회사 미션·제품 소개'},
-      {d:'Day 3', theme:'업무 툴 세팅 + 동료 소개'},
-      {d:'Day 4', theme:'리와인드 4R 환경 미션 깊이 알기'},
-      {d:'Day 5', theme:'첫 주 소감 설문 (3가지 질문)'},
-      {d:'Day 7', theme:'첫 주 완주 축하 + 2주차 안내'}
+  // 전체 직원 이메일 발송
+  if (sendEmail) {
+    var emails = [
+      'greener_kim@iamgreener.co.kr',
+      'eddy_park@iamgreener.co.kr',
+      'jungin_shin@iamgreener.co.kr',
+      'greener_asj@iamgreener.co.kr',
+      'yghan@iamgreener.co.kr',
+      'ksm@iamgreener.co.kr',
+      '98gusdl52@iamgreener.co.kr',
+      'juhee_an@iamgreener.co.kr',
+      'greener_sw@iamgreener.co.kr',
+      'greener_hdr@iamgreener.co.kr',
+      '22hyun@iamgreener.co.kr',
+      'kss1224@iamgreener.co.kr',
+      'yunkk@iamgreener.co.kr',
+      'minnwaterr@iamgreener.co.kr',
+      'jiheyya@iamgreener.co.kr',
+      'greener_an@iamgreener.co.kr',
+      'greener_hys@iamgreener.co.kr'
     ];
 
-    var dayRow = document.getElementById('dayRow');
-    dayRow.innerHTML = dayLabels.map(function(d,i){
-      return '<div class="dcard" onclick="loadDay('+i+')" id="dcard-'+i+'"><div class="dlbl">'+d.d+'</div><div class="dtitle">'+d.theme+'</div></div>';
-    }).join('');
+    showToast('📨 ' + emails.length + '명에게 공지 이메일 발송 중...');
 
-    generatedDays = dayLabels.map(function(d,i){
-      var p;
-      if (i === 5) {
-        p = '리와인드 신입 직원 ' + name + '(' + role + ')에게 입사 5일차에 보내는 첫 주 소감 설문 이메일을 작성하세요.\n' +
-          '3가지 질문 포함:\n1. 첫 주 가장 좋았던 점은?\n2. 어렵거나 불편했던 점은?\n3. 더 도와드릴 것이 있나요?\n' +
-          '답변이 팀장과 임원에게 전달된다고 안내하세요. 솔직한 피드백을 장려하는 따뜻한 톤.\n발신: 김지혜 부장. 첫줄: 제목: [제목내용]';
-      } else {
-        p = '리와인드(아이엠그리너, 친환경 소셜벤처) 신입 직원 ' + name + '(' + role + (age?', '+age:'') + ')에게 ' + d.d + '에 보내는 온보딩 이메일을 작성하세요.\n' +
-          '주제: ' + d.theme + '\n경력 참고: ' + (career||'없음') + '\n' +
-          '따뜻하고 친근한 톤. 리와인드 슬로건("일회용품을 만들지만 쓰레기는 만들지 않습니다")을 자연스럽게 녹여주세요.\n발신: 김지혜 부장. 첫줄: 제목: [제목내용]';
-      }
-      return { prompt: p, text: null };
+    var promises = emails.map(function(email) {
+      return emailjs.send('service_hr', 'template_0d8vuxl', {
+        to_email: email,
+        applicant_name: '리와인드 전체 직원',
+        applicant_email: email,
+        cert_type: '[공지] ' + title,
+        purpose: '공지사항 · ' + date,
+        note: content
+      });
     });
 
-    document.getElementById('obResult').classList.add('show');
-    document.getElementById('dayDetail').style.display = 'none';
-    await loadDay(0);
-
-  } catch(e) {
-    showToast('생성 중 오류. 다시 시도해주세요.');
-    console.error(e);
-  }
-  btn.disabled = false;
-  btn.innerHTML = '✨ 온보딩 메일 생성';
-}
-
-async function loadDay(i) {
-  document.querySelectorAll('.dcard').forEach(function(c,j){ c.classList.toggle('sel', j===i); });
-  var detail = document.getElementById('dayDetail');
-  detail.style.display = 'block';
-  if (!generatedDays[i]) return;
-  if (!generatedDays[i].text) {
-    document.getElementById('daySubj').textContent = '생성 중...';
-    document.getElementById('dayEmail').textContent = '';
-    var r = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:generatedDays[i].prompt}]})
-    });
-    var d = await r.json();
-    generatedDays[i].text = d.content[0].text;
-  }
-  var text = generatedDays[i].text;
-  var sm = text.match(/제목:\s*(.+)/);
-  document.getElementById('daySubj').textContent = '제목: ' + (sm ? sm[1].trim() : '온보딩 메일');
-  document.getElementById('dayEmail').textContent = text.replace(/제목:.+\n?/,'').trim();
-  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
-}
-
-// DOCS
-function addDoc() {
-  var emp = document.getElementById('docEmp').value.trim();
-  var type = document.getElementById('docType').value;
-  if (!emp) { showToast('직원 이름을 입력해주세요.'); return; }
-  var list = document.getElementById('docList');
-  if (list.querySelector('div[style*="text-align"]')) list.innerHTML = '';
-  var row = document.createElement('div');
-  row.className = 'doc-row';
-  row.innerHTML = '<div class="doc-name">📄 ' + type + ' <span style="font-size:12px;color:var(--mu);">· ' + emp + '</span></div>' +
-    '<div style="display:flex;align-items:center;gap:8px;"><span class="doc-st doc-wait">대기 중</span>' +
-    '<button class="btn btn-s btn-sm" onclick="toggleDoc(this)">완료</button></div>';
-  list.appendChild(row);
-  showToast('서류 항목 추가됨');
-}
-function toggleDoc(btn) {
-  var st = btn.previousElementSibling;
-  if (st.classList.contains('doc-wait')) {
-    st.className = 'doc-st doc-ok'; st.textContent = '제출 완료'; btn.textContent = '취소';
+    Promise.all(promises)
+      .then(function() {
+        showToast('✅ 공지 등록 + 전체 직원 이메일 발송 완료!');
+        document.getElementById('noticeTitle').value = '';
+        document.getElementById('noticeContent').value = '';
+        loadAdminNotices();
+      })
+      .catch(function(e) {
+        showToast('⚠️ 일부 이메일 발송 실패. 공지는 등록됨.');
+        loadAdminNotices();
+      });
   } else {
-    st.className = 'doc-st doc-wait'; st.textContent = '대기 중'; btn.textContent = '완료';
+    showToast('✅ 공지가 등록되었습니다!');
+    document.getElementById('noticeTitle').value = '';
+    document.getElementById('noticeContent').value = '';
+    loadAdminNotices();
   }
 }
-function filterDocs(q) {
-  document.querySelectorAll('#docList .doc-row').forEach(function(r){
-    r.style.display = r.textContent.includes(q) ? '' : 'none';
-  });
-}
-
-async function genDocGuide() {
-  var emp = document.getElementById('docGuideEmp').value.trim() || '직원';
-  var career = document.getElementById('docGuideCareer').value;
-  var prompt = '리와인드(아이엠그리너) 신입 직원 ' + emp + '님(' + career + ')에게 보내는 입사 서류 안내 이메일을 작성하세요.\n\n' +
-    '기본 서류: 1.최종학교 졸업증명서 2.주민등록등본 3.가족관계증명서 4.급여통장 사본 5.증명사진 파일 6.채용건강진단서(출근 후 가능)\n' +
-    (career==='경력' ? '경력직 추가: 소득금액증명원 또는 건강보험자격득실확인서, 전년도 근로소득원천징수영수증 (민원24/홈택스 발급)\n' : '') +
-    '연봉계약서 작성을 위해 주민등록번호, 주소, 희망 이메일 아이디를 먼저 회신해달라고 안내하세요.\n' +
-    '발신: 김지혜 부장 (jiheyya@iamgreener.co.kr). 첫줄: 제목: [제목내용]';
-  var res = await fetch('https://api.anthropic.com/v1/messages', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:prompt}]})
-  });
-  var data = await res.json();
-  var text = data.content[0].text;
-  var sm = text.match(/제목:\s*(.+)/);
-  document.getElementById('docGuideSubj').textContent = '제목: ' + (sm ? sm[1] : '입사 서류 안내');
-  document.getElementById('docGuideEmail').textContent = text.replace(/제목:.+\n?/,'').trim();
-  document.getElementById('docGuideResult').style.display = 'block';
-}
-
-// QUESTIONS
-function markDone(btn) {
-  var item = btn.closest('.q-item');
-  var badge = item.querySelector('.badge');
-  badge.className = 'badge badge-done'; badge.textContent = '답변 완료';
-  btn.remove();
-  updateQBadge();
-}
-async function genAnswer(btn, question) {
-  btn.disabled = true; btn.textContent = '생성 중...';
-  var prompt = '리와인드(서울 서대문구 연희로26 동방빌딩 6층) 신입 직원 질문에 인사담당자로서 친절하게 답변하세요.\n질문: ' + question + '\n짧고 친절하게 2-3문장으로 답변하세요.';
-  var res = await fetch('https://api.anthropic.com/v1/messages', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:300, messages:[{role:'user',content:prompt}]})
-  });
-  var data = await res.json();
-  var answer = data.content[0].text;
-  var item = btn.closest('.q-item');
-  var ansDiv = document.createElement('div');
-  ansDiv.style.cssText = 'background:var(--gp);border:1px solid var(--gm);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:13px;line-height:1.7;';
-  ansDiv.innerHTML = '<strong style="color:var(--g);">AI 답변 초안:</strong><br>' + answer;
-  item.appendChild(ansDiv);
-  btn.disabled = false; btn.textContent = 'AI 답변 초안';
-}
-function addQuestion() {
-  var name = document.getElementById('qName').value.trim();
-  var text = document.getElementById('qText').value.trim();
-  var date = document.getElementById('qDate').value;
-  if (!name || !text) { showToast('이름과 질문을 입력해주세요.'); return; }
-  var list = document.getElementById('qList');
-  var item = document.createElement('div');
-  item.className = 'q-item';
-  var safeText = text.replace(/'/g, "\\'");
-  item.innerHTML = '<div class="q-head"><div class="q-name">' + name + ' <span class="badge badge-new">미답변</span></div><div class="q-date">' + date + '</div></div>' +
-    '<div class="q-body">' + text + '</div>' +
-    '<div class="btns"><button class="btn btn-s btn-sm" onclick="markDone(this)">답변 완료</button>' +
-    '<button class="btn btn-a btn-sm" onclick="genAnswer(this,\'' + safeText + '\')">AI 답변 초안</button></div>';
-  list.appendChild(item);
-  document.getElementById('qName').value = '';
-  document.getElementById('qText').value = '';
-  updateQBadge();
-  showToast('질문이 추가되었습니다.');
-}
-function updateQBadge() {
-  document.getElementById('qBadge').textContent = document.querySelectorAll('.badge-new').length;
-}
 
 
-// ── SHEET ID ──────────────────────────────────────
-var SHEET_ID = '1z-zU3M36VoMTdQOoGHuUhzM-48YXm3Mewa4d_iNAR24';
-var SHEET_GID = '641507610';
-var ATTEND_SHEET_ID = '1fopcA9GxbmYEipRXdRCKF_TNMg8xlAnZwx-vgJLi8BE';
-var ATTEND_GID = '1656934812';
-var leaveAllData = [];
-var attendAllData = [];
+// ── 지각 알림 이메일 ──────────────────────────────
+var EMAIL_MAP_LATE = {
+  '김은정':'greener_kim@iamgreener.co.kr','박원욱':'eddy_park@iamgreener.co.kr',
+  '신정인':'jungin_shin@iamgreener.co.kr','안시진':'greener_asj@iamgreener.co.kr',
+  '한윤구':'yghan@iamgreener.co.kr','구승모':'ksm@iamgreener.co.kr',
+  '정민주':'98gusdl52@iamgreener.co.kr','안주희':'juhee_an@iamgreener.co.kr',
+  '정성원':'greener_sw@iamgreener.co.kr','허다람':'greener_hdr@iamgreener.co.kr',
+  '이이현':'22hyun@iamgreener.co.kr','김성수':'kss1224@iamgreener.co.kr',
+  '김윤경':'yunkk@iamgreener.co.kr','김민수':'minnwaterr@iamgreener.co.kr',
+  '김지혜':'jiheyya@iamgreener.co.kr','안성진':'greener_an@iamgreener.co.kr',
+  '신희연':'greener_hys@iamgreener.co.kr'
+};
 
-// ── EMPLOYEE DATA ─────────────────────────────────
-var employees = JSON.parse(localStorage.getItem('rw_employees') || '[]');
-var editingEmpIdx = -1;
-
-function saveEmpStorage() {
-  localStorage.setItem('rw_employees', JSON.stringify(employees));
-}
-
-function calcTenure(joinDate, leaveDate) {
-  if (!joinDate) return '-';
-  var start = new Date(joinDate);
-  var end = leaveDate ? new Date(leaveDate) : new Date();
-  var months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
-  var years = Math.floor(months / 12);
-  var rem = months % 12;
-  if (years > 0 && rem > 0) return years + '년 ' + rem + '개월';
-  if (years > 0) return years + '년';
-  return rem + '개월';
-}
-
-function calcAnnualLeave(joinDate) {
-  if (!joinDate) return 0;
-  var start = new Date(joinDate);
-  var now = new Date();
-  var months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
-  var years = Math.floor(months / 12);
-  if (years < 1) return Math.min(months, 11);
-  if (years < 3) return 15;
-  return Math.min(15 + Math.floor((years - 1) / 2), 25);
-}
-
-function renderEmpList(data) {
-  var list = document.getElementById('empList');
-  if (!data || data.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:32px;color:var(--mu);font-size:13.5px;">등록된 직원이 없습니다.<br>신규 직원 등록 버튼을 눌러 추가하세요.</div>';
-    return;
-  }
-  var rows = data.map(function(e, i) {
-    var tenure = calcTenure(e.joindate, e.leavedate);
-    var leave = calcAnnualLeave(e.joindate);
-    var statusClass = e.status === 'resigned' ? 'status-resigned' : 'status-active';
-    var statusText = e.status === 'resigned' ? '퇴사' : '재직중';
-    return '<tr onclick="editEmployee(' + i + ')">' +
-      '<td><strong>' + e.name + '</strong></td>' +
-      '<td>' + (e.team||'-') + '</td>' +
-      '<td>' + (e.rank||'-') + '</td>' +
-      '<td>' + (e.joindate ? e.joindate.replace(/-/g,'.') : '-') + '</td>' +
-      '<td class="tenure">' + tenure + '</td>' +
-      '<td style="font-size:12px;">' + leave + '일</td>' +
-      '<td>' + (e.email||'-') + '</td>' +
-      '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>' +
-      '<td>' + (e.note ? e.note.substring(0,20) + (e.note.length>20?'...':'') : '-') + '</td>' +
-    '</tr>';
-  }).join('');
-  list.innerHTML = '<table class="emp-table"><thead><tr>' +
-    '<th>이름</th><th>팀</th><th>직급</th><th>입사일</th><th>근속기간</th><th>연차</th><th>이메일</th><th>상태</th><th>특이사항</th>' +
-    '</tr></thead><tbody>' + rows + '</tbody></table>';
-}
-
-var _empFilterStatus = 'all';
-var _empFilterName = '';
-
-function filterEmpStatus(v) { _empFilterStatus = v; applyEmpFilter(); }
-function filterEmpName(v) { _empFilterName = v; applyEmpFilter(); }
-function applyEmpFilter() {
-  var filtered = employees.filter(function(e) {
-    var statusOk = _empFilterStatus === 'all' || e.status === _empFilterStatus;
-    var nameOk = !_empFilterName || e.name.includes(_empFilterName);
-    return statusOk && nameOk;
-  });
-  renderEmpList(filtered);
-}
-
-function showEmpForm(mode, idx) {
-  document.getElementById('empFormCard').style.display = 'block';
-  document.getElementById('empTimelineCard').style.display = 'none';
-  document.getElementById('empFileList').innerHTML = '';
-  if (mode === 'new') {
-    editingEmpIdx = -1;
-    document.getElementById('empFormTitle').textContent = '신규 직원 등록';
-    document.getElementById('deleteEmpBtn').style.display = 'none';
-    ['ef-name','ef-rank','ef-role','ef-email','ef-phone','ef-address','ef-note'].forEach(function(id){ document.getElementById(id).value=''; });
-    document.getElementById('ef-team').value = '영업팀';
-    document.getElementById('ef-status').value = 'active';
-    document.getElementById('ef-joindate').value = '';
-    document.getElementById('ef-leavedate').value = '';
-  } else {
-    editingEmpIdx = idx;
-    var e = employees[idx];
-    document.getElementById('empFormTitle').textContent = e.name + ' 님 정보 수정';
-    document.getElementById('deleteEmpBtn').style.display = 'inline-flex';
-    document.getElementById('ef-name').value = e.name || '';
-    document.getElementById('ef-team').value = e.team || '영업팀';
-    document.getElementById('ef-rank').value = e.rank || '';
-    document.getElementById('ef-role').value = e.role || '';
-    document.getElementById('ef-joindate').value = e.joindate || '';
-    document.getElementById('ef-leavedate').value = e.leavedate || '';
-    document.getElementById('ef-email').value = e.email || '';
-    document.getElementById('ef-phone').value = e.phone || '';
-    document.getElementById('ef-birth').value = e.birth || '';
-    document.getElementById('ef-address').value = e.address || '';
-    document.getElementById('ef-status').value = e.status || 'active';
-    document.getElementById('ef-note').value = e.note || '';
-    renderTimeline(e);
-  }
-  document.getElementById('empFormCard').scrollIntoView({behavior:'smooth'});
-}
-
-function editEmployee(idx) { showEmpForm('edit', idx); }
-function cancelEmpForm() {
-  document.getElementById('empFormCard').style.display = 'none';
-  document.getElementById('empTimelineCard').style.display = 'none';
-}
-
-function saveEmployee() {
-  var name = document.getElementById('ef-name').value.trim();
-  if (!name) { showToast('이름을 입력해주세요.'); return; }
-  var emp = {
-    name: name,
-    team: document.getElementById('ef-team').value,
-    rank: document.getElementById('ef-rank').value,
-    role: document.getElementById('ef-role').value,
-    joindate: document.getElementById('ef-joindate').value,
-    leavedate: document.getElementById('ef-leavedate').value,
-    email: document.getElementById('ef-email').value,
-    phone: document.getElementById('ef-phone').value,
-    birth: document.getElementById('ef-birth').value,
-    address: document.getElementById('ef-address').value,
-    status: document.getElementById('ef-status').value,
-    note: document.getElementById('ef-note').value,
-    timeline: editingEmpIdx >= 0 ? (employees[editingEmpIdx].timeline || []) : [],
-    files: editingEmpIdx >= 0 ? (employees[editingEmpIdx].files || []) : [],
-    updatedAt: new Date().toISOString()
-  };
-  if (editingEmpIdx >= 0) {
-    employees[editingEmpIdx] = emp;
-    showToast(name + ' 님 정보가 수정되었습니다.');
-  } else {
-    emp.timeline = [{ date: new Date().toLocaleDateString('ko-KR'), text: '입사' }];
-    employees.push(emp);
-    showToast(name + ' 님이 등록되었습니다.');
-  }
-  saveEmpStorage();
-  applyEmpFilter();
-  cancelEmpForm();
-}
-
-function deleteEmployee() {
-  if (editingEmpIdx < 0) return;
-  var name = employees[editingEmpIdx].name;
-  if (!confirm(name + ' 님을 삭제하시겠습니까?')) return;
-  employees.splice(editingEmpIdx, 1);
-  saveEmpStorage();
-  applyEmpFilter();
-  cancelEmpForm();
-  showToast(name + ' 님이 삭제되었습니다.');
-}
-
-function renderTimeline(emp) {
-  document.getElementById('empTimelineCard').style.display = 'block';
-  var tl = emp.timeline || [];
-  var container = document.getElementById('empTimeline');
-  container.innerHTML = tl.length === 0
-    ? '<div style="color:var(--mu);font-size:13px;padding:8px 0;">인사 이력이 없습니다.</div>'
-    : tl.map(function(t) {
-        return '<div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-date">' + t.date + '</div><div class="tl-text">' + t.text + '</div></div></div>';
-      }).join('');
-}
-
-function addTimeline() {
-  if (editingEmpIdx < 0) return;
-  var text = document.getElementById('tl-text').value.trim();
-  if (!text) { showToast('내용을 입력해주세요.'); return; }
-  if (!employees[editingEmpIdx].timeline) employees[editingEmpIdx].timeline = [];
-  employees[editingEmpIdx].timeline.push({ date: new Date().toLocaleDateString('ko-KR'), text: text });
-  saveEmpStorage();
-  renderTimeline(employees[editingEmpIdx]);
-  document.getElementById('tl-text').value = '';
-  showToast('이력이 추가되었습니다.');
-}
-
-function empFileDrop(e) { e.preventDefault(); empFileHandle(e.dataTransfer.files[0]); }
-function empFileHandle(file) {
-  if (!file) return;
-  var list = document.getElementById('empFileList');
-  var item = document.createElement('div');
-  item.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;margin-bottom:6px;font-size:13px;';
-  item.innerHTML = '📎 ' + file.name + ' <span style="color:var(--mu);font-size:11px;">(' + (file.size/1024).toFixed(0) + 'KB)</span>';
-  list.appendChild(item);
-  showToast(file.name + ' 업로드 준비 완료 (저장 시 등록됩니다)');
-}
-
-// ── LEAVE DATA ────────────────────────────────────
-async function loadLeaveData() {
-  var loadingEl = document.getElementById('leaveLoading');
-  var tableWrap = document.getElementById('leaveTableWrap');
-  loadingEl.style.display = 'block';
-  loadingEl.innerHTML = '<span class="loading"><span class="ldot"></span><span class="ldot"></span><span class="ldot"></span></span> 데이터 불러오는 중...';
-  tableWrap.style.display = 'none';
-
-  // 구글 시트 JSON API (CORS 우회) - 공개 시트에서 동작
-  var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=Form_Responses1&gid=' + SHEET_GID;
+async function sendLateNotice(name, email, date, time) {
+  var errorSubject = '[오류신고] 지각 알림 오발송 - ' + name + ' (' + date + ' ' + time + ')';
+  var errorBody = '안녕하세요, 신정인 이사님.\n\n' + name + '입니다.\n\n' +
+    date + ' ' + time + '에 지각 알림을 받았는데 해당 시간에 지각하지 않았습니다.\n\n확인 부탁드립니다.\n\n감사합니다.';
+  var mailtoLink = 'mailto:jungin_shin@iamgreener.co.kr?subject=' +
+    encodeURIComponent(errorSubject) + '&body=' + encodeURIComponent(errorBody);
 
   try {
-    var res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    var text = await res.text();
-
-    // 구글이 반환하는 포맷: /*O_o*/\ngoogle.visualization.Query.setResponse({...});
-    var jsonStr = text.replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);\s*$/, '');
-    var json = JSON.parse(jsonStr);
-    var table = json.table;
-    var cols = table.cols.map(function(c){ return c.label || c.id; });
-
-    leaveAllData = table.rows.map(function(row) {
-      var obj = {};
-      cols.forEach(function(col, i) {
-        var cell = row.c[i];
-        obj[col] = cell ? (cell.f || cell.v || '') : '';
-      });
-      return obj;
-    }).filter(function(r){ return r[cols[2]] || r['성명']; }); // 빈 행 제거
-
-    renderLeaveTable(leaveAllData);
-    renderTodayLeave(leaveAllData);
-    renderLeaveSummary(leaveAllData);
-    loadingEl.style.display = 'none';
-    tableWrap.style.display = 'block';
-    showToast('연차 데이터 ' + leaveAllData.length + '건 불러오기 완료!');
-
+    await emailjs.send('service_hr', 'template_0d8vuxl', {
+      to_email: email,
+      applicant_name: name,
+      applicant_email: email,
+      cert_type: '⏰ 오늘 지각 안내',
+      purpose: date + ' ' + time + ' 출근 기록',
+      note: '안녕하세요 ' + name + '님! 😊\n\n' +
+        '오늘(' + date + ') 출근 시간(' + time + ')이 조금 늦으셨네요 🕐\n\n' +
+        '매일 수고 많으시죠? 그래도 내일은 조금 더 일찍 서두르시면 어떨까요? 💪🌿\n\n' +
+        '─────────────────────\n' +
+        '혹시 지각이 아닌데 이 메일을 받으셨다면 시스템 오류일 수 있어요!\n' +
+        '아래 내용으로 신정인 이사님께 바로 메일 보내주세요:\n\n' +
+        '📧 오류 신고: jungin_shin@iamgreener.co.kr\n' +
+        '제목: [오류신고] 지각 알림 오발송 - ' + name + ' (' + date + ' ' + time + ')\n\n' +
+        '항상 파이팅입니다! 리와인드 HR 🌿'
+    });
+    showToast('✅ ' + name + '님 지각 알림 발송!');
   } catch(e) {
-    // JSON API 실패 시 CSV로 재시도
-    try {
-      var csvUrl = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/export?format=csv&gid=' + SHEET_GID + '&cachebust=' + Date.now();
-      var res2 = await fetch(csvUrl);
-      if (!res2.ok) throw new Error('CSV도 실패');
-      var csv = await res2.text();
-      leaveAllData = parseCSV(csv);
-      renderLeaveTable(leaveAllData);
-      renderTodayLeave(leaveAllData);
-      renderLeaveSummary(leaveAllData);
-      loadingEl.style.display = 'none';
-      tableWrap.style.display = 'block';
-      showToast('연차 데이터 ' + leaveAllData.length + '건 불러오기 완료!');
-    } catch(e2) {
-      loadingEl.style.display = 'block';
-      loadingEl.innerHTML = '<div style="color:var(--rd);line-height:1.8;">' +
-        '❌ 데이터를 불러오지 못했습니다.<br><br>' +
-        '<strong>해결 방법:</strong><br>' +
-        '1. 구글 시트 공유 설정 → "링크가 있는 모든 사용자 - 뷰어" 확인<br>' +
-        '2. 브라우저가 Chrome인지 확인<br>' +
-        '3. 파일을 로컬(file://)이 아닌 서버(https://)에서 열어주세요<br><br>' +
-        '<small>오류: ' + e2.message + '</small></div>';
-    }
+    showToast('❌ ' + name + ' 발송 실패');
   }
 }
 
-function parseCSV(csv) {
-  var lines = csv.split('\n').filter(function(l){ return l.trim(); });
-  if (lines.length < 2) return [];
-  var headers = lines[0].split(',').map(function(h){ return h.replace(/"/g,'').trim(); });
-  return lines.slice(1).map(function(line) {
-    var cols = [];
-    var cur = '';
-    var inQ = false;
-    for (var i=0;i<line.length;i++) {
-      if (line[i]==='"') { inQ=!inQ; }
-      else if (line[i]===',' && !inQ) { cols.push(cur.trim()); cur=''; }
-      else { cur+=line[i]; }
-    }
-    cols.push(cur.trim());
-    var obj = {};
-    headers.forEach(function(h,i){ obj[h] = (cols[i]||'').replace(/"/g,''); });
-    return obj;
-  });
-}
-
-function renderLeaveTable(data) {
-  var tbody = document.getElementById('leaveBody');
-  tbody.innerHTML = data.map(function(r) {
-    // 컬럼명 유연하게 처리
-    var name = r['성명'] || r['이름'] || '';
-    var dept = r['부서'] || r['팀'] || '';
-    var type = r['신청 연차 유형'] || r['유형'] || r['연차유형'] || '';
-    var start = r['시작일'] || r['시작 일'] || '';
-    var end = r['종료일'] || r['종료 일'] || '';
-    var days = r['사용일수'] || r['사용 일수'] || '';
-    var handover = r['업무인수인계자'] || r['인수인계자'] || '';
-    var status = r['승인여부'] || r['승인 여부'] || '';
-    var statusStyle = status==='승인' ? 'color:var(--g);font-weight:600;' :
-                      status==='취소' ? 'color:var(--rd);font-weight:600;' : 'color:var(--am);';
-    return '<tr>' +
-      '<td><strong>' + name + '</strong></td>' +
-      '<td>' + dept + '</td>' +
-      '<td>' + type + '</td>' +
-      '<td>' + start + '</td>' +
-      '<td>' + end + '</td>' +
-      '<td style="text-align:center;">' + days + '</td>' +
-      '<td style="font-size:12px;">' + handover + '</td>' +
-      '<td style="' + statusStyle + '">' + status + '</td>' +
-    '</tr>';
-  }).join('');
-}
-
-function renderTodayLeave(data) {
-  var today = new Date();
-  var todayStr = today.toLocaleDateString('ko-KR', {year:'numeric',month:'numeric',day:'numeric'}).replace(/\. /g,'.').replace(/\./g,'.');
-  var todayISO = today.toISOString().split('T')[0];
-
-  var todayPeople = data.filter(function(r) {
-    var approval = (r['승인여부'] || r['승인 여부'] || '').trim();
-    if (approval !== '승인') return false;
-    var startRaw = r['시작일'] || r['시작 일'] || '';
-    var endRaw = r['종료일'] || r['종료 일'] || startRaw;
-    if (!startRaw) return false;
-    try {
-      // 구글 시트 날짜 형식: "2026. 3. 20" 또는 "2026.3.20" 또는 "2026-03-20"
-      function parseKoDate(str) {
-        str = String(str).trim();
-        // "2026. 3. 20" 형식
-        var m = str.match(/(\d{4})[.\-\s]+(\d{1,2})[.\-\s]+(\d{1,2})/);
-        if (m) return new Date(parseInt(m[1]), parseInt(m[2])-1, parseInt(m[3]));
-        return new Date(str);
-      }
-      var s = parseKoDate(startRaw);
-      var e = parseKoDate(endRaw);
-      // 날짜만 비교 (시간 제거)
-      var todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      var sDate = new Date(s.getFullYear(), s.getMonth(), s.getDate());
-      var eDate = new Date(e.getFullYear(), e.getMonth(), e.getDate());
-      return todayDate >= sDate && todayDate <= eDate;
-    } catch(ex) { return false; }
+async function sendAllLateNotices() {
+  var today = new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','');
+  var lateList = (attendAllData || []).filter(function(r) {
+    var isLate = (r['지각'] || r['지각여부'] || r['평가'] || '').includes('지각') ||
+                 (r['평가'] || '') === 'C';
+    return isLate;
   });
 
-  var el = document.getElementById('todayLeave');
-  if (todayPeople.length === 0) {
-    el.innerHTML = '<div class="leave-empty">오늘 (' + today.toLocaleDateString('ko-KR') + ') 연차자가 없습니다. 🌿</div>';
-    el.className = 'hl';
-    return;
+  if (!lateList.length) { showToast('지각자가 없습니다!'); return; }
+
+  if (!confirm(lateList.length + '명에게 지각 알림을 발송할까요?\n\n' +
+    lateList.map(function(r){ return '· ' + r['이름']; }).join('\n'))) return;
+
+  for (var i = 0; i < lateList.length; i++) {
+    var r = lateList[i];
+    var name = r['이름'] || '';
+    var email = EMAIL_MAP_LATE[name];
+    if (!email) { showToast('⚠️ ' + name + ' 이메일 없음'); continue; }
+    await sendLateNotice(name, email, r['날짜'] || '', r['시간'] || '');
+    await new Promise(function(res){ setTimeout(res, 400); });
   }
-  el.className = '';
-  el.style.cssText = '';
-  el.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--g);margin-bottom:10px;">오늘 ' + today.toLocaleDateString('ko-KR') + ' 연차자 ' + todayPeople.length + '명</div>' +
-    todayPeople.map(function(r) {
-      var initial = (r['성명']||'?')[0];
-      var typeClass = (r['신청 연차 유형']||'').includes('반차') ? 'leave-반차' : 'leave-연차';
-      return '<div class="leave-card">' +
-        '<div class="leave-avatar">' + initial + '</div>' +
-        '<div class="leave-info"><strong>' + r['성명'] + '</strong><span>' + (r['부서']||'') + '</span></div>' +
-        '<span class="leave-type ' + typeClass + '">' + (r['신청 연차 유형']||'연차') + '</span>' +
-        '</div>';
-    }).join('');
+  showToast('✅ 지각 알림 발송 완료!');
 }
-
-function renderLeaveSummary(data) {
-  var approved = data.filter(function(r){ return r['승인여부']==='승인'; });
-  var byPerson = {};
-  approved.forEach(function(r) {
-    var name = r['성명'] || r['이름'] || '';
-    if (!name) return;
-    var dept = r['부서'] || r['팀'] || '';
-    var days = r['사용일수'] || r['사용 일수'] || 0;
-    if (!byPerson[name]) byPerson[name] = { used: 0, team: dept };
-    byPerson[name].used += parseFloat(days) || 0;
-  });
-  var names = Object.keys(byPerson).sort();
-  var el = document.getElementById('leaveSummary');
-  if (names.length === 0) { el.textContent = '데이터가 없습니다.'; return; }
-  el.innerHTML = '<div class="summary-grid">' +
-    names.map(function(name) {
-      var d = byPerson[name];
-      return '<div class="summary-card">' +
-        '<div class="s-name">' + name + ' <span style="font-size:10px;color:var(--mu);">' + d.team + '</span></div>' +
-        '<div class="s-used">' + d.used + '<span style="font-size:13px;font-weight:400;color:var(--mu);">일</span></div>' +
-        '<div class="s-total">사용 연차</div>' +
-        '</div>';
-    }).join('') + '</div>';
-}
-
-var _leaveFilterName = '';
-var _leaveFilterStatus = 'all';
-function filterLeave(v) { _leaveFilterName = v; applyLeaveFilter(); }
-function filterLeaveStatus(v) { _leaveFilterStatus = v; applyLeaveFilter(); }
-function applyLeaveFilter() {
-  var filtered = leaveAllData.filter(function(r) {
-    var nameOk = !_leaveFilterName || (r['성명']||'').includes(_leaveFilterName);
-    var statusOk = _leaveFilterStatus === 'all' || (r['승인여부']||'').includes(_leaveFilterStatus);
-    return nameOk && statusOk;
-  });
-  renderLeaveTable(filtered);
-}
-
-
-
-// ── ATTEND ────────────────────────────────────────
-var _attendFilters = {name:'', date:'', type:'', late:''};
 
 async function loadAttendData() {
   var loadEl = document.getElementById('attendLoading');
@@ -2023,7 +1256,7 @@ async function sendGuide() {
 
   try {
     var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body: JSON.stringify({
         model:'claude-sonnet-4-20250514', max_tokens:600,
         system: GUIDE_CONTEXT,
